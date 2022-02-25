@@ -1,6 +1,7 @@
 It's a react todo app..
 
 ## Shortcuts
+| Function | Shortcut |
 |--------------|-----------|
 | Move focus down | `Down` or `Tab` |
 | Move focus up | `Up` or `Shift+Tab` |
