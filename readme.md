@@ -1,8 +1,8 @@
 It's a react todo app..
 
 ## Shortcuts
-|: Function |: Keys |
-|--------------|-----------|
+| Function | Keys |
+|:--------------|:-----------|
 | Move focus down | `Down` or `Tab` |
 | Move focus up | `Up` or `Shift+Tab` |
 | Edit todo | `E` or `Enter` |
@@ -19,7 +19,7 @@ It's a react todo app..
 **Entry Input**   
 - Type, and use `Enter` to add text as a new note
 - Use `Shift+Enter` to add a newline while typing  
- 
+
 **Editing a Todo**   
 - While focused, use `Enter` to edit
 - Use `Ctrl+Enter` to confirm edit (`Enter` will add a newline)
