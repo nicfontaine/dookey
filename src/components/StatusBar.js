@@ -27,7 +27,7 @@ const StatusBar = ({msg}) => {
 			<style jsx>{`
 			  .status-bar {
 			    padding: 0.8em 2rem;
-					background: #151515;
+					background: #131313;
 					font-family: "PT Mono", monospace;
 					font-size: 0.8rem;
 					color: #aaa;

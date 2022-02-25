@@ -36,7 +36,6 @@ It's a react todo app..
 - `/nuke` Delete all notes
 
 ## Bugs
-- Drag select bug, running handleMain.blur()
 - Status bar msg won't update, if another msg is still active (before it gets reset)
 
 ## Dev Branch Bugs
