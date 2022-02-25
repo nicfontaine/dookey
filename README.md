@@ -1,70 +1,43 @@
-# Getting Started with Create React App
+It's a react todo app..
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Shortcuts
+- Move down: `Down` or `Tab`
+- Move up: `Up` or `Shift+Tab`
+- Edit todo: `E` or `Enter`
+- Undo Edit: `Esc`
+- Save Edit: `Enter`
+- Add newline to edit/entry: `Ctrl+Enter`
+- Delete todo: `D` or `Delete`
+- Move todo up: `Ctrl+Shift+Up`
+- Move todo down: `Ctrl+Shift+Down`
+- Focus todo input: `/`
 
-## Available Scripts
+## Input
+**Entry Input**   
+- Type, and use `Enter` to add text as a new note
+- Use `Shift+Enter` to add a newline while typing
+**Editing a Todo**   
+- While focused, use `Enter` to edit
+- Use `Ctrl+Enter` to confirm edit (`Enter` will add a newline)
+- `Esc` to cancel your edit
 
-In the project directory, you can run:
+## Features
+- Markdown support
 
-### `npm start`
+## Commands
+- `/export` Copy data to clipboard
+- `/import` Paste data, and load
+- `/save` Save to backup file
+- `/open` Load from backup file
+- `/nuke` Delete all notes
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Bugs
+- Drag select bug, running handleMain.blur()
+- Status bar msg won't update, if another msg is still active (before it gets reset)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Dev Branch Bugs
+- Autosize on edit textarea not working
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Todo
+- Maybe move edit/active outside of data object
+- Textarea styling (height)
