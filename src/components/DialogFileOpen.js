@@ -5,8 +5,6 @@ import { useEffect, useRef } from "react"
 import entryCommands from "../mod/entry-commands.js"
 
 export default function DialogFileOpen({
-	goto,
-	setFocusElement,
 	setStatusMsg,
 	fileOpenSelect,
 	setFileOpenSelect,
@@ -17,8 +15,6 @@ export default function DialogFileOpen({
 
 	useEffect(() => {
 		if (fileOpenSelect) {
-			setFocusElement(null)
-			goto.exit()
 			input.current.click()
 			setFileOpenSelect(false)
 		}

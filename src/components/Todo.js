@@ -14,17 +14,14 @@ const Todo = ({
   activeIndex,
   setTodoList,
   todoList,
-  activeIndexPrevious,
-  setActiveIndexPrevious,
-  goto,
-  deleteIndex,
-  setDeleteIndex,
-  editIndex,
-  setEditIndex
+  goto
 }) => {
 
   const [editTextSaved, setEditTextSaved] = useState("")
+  const [editIndex, setEditIndex] = useState(null)
+  const [deleteIndex, setDeleteIndex] = useState(null)
   const [todoInputText, setTodoInputText] = useState(todo.text)
+  const [activeIndexPrevious, setActiveIndexPrevious] = useState(-1)
 
   const todoRef = useRef(null)
   const todoInputRef = useRef(null)
@@ -80,6 +77,7 @@ const Todo = ({
       handleTodo.postDeleteIndex(_list)
       // NOTE: not working, when list is empty
       setTodoList(_list)
+      setDeleteIndex(null)
     },
 
     // Update activeIndex after deletion, based on number of other tasks
@@ -212,7 +210,7 @@ const Todo = ({
     },
 
     blur: (e) => {
-      console.log("blur input")
+      handleTodoInput.unEdit(e)
     },
 
     unEdit: (e) => {
@@ -285,6 +283,7 @@ const Todo = ({
 
     let isDelete = index === deleteIndex
     let isActive = index === activeIndex
+
     return(
       <button
         className={csn("todo todo-focus",

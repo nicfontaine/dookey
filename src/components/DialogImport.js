@@ -8,11 +8,9 @@ const DialogImport = ({
 	goto,
 	todoList,
 	setTodoList,
-	activeIndex,
 	setStatusMsg,
 	dialogImportShow,
-	setDialogImportShow,
-	setFocusElement
+	setDialogImportShow
 }) => {
 
 	const importInput = useRef(null)
@@ -36,8 +34,7 @@ const DialogImport = ({
 		},
 
 		show: () => {
-			goto.exit()
-			setFocusElement(importInput.current)
+			goto.element(importInput.current)
 			entryCommands.import(importDialog, importInput, importDialogStatusText)
 		},
 	  

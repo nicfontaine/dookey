@@ -5,10 +5,7 @@ import { v4 as uuid } from "uuid"
 import csn from "classnames"
 import autosize from "autosize"
 import entryCommands from "../mod/entry-commands.js"
-// import twrp from "./scripts/table-wrap.js"
 
-// import { TodoProvider } from "../TodoContext.js"
-// import { TodoContext } from "../TodoContext.js"
 import Head from "next/head"
 import EntryForm from "../components/EntryForm"
 import Todo from "../components/Todo"
@@ -21,11 +18,10 @@ var activeIndex = -1
 
 const TodoPage = () => {
 
-  // const { todoList, setTodoList, activeIndex, setActiveIndex, activeIndexPrevious, setActiveIndexPrevious } = useContext(TodoContext)
+  // Recoil
+  // todoList, setTodoList, focusElement, setFocusElement, mainRef, todoListRef
+
   const [todoList, setTodoList] = useState([])
-  const [deleteIndex, setDeleteIndex] = useState(null)
-  const [editIndex, setEditIndex] = useState(null)
-  const [activeIndexPrevious, setActiveIndexPrevious] = useState(-1)
   const [focusElement, setFocusElement] = useState()
 
   const [statusMsg, setStatusMsg] = useState("")
@@ -36,10 +32,10 @@ const TodoPage = () => {
   const mainRef = useRef(null)
   const todoListRef = useRef(null)
 
-  // const [todoRefs, setTodoRefs] = useState([])
   const [entryRef, setEntryRef] = useState()
 
   // Index focus change
+  // mainRef, activeIndex, focusElement
   const goto = {
     next: () => {
       let todos = mainRef.current.getElementsByClassName("todo-focus")
@@ -55,11 +51,15 @@ const TodoPage = () => {
     entry: () => {
       goto.index(-1)
     },
+    exit: () => {
+      goto.index(null)
+    },
     index: (i) => {
       focusChange(i)
     },
-    exit: () => {
-      goto.index(null)
+    element: (e) => {
+      activeIndex = null
+      setFocusElement(e)
     }
   }
 
@@ -86,7 +86,6 @@ const TodoPage = () => {
   // Update Todo list (storage)
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todoList))
-    setDeleteIndex(null)
     focusChange(activeIndex)
     let todos = mainRef.current.getElementsByClassName("todo-focus")
   }, [todoList])
@@ -104,9 +103,7 @@ const TodoPage = () => {
         <title>DooKey</title>
       </Head>
 
-      <div className="main-container"
-        ref={mainRef}
-      >
+      <div ref={mainRef} className="main-container">
 
         <div className="main">
 
@@ -141,13 +138,7 @@ const TodoPage = () => {
                 activeIndex={activeIndex}
                 todoList={todoList}
                 setTodoList={setTodoList}
-                activeIndexPrevious={activeIndexPrevious}
-                setActiveIndexPrevious={setActiveIndexPrevious}
                 goto={goto}
-                deleteIndex={deleteIndex}
-                setDeleteIndex={setDeleteIndex}
-                editIndex={editIndex}
-                setEditIndex={setEditIndex}
               />
             }) : undefined }
           </div>
@@ -158,7 +149,6 @@ const TodoPage = () => {
           goto={goto}
           todoList={todoList}
           setTodoList={setTodoList}
-          activeIndex={activeIndex}
           setStatusMsg={setStatusMsg}
           dialogImportShow={dialogImportShow}
           setDialogImportShow={setDialogImportShow}
@@ -166,8 +156,6 @@ const TodoPage = () => {
         />
 
         <DialogFileOpen
-          goto={goto}
-          setFocusElement={setFocusElement}
           setStatusMsg={setStatusMsg}
           fileOpenSelect={fileOpenSelect}
           setFileOpenSelect={setFileOpenSelect}

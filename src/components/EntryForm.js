@@ -60,12 +60,6 @@ const EntryForm = ({
 
 	  active: () => {
 	  	goto.entry()
-	    // NOTE: deleting first todo is setting todo, and triggering this too
-	    // setTodoList(todoList.map((todo) => {
-	    // 	delete todo.edit
-	    // 	delete todo.active
-	    // 	return todo
-	    // }))
 	    if (todoListRef.current) {
 	    	todoListRef.current.scrollTop = 0
 	    }
