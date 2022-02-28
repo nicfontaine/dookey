@@ -1,36 +1,36 @@
 (function(){"use strict"})()
 
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import autosize from "autosize"
 import csn from "classnames"
 
 const TodoInput = ({
-		setTodoList,
-		todoList,
-		setEditMode,
-		editTextSaved,
-		setEditTextSaved,
-		activeIndex,
 		todo,
-		setActiveIndex,
-		activeIndexPrevious,
-		setActiveIndexPrevious
+		index,
+		todoList,
+		goto,
+		setTodoList,
+		editIndex,
+		setEditIndex,
+		editTextSaved,
+		activeIndexPrevious
 	}) => {
+
+	const [todoInputText, setTodoInputText] = useState(todo.text)
+	const todoInputRef = useRef(null)
+
+	useEffect(() => {
+		autosize(todoInputRef.current)
+	}, [])
 
 	// Todo edit input
 	const handleTodoInput = {
 
 	  // Input value change
 	  change: (e) => {
-	    setEditMode(true)
 	    setTodoInputText(e.target.value)
+	    // e.target.style.minHeight = e.target.scrollHeight + "px"
 	    autosize.update(e.target)
-	    setTodoList(todoList.map((todo, index) => {
-	      if (index === activeIndex) {
-	        todo.text = e.target.value
-	      }
-	      return todo
-	    }))
 	  },
 
 	  focus: (e) => {
@@ -38,19 +38,20 @@ const TodoInput = ({
 	    setTimeout(() => {
 	      e.target.selectionStart = e.target.selectionEnd = e.target.value.length
 	    }, 0)
-	    autosize(e.target)
+	    e.target.style.minHeight = e.target.scrollHeight + "px"
+	    // autosize(e.target)
+	    // autosize.update(e.target)
 	  },
 
 	  blur: (e) => {
-	    console.log("blur input")
+	    handleTodoInput.unEdit(e)
 	  },
 
 	  unEdit: (e) => {
-	    setEditMode(false)
+	    setEditIndex(null)
 	    let _list = todoList
 	    let val = e.target.value
 	    _list = _list.map((todo, index) => {
-	      delete todo.edit
 	      if (index === activeIndexPrevious) {
 	        todo.text = val
 	      }
@@ -60,8 +61,7 @@ const TodoInput = ({
 	        return todo
 	      }
 	    })
-	    setActiveIndex(activeIndexPrevious)
-	    setFocusElement(activeTodo)
+	    goto.index(activeIndexPrevious)
 	    setTodoList(_list)
 	  },
 
@@ -69,42 +69,48 @@ const TodoInput = ({
 	  keyDown: (e) => {
 	    // "ESC"
 	    if (e.key === "Escape") {
-	      setEditMode(false)
-	      setTodoList(todoList.map((todo) => {
-	        if (todo.edit) {
+	      e.preventDefault()
+	      setTodoList(todoList.map((todo, index) => {
+	        if (index === editIndex) {
 	          todo.text = editTextSaved
 	        }
-	        delete todo.edit
 	        return todo
 	      }))
-	      setActiveIndex(activeIndexPrevious)
-	      setFocusElement(activeTodo)
-	      // setActiveIndex(activeIndex)
+	      goto.index(activeIndexPrevious)
+	      setEditIndex(null)
 	    }
 	    // Unedit, or carraige return
 	    if (e.key === "Enter") {
-	      e.preventDefault()
-	      if (!e.ctrlKey) {
+	      if (e.ctrlKey) {
+	        e.preventDefault()
 	        handleTodoInput.unEdit(e)
 	      } else {
-	        e.target.value += "\n"
+	        // e.target.value += "\n"
 	        autosize.update(e.target)
 	      }
+	    }
+	    if (e.key === "Tab") {
+	      e.preventDefault()
+	      // NOTE: would be nice to have tabbed entry functionality
 	    }
 	  }
 	}
 	
 	return(
-		<textarea className="todo-input" type="text"
-		  value={todoInputText}
-		  onChange={handleTodoInput.change}
-		  onKeyDown={handleTodoInput.keyDown}
-		  onFocus={handleTodoInput.focus}
-		  onBlur={handleTodoInput.blur}
-		  autoFocus
-		  ref={todoRef}
-		  rows="1"
-		></textarea>
+		// <div style={{position:"relative"}}>
+			// {<span className="todo-index">{index+1}</span>}
+			<textarea className="todo-input todo-focus" type="text"
+			  value={todoInputText}
+			  onChange={handleTodoInput.change}
+			  onKeyDown={handleTodoInput.keyDown}
+			  onFocus={handleTodoInput.focus}
+			  onBlur={handleTodoInput.blur}
+			  autoFocus
+			  tabIndex="0"
+			  rows="1"
+			  ref={todoInputRef}
+			></textarea>
+		// </div>
 	)
 
 }

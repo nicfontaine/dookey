@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import csn from "classnames"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
-import autosize from "autosize"
+import TodoInput from "./TodoInput"
 
 var deleteStore = []
 
@@ -20,11 +20,7 @@ const Todo = ({
   const [editTextSaved, setEditTextSaved] = useState("")
   const [editIndex, setEditIndex] = useState(null)
   const [deleteIndex, setDeleteIndex] = useState(null)
-  const [todoInputText, setTodoInputText] = useState(todo.text)
   const [activeIndexPrevious, setActiveIndexPrevious] = useState(-1)
-
-  const todoRef = useRef(null)
-  const todoInputRef = useRef(null)
 
   var dragged = false
   var mX
@@ -35,7 +31,7 @@ const Todo = ({
       if (activeIndex > 0) {
         let _list = todoList.map((todo) => todo)
         _list.splice(activeIndex - 1, 0, _list.splice(activeIndex, 1)[0])
-        // goto.prev()
+        console.log("activeIndex " + activeIndex)
         setTodoList(_list)
       }
     },
@@ -43,7 +39,7 @@ const Todo = ({
       if (activeIndex < todoList.length-1) {
         let _list = todoList.map((todo) => todo)
         _list.splice(activeIndex + 1, 0, _list.splice(activeIndex, 1)[0])
-        // goto.next()
+        console.log("activeIndex " + activeIndex)
         setTodoList(_list)
       }
     }
@@ -63,7 +59,7 @@ const Todo = ({
     delete: (e) => {
       e.target.style.height = e.target.offsetHeight + "px"
       setDeleteIndex(activeIndex)
-      deleteStore.push([todoList[activeIndex], index])
+      deleteStore.push({todo: todoList[activeIndex], index})
       setTimeout(() => handleTodo.remove(activeIndex), 150)
     },
 
@@ -77,7 +73,6 @@ const Todo = ({
       handleTodo.postDeleteIndex(_list)
       // NOTE: not working, when list is empty
       setTodoList(_list)
-      setDeleteIndex(null)
     },
 
     // Update activeIndex after deletion, based on number of other tasks
@@ -99,6 +94,9 @@ const Todo = ({
     },
 
     focus: (e, index) => {
+      // NOTE: r-click is focusing, so we'll just change the index as well
+      // NOTE: This is messing up when moving todos, and focusing the old place
+      // goto.index(index)
       // e.target.classList.add("active")
       // console.log("Todo: " + index + " has been focused")
     },
@@ -189,93 +187,20 @@ const Todo = ({
 
   }
 
-  // Todo edit input
-  const handleTodoInput = {
-
-    // Input value change
-    change: (e) => {
-      setTodoInputText(e.target.value)
-      e.target.style.minHeight = e.target.scrollHeight + "px"
-      // autosize.update(e.target)
-    },
-
-    focus: (e) => {
-      // Move cursor to end
-      setTimeout(() => {
-        e.target.selectionStart = e.target.selectionEnd = e.target.value.length
-      }, 0)
-      e.target.style.minHeight = e.target.scrollHeight + "px"
-      // autosize(e.target)
-      // autosize.update(e.target)
-    },
-
-    blur: (e) => {
-      handleTodoInput.unEdit(e)
-    },
-
-    unEdit: (e) => {
-      setEditIndex(null)
-      let _list = todoList
-      let val = e.target.value
-      _list = _list.map((todo, index) => {
-        if (index === activeIndexPrevious) {
-          todo.text = val
-        }
-        return todo
-      }).filter((todo) => {
-        if (todo.text.length) {
-          return todo
-        }
-      })
-      goto.index(activeIndexPrevious)
-      setTodoList(_list)
-    },
-
-    // Handle special keys like enter, escape, etc
-    keyDown: (e) => {
-      // "ESC"
-      if (e.key === "Escape") {
-        e.preventDefault()
-        setTodoList(todoList.map((todo, index) => {
-          if (index === editIndex) {
-            todo.text = editTextSaved
-          }
-          return todo
-        }))
-        goto.index(activeIndexPrevious)
-        setEditIndex(null)
-      }
-      // Unedit, or carraige return
-      if (e.key === "Enter") {
-        if (e.ctrlKey) {
-          e.preventDefault()
-          handleTodoInput.unEdit(e)
-        } else {
-          // e.target.value += "\n"
-          autosize.update(e.target)
-        }
-      }
-      if (e.key === "Tab") {
-        e.preventDefault()
-        // NOTE: would be nice to have tabbed entry functionality
-      }
-    }
-  }
-
   if (index === editIndex) {
 
     return (
-      <textarea className="todo-input todo-focus" type="text"
-        value={todoInputText}
-        onChange={handleTodoInput.change}
-        onKeyDown={handleTodoInput.keyDown}
-        onFocus={handleTodoInput.focus}
-        onBlur={handleTodoInput.blur}
-        autoFocus
-        tabIndex="0"
-        ref={todoRef}
-        rows="1"
-      ></textarea>
+      <TodoInput 
+        todo={todo}
+        index={index}
+        todoList={todoList}
+        goto={goto}
+        setTodoList={setTodoList}
+        editIndex={editIndex}
+        setEditIndex={setEditIndex}
+        editTextSaved={editTextSaved}
+        activeIndexPrevious={activeIndexPrevious}
+      />
     )
 
   }
@@ -296,7 +221,6 @@ const Todo = ({
         onKeyDown={handleTodo.keyDown}
         autoFocus={todo.active}
         tabIndex="0"
-        ref={todoRef}
       >
         {<span className="todo-index">{index+1}</span>}
         {/*{<span className="todo-index">{(index+10).toString(36)}</span>}*/}

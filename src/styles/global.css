@@ -166,7 +166,7 @@ body, input, textarea {
   left: 0.7rem;
   align-self: flex-start;
   top: 0.84rem;
-  color: rgba(255,255,255,0.22);
+  color: rgba(255,255,255,0.3);
   text-transform: uppercase;
   left: 0.5rem;
   top: 0.77rem;
@@ -247,7 +247,7 @@ pre.todo-text a {
   margin-left: 0;
   /*margin-right: 1rem;*/
   border-radius: 5px;
-  padding: 0.5rem 0.7rem;
+  padding: 0.5rem 0.7rem 0.5rem 2.2rem;
   /*min-height: 2.56rem;*/
   border: none;
   outline: none;

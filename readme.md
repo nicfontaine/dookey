@@ -37,10 +37,10 @@ It's a react todo app..
 
 ## Bugs
 - Status bar msg won't update, if another msg is still active (before it gets reset)
-
-## Dev Branch Bugs
 - Autosize on edit textarea not working
+- Todo input blur is happening on window switching
 
 ## Todo
 - Maybe move edit/active outside of data object
 - Textarea styling (height)
+- Tags & filters
