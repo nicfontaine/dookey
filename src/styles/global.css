@@ -1,17 +1,17 @@
-/*@import url('https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,400;0,700;1,400&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=PT+Mono&display=swap');
-*/
+/*@import url('https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,400;0,700;1,400&display=swap');*/
+/*@import url('https://fonts.googleapis.com/css2?family=PT+Mono&display=swap');*/
+
 @font-face {
   font-family: "Bitter";
   src: local("Bitter"),
-    url("../fonts/Bitter-VariableFont_wght.ttf"),
-    url("../fonts/Bitter-Italic-VariableFont_wght.ttf");
+    url(../fonts/Bitter-VariableFont_wght.ttf),
+    url(../fonts/Bitter-Italic-VariableFont_wght.ttf);
 }
 
 @font-face {
   font-family: "PT Mono";
   src: local("PT Mono"),
-    url("../fonts/PTMono-Regular.ttf");
+    url(../fonts/PTMono-Regular.ttf);
 }
 
 body {
@@ -213,17 +213,18 @@ body, input, textarea {
   margin: 0;
   /*margin-bottom: 0.69rem;*/
   white-space: pre-wrap;
-}
-.todo pre {
   user-select: text;
+  flex: 1;
 }
-pre.todo-text a {
+
+/* Markdown */
+.todo-text a {
   color: #65beb1;
 }
 .todo-text p {
   margin: 0;
 }
-.todo-text ul {
+.todo-text ul, .todo-text ol {
   padding-left: 1.2rem;
   display: flex;
   flex-direction: column;
@@ -242,6 +243,33 @@ pre.todo-text a {
   border-radius: 4px;
   font-size: 0.95rem;
 }
+.todo-text h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.todo-text blockquote {
+  margin: 0;
+  display: flex;
+  padding: 0.6rem;
+  border-left: 3px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.06);
+}
+.todo-text hr {
+  width: 100%;
+  color: rgba(255,255,255,0.15);
+}
+.todo-text table {
+  display: block;
+  border-collapse: collapse;
+}
+.todo-text table th {
+  background: rgba(255,255,255,0.1);
+}
+.todo-text table th, .todo-text table td {
+  border: 1px solid #444;
+  padding: 0.1rem 0.4rem;
+}
+
 .todo-input {
   /*margin-left: 1.62rem;*/
   margin-left: 0;

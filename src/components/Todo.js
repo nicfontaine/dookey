@@ -224,9 +224,9 @@ const Todo = ({
       >
         {<span className="todo-index">{index+1}</span>}
         {/*{<span className="todo-index">{(index+10).toString(36)}</span>}*/}
-        <pre className="todo-text">
+        <div className="todo-text">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{todo.text}</ReactMarkdown>
-        </pre>
+        </div>
       </button>
     )
 

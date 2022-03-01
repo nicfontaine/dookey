@@ -27,6 +27,7 @@ It's a react todo app..
 
 ## Features
 - Markdown support
+	- Code-blocks not supported
 
 ## Commands
 - `/export` Copy data to clipboard
