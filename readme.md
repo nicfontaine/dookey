@@ -40,6 +40,12 @@ It's a react todo app..
 - Status bar msg won't update, if another msg is still active (before it gets reset)
 - Autosize on edit textarea not working
 - Todo input blur is happening on window switching
+- Entry input getting sized smaller on refresh, since it has no value
+
+## Tauri Bugs
+- Export broken b/c clipboard
+- Scroll overflow not working
+- Entry input has focus, but not getting class
 
 ## Todo
 - Maybe move edit/active outside of data object

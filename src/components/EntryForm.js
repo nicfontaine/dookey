@@ -12,6 +12,7 @@ const EntryForm = ({
 	todoList,
 	activeIndex,
 	setStatusMsg,
+	commandOptionsDisplay,
 	setDialogImportShow,
 	setCommandOptionsDisplay,
 	setFileOpenSelect,
@@ -106,7 +107,8 @@ const EntryForm = ({
         	goto.next()
         }
 	    }
-	    if (e.key === "Escape" && entryInput === "/") {
+	    // Clear via escape, if viewing command overlay
+	    if (e.key === "Escape" && commandOptionsDisplay) {
 	    	setEntryInput("")
 	    }
 	  },
@@ -126,7 +128,8 @@ const EntryForm = ({
 	    // Commands
 	    if (val.indexOf("/") === 0) {
 	    	// NOTE: Cleanup and move
-	      let command = val.split("/")[1]
+	    	let args = val.split("/")[1].split(" ")
+	      let command = args[0]
 	      if (command in entryCommands) {
 	        switch(command) {
 	          case "msg":
@@ -147,6 +150,9 @@ const EntryForm = ({
 	          case "open":
 	            entryCommands[command](setFileOpenSelect)
 	            break
+	          case "size":
+	          	entryCommands[command](formRef, args[1])
+	          	break
 	        }
 	        handleEntryInput.clear()
 	        return;

@@ -35,6 +35,14 @@ const entryCommands = {
     setFileOpenSelect(true)
   },
 
+  size: (target, args) => {
+    let size = args.split(" ")[0]
+    if (size) {
+      localStorage.setItem("font-size", size)
+      target.current.closest("html").style.fontSize = size + "px"
+    }
+  },
+
   save: async (todoList, setStatusMsg) => {
     let list = todoList.map((todo) => {
       return { text: todo.text, id: todo.id }

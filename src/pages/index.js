@@ -75,8 +75,14 @@ const TodoPage = () => {
 
   // Load
   useEffect(() => {
+    // LS - Todos
     let list = JSON.parse(localStorage.getItem("todos"))
     if (list) { setTodoList(list) }
+    // LS - Font size
+    let fontSize = JSON.parse(localStorage.getItem("font-size"))
+    if (fontSize) {
+      mainRef.current.closest("html").style.fontSize = fontSize + "px"
+    }
     document.body.tabIndex = -1
     document.getElementsByTagName("body")[0].addEventListener("focus", (e) => {
       console.log("Focus event on <body>")
@@ -113,6 +119,7 @@ const TodoPage = () => {
             todoList={todoList}
             activeIndex={activeIndex}
             setStatusMsg={setStatusMsg}
+            commandOptionsDisplay={commandOptionsDisplay}
             setDialogImportShow={setDialogImportShow}
             setCommandOptionsDisplay={setCommandOptionsDisplay}
             setFileOpenSelect={setFileOpenSelect}
