@@ -152,7 +152,7 @@ input, textarea {
   /*align-self: flex-start;*/
   transition: 0.1s all;
   border-radius: 5px;
-  color: #e0e0e0;
+  color: #d8d8d8;
   cursor: pointer;
   font-family: inherit;
   animation: todoCreate 0.3s 1 forwards;
@@ -219,12 +219,14 @@ input, textarea {
 }
 
 /* Markdown */
-.todo-text a {
-  color: #65beb1;
+.todo-text a, .todo-text a code {
   color: #7476ff;
 }
 .todo-text p {
   margin: 0;
+}
+.todo-text strong {
+  color: #e8e8e8;
 }
 .todo-text ul, .todo-text ol {
   padding-left: 1.2rem;
@@ -257,6 +259,7 @@ input, textarea {
   font-size: 0.9rem;
   margin: 0 0.1rem;
   transition: all 0.2s;
+  color: #5ab389;
 }
 .todo.active .todo-text code {
   border: 1px solid rgba(255,255,255,0.2);

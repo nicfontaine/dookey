@@ -17,7 +17,6 @@ const Todo = ({
   goto
 }) => {
 
-  const [editTextSaved, setEditTextSaved] = useState("")
   const [editIndex, setEditIndex] = useState(null)
   const [deleteIndex, setDeleteIndex] = useState(null)
   const [activeIndexPrevious, setActiveIndexPrevious] = useState(-1)
@@ -50,7 +49,6 @@ const Todo = ({
     // Set active todo to edit mode
     edit: (e) => {
       setEditIndex(index)
-      setEditTextSaved(todoList[activeIndex].text)
       setActiveIndexPrevious(activeIndex)
       goto.index(index)
     },
@@ -198,7 +196,6 @@ const Todo = ({
         setTodoList={setTodoList}
         editIndex={editIndex}
         setEditIndex={setEditIndex}
-        editTextSaved={editTextSaved}
         activeIndexPrevious={activeIndexPrevious}
       />
     )

@@ -12,11 +12,11 @@ const TodoInput = ({
 		setTodoList,
 		editIndex,
 		setEditIndex,
-		editTextSaved,
 		activeIndexPrevious
 	}) => {
 
 	const [todoInputText, setTodoInputText] = useState(todo.text)
+	const todoTextBackup = todo.text
 	const todoInputRef = useRef(null)
 
 	useEffect(() => {
@@ -72,7 +72,7 @@ const TodoInput = ({
 	      e.preventDefault()
 	      setTodoList(todoList.map((todo, index) => {
 	        if (index === editIndex) {
-	          todo.text = editTextSaved
+	          todo.text = todoTextBackup
 	        }
 	        return todo
 	      }))

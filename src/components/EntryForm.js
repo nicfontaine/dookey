@@ -66,6 +66,10 @@ const EntryForm = ({
 	    }
 	  },
 
+	  focus: (e) => {
+	  	autosize.update(entryInputRef.current)
+	  },
+
 	  // In case focus leaves, but active doesn't change. Like to <body>
 	  blur: (e) => {
 	  	// Changing windows/tabs doesn't really blur the input
@@ -184,9 +188,10 @@ const EntryForm = ({
 		    onChange={handleEntryInput.change}
 		    onKeyDown={handleEntryInput.keyDown}
 		    onClick={handleEntryInput.active}
-		    // onFocus={handleEntryInput.active}
+		    onFocus={handleEntryInput.focus}
 		    onBlur={handleEntryInput.blur}
 		    tabIndex="0"
+		    rows="1"
 		    autoFocus
 		    placeholder="Add a todo"
 		    ref={entryInputRef}

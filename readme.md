@@ -51,3 +51,5 @@ It's a react todo app..
 - Maybe move edit/active outside of data object
 - Textarea styling (height)
 - Tags & filters
+- Scroll todolist top, on entry submit
+- Home/End nav
