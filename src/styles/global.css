@@ -170,7 +170,7 @@ input, textarea {
   font-size: 0.9em;
   flex: 0;
   margin-right: 1rem;
-  line-height: 1.7;
+  line-height: 1.9;
 }
 .todo-content {
   flex: 1;
@@ -188,10 +188,8 @@ input, textarea {
   /*font-weight: 600;*/
 }
 .todo.delete {
-	animation: todoDelete 0.55s 1 forwards;
-  overflow: hidden;
-  flex-shrink: 0;
-	/*text-decoration: line-through;*/
+	animation: todoDelete 0.4s 1 forwards;
+  /*flex-shrink: 0;*/
 }
 .todo.delete .todo-content {
   /*overflow: hidden;*/
@@ -203,9 +201,10 @@ input, textarea {
 @keyframes todoDelete {
 	from { width: 100%; }
 	to {
-		width: 0;
+		/*width: 0;*/
 		color: rgba(255,255,255,0);
-    opacity: 0.4;
+    background: transparent;
+    opacity: 0.2;
 	}
 }
 .todo-text {
@@ -286,6 +285,10 @@ input, textarea {
 }
 .todo-text table th {
   background: rgba(255,255,255,0.1);
+}
+.todo-text pre {
+  margin: 0.5rem 0;
+  display: flex;
 }
 .todo-text table th, .todo-text table td {
   border: 1px solid #444;

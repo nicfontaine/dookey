@@ -5,6 +5,7 @@ It's a react todo app..
 |:--------------|:-----------|
 | Move focus down | `Down` or `Tab` |
 | Move focus up | `Up` or `Shift+Tab` |
+| Focus first/last | `Home`/`End` |
 | Edit todo | `E` or `Enter` |
 | Undo Edit | `Esc` |
 | Save Edit | `Enter` |
@@ -27,7 +28,6 @@ It's a react todo app..
 
 ## Features
 - Markdown support
-	- Code-blocks not supported
 
 ## Commands
 - `/export` Copy data to clipboard

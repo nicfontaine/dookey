@@ -55,7 +55,7 @@ const Todo = ({
 
     // Mark task for delete
     delete: (e) => {
-      e.target.style.height = e.target.offsetHeight + "px"
+      e.target.style.height = e.target.getBoundingClientRect().height + "px"
       setDeleteIndex(activeIndex)
       deleteStore.push({todo: todoList[activeIndex], index})
       setTimeout(() => handleTodo.remove(activeIndex), 150)
@@ -129,31 +129,31 @@ const Todo = ({
       if (!e.target.classList.contains("todo")) {
         return;
       }
-
       if (e.key === "Enter") {
         e.preventDefault()
         handleTodo.edit(e)
       }
-      if (e.key === "Delete" || e.key === "d") {
+      else if (e.key === "Delete" || e.key === "d") {
         e.preventDefault()
         handleTodo.delete(e)
       }
-      if (e.key === "e") {
+      else if (e.key === "e") {
         e.preventDefault()
         handleTodo.edit(e)
       }
-      if (e.key === "/") {
+      else if (e.key === "/") {
         e.preventDefault()
         goto.index(-1)
       }
-      if (e.key === "ArrowDown") {
+      else if (e.key === "ArrowDown") {
         e.preventDefault()
         // Move todo
         if (e.shiftKey && e.ctrlKey) {
           move.down()
         }
         goto.next()
-      } else if (e.key === "ArrowUp") {
+      }
+      else if (e.key === "ArrowUp") {
         e.preventDefault
         // Move todo
         if (e.shiftKey && e.ctrlKey) {
@@ -161,8 +161,7 @@ const Todo = ({
         }
         goto.prev()
       }
-
-      if (e.ctrlKey && e.key === "z") {
+      else if (e.key === "z" && e.ctrlKey) {
         if (!deleteStore.length) {
           return;
         }
@@ -172,13 +171,21 @@ const Todo = ({
         goto.index(_td.index)
         setTodoList(_list)
       }
-      if (e.key === "Tab") {
+      else if (e.key === "Tab") {
         e.preventDefault()
         if (e.shiftKey) {
           goto.prev()
         } else {
           goto.next()
         }
+      }
+      else if (e.key === "Home") {
+        e.preventDefault()
+        goto.index(0)
+      }
+      else if (e.key === "End") {
+        e.preventDefault()
+        goto.index(todoList.length-1)
       }
 
     }
