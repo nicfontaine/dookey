@@ -84,9 +84,21 @@ const TodoPage = () => {
       mainRef.current.closest("html").style.fontSize = fontSize + "px"
     }
     document.body.tabIndex = -1
-    document.getElementsByTagName("body")[0].addEventListener("focus", (e) => {
+    document.body.addEventListener("focus", (e) => {
       console.log("Focus event on <body>")
     })
+    // document.body.addEventListener("keyup", (e) => {
+    // 	e.stopPropagation()
+    // 	if (e.target !== document.body) {
+    // 		console.log("not equal")
+    // 		return;
+    // 	}
+    // 	if (e.key === "/") {
+    // 		console.log("slash")
+    // 		entryRef.focus()
+    // 		goto.entry()
+    // 	}
+    // }, {passive: true})
   }, [])
 
   // Update Todo list (storage)
@@ -132,7 +144,6 @@ const TodoPage = () => {
             commandOptionsDisplay={commandOptionsDisplay}
           />
 
-          {/* Todo List */}
           <div
             className={`todo-list ${commandOptionsDisplay ? "blur" : ""}`}
             ref={todoListRef}

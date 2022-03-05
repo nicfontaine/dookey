@@ -278,6 +278,7 @@ input, textarea {
 .todo-text hr {
   width: 100%;
   color: rgba(255,255,255,0.15);
+  margin-top: 0.75rem;
 }
 .todo-text table {
   display: block;
