@@ -68,6 +68,7 @@ const TodoPage = () => {
     if (activeIndex === -1 && entryRef) {
       setFocusElement(entryRef)
     } else if (activeIndex > -1) {
+      if (activeIndex === 0) { todoListRef.current.scrollTop = 0 }
       let todos = mainRef.current.getElementsByClassName("todo-focus")
       setFocusElement(todos[activeIndex])
     }

@@ -41,6 +41,7 @@ It's a react todo app..
 - Autosize on edit textarea not working
 - Todo input blur is happening on window switching
 - Entry input getting sized smaller on refresh, since it has no value
+- Edit not saving, and focus going back to entry occasionally
 
 ## Tauri Bugs
 - Export broken b/c clipboard
