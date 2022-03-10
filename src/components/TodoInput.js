@@ -23,6 +23,13 @@ const TodoInput = ({
 		autosize(todoInputRef.current)
 	}, [])
 
+	function textSurround(target, str) {
+		let val = target.value
+  	let start = target.selectionStart
+  	let end = target.selectionEnd
+  	return `${val.slice(0, start)}${str}${val.slice(start, end)}${str}${val.slice(end)}`
+	}
+
 	// Todo edit input
 	const handleTodoInput = {
 
@@ -80,7 +87,7 @@ const TodoInput = ({
 	      setEditIndex(null)
 	    }
 	    // Unedit, or carraige return
-	    if (e.key === "Enter") {
+	    else if (e.key === "Enter") {
 	      if (e.ctrlKey) {
 	        e.preventDefault()
 	        handleTodoInput.unEdit(e)
@@ -89,9 +96,18 @@ const TodoInput = ({
 	        autosize.update(e.target)
 	      }
 	    }
-	    if (e.key === "Tab") {
+	    else if (e.key === "Tab") {
 	      e.preventDefault()
 	      // NOTE: would be nice to have tabbed entry functionality
+	    }
+	    // Bolden
+	    else if (e.key === "b" && e.ctrlKey) {
+	    	e.preventDefault()
+	    	e.target.value = textSurround(e.target, "**")
+	    }
+	    else if (e.key === "i" && e.ctrlKey) {
+	    	e.preventDefault()
+	    	e.target.value = textSurround(e.target, "_")
 	    }
 	  }
 	}

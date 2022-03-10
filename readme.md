@@ -54,3 +54,4 @@ It's a react todo app..
 - Tags & filters
 - Scroll todolist top, on entry submit
 - Home/End nav
+- Set caret position after todo-input textSurround()
