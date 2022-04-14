@@ -88,6 +88,8 @@ input, textarea {
   border: 1px solid #777;
   transition: opacity 0.9s;
   opacity: 1;
+  user-select: none;
+  pointer-events: none;
 }
 .entry-form.active:after {
   transition: none;
@@ -107,6 +109,7 @@ input, textarea {
   resize: none;
   height: 2.4em;
   font-family: inherit;
+  line-height: 1.5;
 }
 .entry-input.active {
 	border-radius: 5px;
@@ -236,12 +239,18 @@ input, textarea {
 .todo-text ul {
   list-style: none;
 }
+.todo-text ul li, .todo-text ol li {
+  word-break: break-all;
+  /* display: flex; */
+  /* flex-direction: column; */
+}
 .todo-text ul li:before {
   content: "\2022";
   color: rgba(255,255,255,0.3);
   display: inline-block;
   width: 1em;
   margin-left: -1em;
+  position: absolute;
 }
 .todo-text p {
   margin: 0;

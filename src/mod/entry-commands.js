@@ -35,12 +35,8 @@ const entryCommands = {
     setFileOpenSelect(true)
   },
 
-  size: (target, args) => {
-    let size = args.split(" ")[0]
-    if (size) {
-      localStorage.setItem("font-size", size)
-      target.current.closest("html").style.fontSize = size + "px"
-    }
+  size: (setMainFontSize, size) => {
+    setMainFontSize(size)
   },
 
   save: async (todoList, setStatusMsg) => {

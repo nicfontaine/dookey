@@ -28,6 +28,7 @@ const TodoPage = () => {
   const [dialogImportShow, setDialogImportShow] = useState(false)
   const [commandOptionsDisplay, setCommandOptionsDisplay] = useState(false)
   const [fileOpenSelect, setFileOpenSelect] = useState(false)
+  const [mainFontSize, setMainFontSize] = useState(16)
 
   const mainRef = useRef(null)
   const todoListRef = useRef(null)
@@ -81,9 +82,7 @@ const TodoPage = () => {
     if (list) { setTodoList(list) }
     // LS - Font size
     let fontSize = JSON.parse(localStorage.getItem("font-size"))
-    if (fontSize) {
-      mainRef.current.closest("html").style.fontSize = fontSize + "px"
-    }
+    if (fontSize) { setMainFontSize(fontSize) }
     document.body.tabIndex = -1
     document.body.addEventListener("focus", (e) => {
       console.log("Focus event on <body>")
@@ -114,6 +113,12 @@ const TodoPage = () => {
     if (focusElement) { focusElement.focus() }
   }, [focusElement])
 
+  // Main font size change
+  useEffect(() => {
+    mainRef.current.closest("html").style.fontSize = mainFontSize + "px"
+    localStorage.setItem("font-size", mainFontSize)
+  }, [mainFontSize])
+
   return (
 
     <>
@@ -139,10 +144,12 @@ const TodoPage = () => {
             setFocusElement={setFocusElement}
             setEntryRef={setEntryRef}
             goto={goto}
+            setMainFontSize={setMainFontSize}
           />
 
           <CommandOptions
             commandOptionsDisplay={commandOptionsDisplay}
+            mainFontSize={mainFontSize}
           />
 
           <div

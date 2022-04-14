@@ -17,7 +17,8 @@ const EntryForm = ({
 	setCommandOptionsDisplay,
 	setFileOpenSelect,
 	setEntryRef,
-	goto
+	goto,
+	setMainFontSize
 }) => {
 
 	const [entryInput, setEntryInput] = useState("")
@@ -155,7 +156,10 @@ const EntryForm = ({
 	            entryCommands[command](setFileOpenSelect)
 	            break
 	          case "size":
-	          	entryCommands[command](formRef, args[1])
+							let size = args[1].split(" ")[0]
+							if (size) {
+								entryCommands[command](setMainFontSize, Number(size))
+							}
 	          	break
 	        }
 	        handleEntryInput.clear()

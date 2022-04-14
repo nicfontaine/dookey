@@ -104,7 +104,7 @@ const Todo = ({
       // Already selected - edit mode
       goto.index(index)
       if (!dragged && activeIndex === index) {
-        setEditIndex(index)
+        // setEditIndex(index)
       } else {
         setEditIndex(null)
       }

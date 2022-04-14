@@ -1,9 +1,8 @@
 (function(){"use strict"})()
 
-import { useEffect, useRef } from "react"
-
 const CommandOptions = ({
-	commandOptionsDisplay
+	commandOptionsDisplay,
+	mainFontSize
 }) => {
 
 	return(
@@ -19,7 +18,7 @@ const CommandOptions = ({
 						<div className="mg-b-5"><span className="code">/save</span></div>
 						<div className="mg-b-5"><span className="code">/open</span></div>
 						<div className="mg-b-5"><span className="code">/nuke</span></div>
-						<div className="mg-b-5"><span className="code">/size 16</span></div>
+						<div className="mg-b-5"><span className="code">/size {mainFontSize}</span></div>
 					</div>
 					<div className="desc">
 						<div className="mg-b-5">Copy data to clipboard</div>
@@ -27,7 +26,7 @@ const CommandOptions = ({
 						<div className="mg-b-5">Save to backup file</div>
 						<div className="mg-b-5">Load from backup file</div>
 						<div className="mg-b-5">Delete all notes</div>
-						<div className="mg-b-5">Set font-size to any number</div>
+						<div className="mg-b-5">Set font-size to any number (Current size is displayed)</div>
 					</div>
 				</div>
 			</div>
