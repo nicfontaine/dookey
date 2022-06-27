@@ -30,7 +30,7 @@ const Todo = ({
       if (activeIndex > 0) {
         let _list = todoList.map((todo) => todo)
         _list.splice(activeIndex - 1, 0, _list.splice(activeIndex, 1)[0])
-        console.log("activeIndex " + activeIndex)
+        // console.log("activeIndex " + activeIndex)
         setTodoList(_list)
       }
     },
@@ -38,7 +38,7 @@ const Todo = ({
       if (activeIndex < todoList.length-1) {
         let _list = todoList.map((todo) => todo)
         _list.splice(activeIndex + 1, 0, _list.splice(activeIndex, 1)[0])
-        console.log("activeIndex " + activeIndex)
+        // console.log("activeIndex " + activeIndex)
         setTodoList(_list)
       }
     }
