@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import { v4 as uuid } from 'uuid'
+import TextArea from "textarea-autosize-reactjs"
 import autosize from "autosize"
 
 import entryCommands from "../mod/entry-commands.js"
@@ -29,7 +30,6 @@ const EntryForm = ({
   	setEntryRef(entryInputRef.current)
   	entryInputRef.current.focus()
   	entryInputRef.current.value = ""
-    autosize(entryInputRef.current)
     document.body.addEventListener("keydown", (e) => {
       if (e.target === document.body) {
         if (e.key === "/") {
@@ -42,7 +42,6 @@ const EntryForm = ({
 
   // Entry Input
   useEffect(() => {
-    autosize.update(entryInputRef.current)
     if (entryInput[0] === "/") {
     	setCommandOptionsDisplay(true)
     } else {
@@ -67,9 +66,7 @@ const EntryForm = ({
 	    }
 	  },
 
-	  focus: (e) => {
-	  	autosize.update(entryInputRef.current)
-	  },
+	  focus: (e) => {},
 
 	  // In case focus leaves, but active doesn't change. Like to <body>
 	  blur: (e) => {
@@ -185,7 +182,7 @@ const EntryForm = ({
 		  onSubmit={handleEntryInput.submit}
 		  ref={formRef}
 		>
-		  <textarea
+		  <TextArea
 		    type="text"
 		    value={entryInput}
 		    className={`entry-input ${activeIndex === -1 ? "active" : ""}`}
@@ -199,7 +196,8 @@ const EntryForm = ({
 		    autoFocus
 		    placeholder="Add a todo"
 		    ref={entryInputRef}
-		  ></textarea>
+		  >{entryInput}</TextArea>
+
 		</form>
 		</>
 	)

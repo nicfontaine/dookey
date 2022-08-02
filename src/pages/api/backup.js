@@ -7,7 +7,8 @@ export default async function handler(request, response) {
 	
 	const { method } = request
 	if (method === "POST") {
-		const filePath = "./backups/" + Date.now() + ".json"
+		let d = new Date()
+		const filePath = `./backups/${d.toISOString().split("T")[0]}-${d.getTime()}.json`
 		try {
 			await fsx.ensureFile(filePath)
 			await fs.writeFile(filePath, JSON.stringify(request.body))

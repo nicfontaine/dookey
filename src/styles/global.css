@@ -105,16 +105,17 @@ input, textarea {
   caret-color: transparent;
   background: #494949;
   z-index: 5;
-  transition: 0.12s width ease-in, 0.12s background ease-in, 0.12s border-radius ease-in;
+  transition: 0.12s width ease-in, 0.12s padding ease-in, 0.12s border-radius ease-in;
   resize: none;
   height: 2.4em;
   font-family: inherit;
   line-height: 1.5;
+  resize: none;
 }
 .entry-input.active {
 	border-radius: 5px;
   width: 100%;
-  padding: 0.6rem 1rem 0.6rem 2rem;
+  padding-left: 2rem;
   box-shadow: 0 2px 6px rgba(0,0,0,0.3);
   z-index: 10;
   /*background: #161616;*/
@@ -128,6 +129,7 @@ input, textarea {
 	50% { background: #333; }
 	100% { background: #161616; }
 }
+
 .todo-list {
   display: flex;
   flex-direction: column;
@@ -235,13 +237,15 @@ input, textarea {
   display: flex;
   flex-direction: column;
   margin: 0;
+  flex-basis: 100%;
 }
 .todo-text ul {
   list-style: none;
 }
 .todo-text ul li, .todo-text ol li {
   word-break: break-all;
-  /* display: flex; */
+  display: flex;
+  flex-wrap: wrap;
   /* flex-direction: column; */
 }
 .todo-text ul li:before {
@@ -257,17 +261,23 @@ input, textarea {
 }
 .todo-text strong {
   font-weight: 700;
+  margin-left: 0.2rem;
 }
 .todo-text code {
   background: rgba(0,0,0,0.5);
   border: 1px solid transparent;
-  color: eee;
-  padding: 0 0.3rem;
+  color: #eee;
+  padding: 0.1rem 0.3rem;
   border-radius: 4px;
   font-size: 0.9rem;
   margin: 0 0.1rem;
   transition: all 0.15s;
   color: #5ab389;
+  line-height: 1.2;
+}
+.todo-text ul li code {
+  align-self: center;
+  margin-right: 0.4rem;
 }
 .todo.active .todo-text code {
   border: 1px solid rgba(255,255,255,0.2);
