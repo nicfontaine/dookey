@@ -120,7 +120,7 @@ const TodoInput = ({
 			  onChange={handleTodoInput.change}
 			  onKeyDown={handleTodoInput.keyDown}
 			  onFocus={handleTodoInput.focus}
-			  onBlur={handleTodoInput.blur}
+			  // onBlur={handleTodoInput.blur}
 			  autoFocus
 			  tabIndex="0"
 			  rows="1"

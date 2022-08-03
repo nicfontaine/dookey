@@ -1,4 +1,5 @@
 (function(){"use strict"})()
+import { writeText } from "@tauri-apps/api/clipboard"
 
 const entryCommands = {
 
@@ -19,9 +20,17 @@ const entryCommands = {
     entryCommands.statusClearDelay(setStatusMsg, 4000)
   },
 
-  export: (todoList, setStatusMsg) => {
-    navigator.clipboard.writeText(JSON.stringify(todoList))
-    setStatusMsg("Copied to clipboard")
+  export: async (todoList, setStatusMsg) => {
+    let txt = JSON.stringify(todoList)
+    if ("clipboard" in navigator) {
+      navigator.clipboard.writeText(txt)
+      setStatusMsg("Copied to clipboard (navigator)")
+    } else if (window.__TAURI__) {
+      await writeText(txt)
+      setStatusMsg("Copied to clipboard (tauri)")
+    } else {
+      setStatusMsg("Failed to copy to clipboard")
+    }
     entryCommands.statusClearDelay(setStatusMsg, 4000)
   },
 
