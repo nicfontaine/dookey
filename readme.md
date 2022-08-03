@@ -1,4 +1,4 @@
-It's a react todo app..
+🙃 React To**Do** app designed around **key**board shortcuts
 
 ## Shortcuts
 | Function | Keys |
@@ -27,7 +27,7 @@ It's a react todo app..
 - `Esc` to cancel your edit
 
 ## Features
-- Markdown support
+- Markdown support, with Gemoji shortcuts (:+1: 👍️)
 
 ## Commands
 - `/export` Copy data to clipboard
@@ -44,12 +44,15 @@ It's a react todo app..
 
 ## Tauri Bugs
 - Scroll overflow not working
+- Open from backup file not working
 - Entry input has focus, but not getting class
 
 ## Todo
+- Tags
+- Search
 - Maybe move edit/active outside of data object
 - Textarea styling (height)
 - Tags & filters
 - Scroll todolist top, on entry submit
-- Home/End nav
 - Set caret position after todo-input textSurround()
+- Command to populate with random todos

@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import csn from "classnames"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
+import remarkGemoji from "remark-gemoji"
 import TodoInput from "./TodoInput"
 
 var deleteStore = []
@@ -229,7 +230,7 @@ const Todo = ({
         {<span className="todo-index">{index+1}</span>}
         {/*{<span className="todo-index">{(index+10).toString(36)}</span>}*/}
         <div className="todo-text">
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>{todo.text}</ReactMarkdown>
+          <ReactMarkdown remarkPlugins={[remarkGfm, remarkGemoji]}>{todo.text}</ReactMarkdown>
         </div>
       </button>
     )
