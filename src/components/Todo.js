@@ -5,6 +5,9 @@ import csn from "classnames"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import remarkGemoji from "remark-gemoji"
+import * as randomColor from "random-color"
+import { v4 as uuid } from 'uuid'
+
 import TodoInput from "./TodoInput"
 
 var deleteStore = []
@@ -13,14 +16,21 @@ const Todo = ({
   todo,
   index,
   activeIndex,
-  setTodoList,
   todoList,
+  setTodoList,
+  tagList,
+  setTagList,
   goto
 }) => {
 
   const [editIndex, setEditIndex] = useState(null)
   const [deleteIndex, setDeleteIndex] = useState(null)
   const [activeIndexPrevious, setActiveIndexPrevious] = useState(-1)
+  
+  const [tagInput, setTagInput] = useState("")
+  const [editTag, setEditTag] = useState(null)
+
+  const tagInputRef = useRef(null)
 
   var dragged = false
   var mX
@@ -100,6 +110,10 @@ const Todo = ({
       // console.log("Todo: " + index + " has been focused")
     },
 
+    blur: (e, index) => {
+      // setEditTag(false)
+    },
+
     // Click to activate todo
     click: (e, index) => {
       // Already selected - edit mode
@@ -127,6 +141,7 @@ const Todo = ({
     },
 
     keyDown: (e) => {
+      // NOTE: Move all of this to a module
       if (!e.target.classList.contains("todo")) {
         return;
       }
@@ -146,6 +161,10 @@ const Todo = ({
         e.preventDefault()
         goto.index(-1)
       }
+      else if (e.key === "t") {
+        e.preventDefault()
+        handleTagInput.active()
+      }
       else if (e.key === "ArrowDown") {
         e.preventDefault()
         // Move todo
@@ -155,22 +174,12 @@ const Todo = ({
         goto.next()
       }
       else if (e.key === "ArrowUp") {
-        e.preventDefault
+        e.preventDefault()
         // Move todo
         if (e.shiftKey && e.ctrlKey) {
           move.up()
         }
         goto.prev()
-      }
-      else if (e.key === "z" && e.ctrlKey) {
-        if (!deleteStore.length) {
-          return;
-        }
-        let _td = deleteStore.pop()
-        let _list = todoList.map((todo) => todo)
-        _list.splice(_td.index, 0, _td.todo)
-        goto.index(_td.index)
-        setTodoList(_list)
       }
       else if (e.key === "Tab") {
         e.preventDefault()
@@ -188,7 +197,77 @@ const Todo = ({
         e.preventDefault()
         goto.index(todoList.length-1)
       }
+      else if (e.key === "z" && e.ctrlKey) {
+        if (!deleteStore.length) {
+          return;
+        }
+        let _td = deleteStore.pop()
+        let _list = todoList.map((todo) => todo)
+        _list.splice(_td.index, 0, _td.todo)
+        goto.index(_td.index)
+        setTodoList(_list)
+      }
 
+    }
+
+  }
+
+  const handleTagInput = {
+
+    active() {
+      setActiveIndexPrevious(activeIndex)
+      goto.exit()
+      setEditTag(true)
+      setTagInput(todoList[activeIndex].tags)
+    },
+
+    deactive(e) {
+      e.target.blur()
+      goto.index(activeIndexPrevious)
+      // NOTE: Covering the todo active css transition with a delay is ugly
+      setTimeout(() => { setEditTag(false)}, 100)
+    },
+
+    submit(e) {
+      e.preventDefault()
+      let inputTags = tagInputRef.current.value.replace(/\s/g, "").split(",")
+      inputTags = inputTags.filter((a) => { if (a.length && a !== ",") { return a}})
+      setTodoList(todoList.map((todo, index) => {
+        if (index === activeIndexPrevious) {
+          todo.tags = inputTags
+        }
+        return todo
+      }))
+      let _tglist = Object.assign({}, tagList)
+      let ts = [...inputTags]
+      while (ts.length) {
+        let tg = ts.shift()
+        if (!(tg in _tglist)) {
+          let color = randomColor(0.25, 0.99).hexString()
+          _tglist[tg] = { id: uuid(), color }
+        }
+      }
+      setTagList(_tglist)
+      handleTagInput.deactive(e)
+    },
+
+    keydown(e) {
+      if (e.key === "Tab") e.preventDefault()
+      if (e.key === "Escape") {
+        handleTagInput.deactive(e)
+      }
+      if (e.key === " ") {
+        e.preventDefault()
+        let v = tagInputRef.current.value
+        if (v[v.length-1] !== ",") {
+          setTagInput(v + ",")
+        }
+      }
+    },
+
+    change(e) {
+      e.preventDefault()
+      setTagInput(e.target.value)
     }
 
   }
@@ -221,17 +300,47 @@ const Todo = ({
         {active:isActive})}
         onClick={(e) => handleTodo.click(e, index)}
         onFocus={(e) => handleTodo.focus(e, index)}
+        onBlur={(e) => handleTodo.blur(e, index)}
         onMouseDown={handleTodo.mouseDown}
         onMouseUp={handleTodo.mouseUp}
         onKeyDown={handleTodo.keyDown}
         autoFocus={todo.active}
         tabIndex="0"
       >
+        
         {<span className="todo-index">{index+1}</span>}
+
         {/*{<span className="todo-index">{(index+10).toString(36)}</span>}*/}
+
         <div className="todo-text">
           <ReactMarkdown remarkPlugins={[remarkGfm, remarkGemoji]}>{todo.text}</ReactMarkdown>
         </div>
+
+        { todo.tags && todo.tags.length && !editTag ?
+          <div className="todo-tag-list">
+            { todo.tags.map((t) => {
+              return <div key={tagList[t].id} className="tag" style={{backgroundColor: tagList[t].color}}>{t}</div>
+            }) }
+          </div>
+        : null }
+
+        { editTag ?
+          <div className="todo-tag-edit">
+            <span className="icon">&#9873;</span>
+            <div className="heading">Tags</div>
+            <form onSubmit={handleTagInput.submit}>
+              <input
+                ref={tagInputRef}
+                value={tagInput}
+                onChange={handleTagInput.change}
+                onKeyDown={handleTagInput.keydown}
+                placeholder="comma-separated tags"
+                autoFocus
+              ></input>
+            </form>
+          </div>
+        : null }
+
       </button>
     )
 

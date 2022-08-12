@@ -8,7 +8,8 @@ export default function DialogFileOpen({
 	setStatusMsg,
 	fileOpenSelect,
 	setFileOpenSelect,
-	setTodoList
+	setTodoList,
+	setTagList
 }) {
 
 	const input = useRef(null)
@@ -22,10 +23,12 @@ export default function DialogFileOpen({
 	
 	const fileUpload = (e) => {
 		let file = e.target.files[0]
+		if (!file) return
 		let reader = new FileReader()
 		reader.addEventListener("load", (e) => {
-			let list = JSON.parse(reader.result)
-			setTodoList(list)
+			let { todos, tags} = JSON.parse(reader.result)
+			setTodoList(todos)
+			setTagList(tags)
 			setStatusMsg("Loaded from file")
 		})
 		reader.addEventListener("error", (e) => {

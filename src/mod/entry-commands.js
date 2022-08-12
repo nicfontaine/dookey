@@ -20,8 +20,8 @@ const entryCommands = {
     entryCommands.statusClearDelay(setStatusMsg, 4000)
   },
 
-  export: async (todoList, setStatusMsg) => {
-    let txt = JSON.stringify(todoList)
+  export: async (todos, tags, setStatusMsg) => {
+    let txt = JSON.stringify({todos, tags })
     if ("clipboard" in navigator) {
       navigator.clipboard.writeText(txt)
       setStatusMsg("Copied to clipboard (navigator)")
@@ -48,14 +48,14 @@ const entryCommands = {
     setMainFontSize(size)
   },
 
-  save: async (todoList, setStatusMsg) => {
-    let list = todoList.map((todo) => {
-      return { text: todo.text, id: todo.id }
-    })
+  save: async (todos, tags, setStatusMsg) => {
+    // let todos = todoList.map((todo) => {
+    //   return { text: todo.text, id: todo.id }
+    // })
     const response = await fetch("/api/backup", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
-      body: JSON.stringify(list)
+      body: JSON.stringify({todos, tags})
     })
     const res = await response.json()
     if (res.err) { setStatusMsg(err) }

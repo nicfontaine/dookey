@@ -22,6 +22,8 @@ const TodoPage = () => {
   // todoList, setTodoList, focusElement, setFocusElement, mainRef, todoListRef
 
   const [todoList, setTodoList] = useState([])
+  const [tagList, setTagList] = useState({})
+
   const [focusElement, setFocusElement] = useState()
 
   const [statusMsg, setStatusMsg] = useState("")
@@ -77,9 +79,11 @@ const TodoPage = () => {
 
   // Load
   useEffect(() => {
-    // LS - Todos
+    // LS - Todos, Tags
     let list = JSON.parse(localStorage.getItem("todos"))
-    if (list) { setTodoList(list) }
+    if (list) setTodoList(list)
+    let tags = JSON.parse(localStorage.getItem("tags"))
+    if (tags) setTagList(tags)
     // LS - Font size
     let fontSize = JSON.parse(localStorage.getItem("font-size"))
     if (fontSize) { setMainFontSize(fontSize) }
@@ -105,8 +109,12 @@ const TodoPage = () => {
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todoList))
     focusChange(activeIndex)
-    let todos = mainRef.current.getElementsByClassName("todo-focus")
+    // let todos = mainRef.current.getElementsByClassName("todo-focus")
   }, [todoList])
+
+  useEffect(() => {
+    localStorage.setItem("tags", JSON.stringify(tagList))
+  }, [tagList])
 
   // Focus element
   useEffect(() => {
@@ -135,6 +143,7 @@ const TodoPage = () => {
             todoListRef={todoListRef}
             setTodoList={setTodoList}
             todoList={todoList}
+            tagList={tagList}
             activeIndex={activeIndex}
             setStatusMsg={setStatusMsg}
             commandOptionsDisplay={commandOptionsDisplay}
@@ -164,6 +173,8 @@ const TodoPage = () => {
                 activeIndex={activeIndex}
                 todoList={todoList}
                 setTodoList={setTodoList}
+                tagList={tagList}
+                setTagList={setTagList}
                 goto={goto}
               />
             }) : undefined }
@@ -186,6 +197,7 @@ const TodoPage = () => {
           fileOpenSelect={fileOpenSelect}
           setFileOpenSelect={setFileOpenSelect}
           setTodoList={setTodoList}
+          setTagList={setTagList}
         />
 
         <StatusBar msg={statusMsg} />

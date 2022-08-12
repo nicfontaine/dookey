@@ -135,6 +135,7 @@ input, textarea {
   flex-direction: column;
   overflow-y: auto;
   flex-shrink: 1;
+  flex-grow: 1;
   min-height: 0;
   padding-right: 1.5rem;
   padding-top: 1rem;
@@ -162,6 +163,7 @@ input, textarea {
   font-family: inherit;
   animation: todoCreate 0.3s 1 forwards;
   font-size: inherit;
+  flex-wrap: wrap;
 }
 @keyframes todoCreate {
 	from { opacity: 0.5; }
@@ -182,6 +184,7 @@ input, textarea {
 }
 .todo:focus:not(:active), .todo.active, .todo-input {
   background: #131313;
+  z-index: 10;
 }
 .todo:focus:not(:active) .todo-text,
 .todo.active .todo-text {
@@ -339,6 +342,67 @@ input, textarea {
 }
 .todo.edit .todo-text {
   display: none;
+}
+
+.todo-tag-edit {
+  position: absolute;
+  /* bottom: 0; */
+  /* transform: translateY(100%); */
+  padding: 0.5rem 0.7rem;
+  background: rgba(0,0,0,0.9);
+  /* width: 100%; */
+  right: -2px; left: -2px;
+  top: -2px; bottom: -2px;
+  border-radius: 5px;
+  text-align: center;
+  display: flex;
+  /* justify-content: center; */
+  /* right: -2px; left: -2px; */
+}
+.todo-tag-edit .heading {
+  margin-right: 0.7rem;
+  font-size: 1.2rem;
+  align-self: center;
+  display: none;
+}
+.todo-tag-edit form {
+  align-self: center;
+}
+.todo-tag-edit input {
+  background: #222;
+  padding: 0.4rem 0.5rem;
+  border-radius: 3px;
+	border: none;
+	outline: none;
+}
+.todo-tag-edit .icon {
+  margin-right: 0.7rem;
+  align-self: center;
+  color: rgba(255,255,255,0.7);
+  font-size: 1.1rem;
+}
+.todo-tag-list {
+  /* flex: 1; */
+  /* flex-basis: 100%; */
+  display: flex;
+  flex-direction: row;
+  flex-direction: column;
+  align-items: flex-end;
+  /* margin-top: 0.35rem; */
+  /* justify-content: flex-end; */
+}
+.tag {
+  padding: 0.23rem 0.34rem;
+  background: rgba(255,255,255,0.12);
+  color: #222;
+  line-height: 1;
+  border-radius: 4px;
+  /* margin-right: 0.3rem; */
+  margin-bottom: 0.3rem;
+  font-size: 0.94rem
+}
+.tag:last-child {
+  margin-bottom: 0;
 }
 
 .dialog {

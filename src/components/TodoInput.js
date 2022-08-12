@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react"
 import autosize from "autosize"
+import TextArea from "textarea-autosize-reactjs"
 import csn from "classnames"
 
 const TodoInput = ({
@@ -20,7 +21,7 @@ const TodoInput = ({
 	const todoInputRef = useRef(null)
 
 	useEffect(() => {
-		autosize(todoInputRef.current)
+		// autosize(todoInputRef.current)
 	}, [])
 
 	function textSurround(target, str) {
@@ -37,7 +38,7 @@ const TodoInput = ({
 	  change: (e) => {
 	    setTodoInputText(e.target.value)
 	    // e.target.style.minHeight = e.target.scrollHeight + "px"
-	    autosize.update(e.target)
+	    // autosize.update(e.target)
 	  },
 
 	  focus: (e) => {
@@ -93,7 +94,7 @@ const TodoInput = ({
 	        handleTodoInput.unEdit(e)
 	      } else {
 	        // e.target.value += "\n"
-	        autosize.update(e.target)
+	        // autosize.update(e.target)
 	      }
 	    }
 	    else if (e.key === "Tab") {
@@ -115,7 +116,7 @@ const TodoInput = ({
 	return(
 		// <div style={{position:"relative"}}>
 			// {<span className="todo-index">{index+1}</span>}
-			<textarea className="todo-input todo-focus" type="text"
+			<TextArea className="todo-input todo-focus" type="text"
 			  value={todoInputText}
 			  onChange={handleTodoInput.change}
 			  onKeyDown={handleTodoInput.keyDown}
@@ -125,7 +126,7 @@ const TodoInput = ({
 			  tabIndex="0"
 			  rows="1"
 			  ref={todoInputRef}
-			></textarea>
+			></TextArea>
 		// </div>
 	)
 

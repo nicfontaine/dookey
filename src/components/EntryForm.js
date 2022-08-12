@@ -11,6 +11,7 @@ const EntryForm = ({
 	todoListRef,
 	setTodoList,
 	todoList,
+	tagList,
 	activeIndex,
 	setStatusMsg,
 	commandOptionsDisplay,
@@ -135,27 +136,27 @@ const EntryForm = ({
 	      if (command in entryCommands) {
 	        switch(command) {
 	          case "msg":
-	            entryCommands[command](setStatusMsg, "test")
+	            entryCommands.msg(setStatusMsg, "test")
 	            break
 	          case "nuke":
-	            entryCommands[command](setTodoList, setStatusMsg)
+	            entryCommands.nuke(setTodoList, setStatusMsg)
 	            break
 	          case "export":
-	            entryCommands[command](todoList, setStatusMsg)
+	            entryCommands.export(todoList, tagList, setStatusMsg)
 	            break
 	          case "import":
 	          	setDialogImportShow(true)
 	            break
 	          case "save":
-	            entryCommands[command](todoList, setStatusMsg)
+	            entryCommands.save(todoList, tagList, setStatusMsg)
 	            break
 	          case "open":
-	            entryCommands[command](setFileOpenSelect)
+	            entryCommands.open(setFileOpenSelect)
 	            break
 	          case "size":
 							let size = args[1].split(" ")[0]
 							if (size) {
-								entryCommands[command](setMainFontSize, Number(size))
+								entryCommands.size(setMainFontSize, Number(size))
 							}
 	          	break
 	        }
@@ -166,7 +167,7 @@ const EntryForm = ({
 	    setTodoList([
 	      {
 	        text: val,
-	        id: uuid(),
+	        id: uuid()
 	      },
 	      ...todoList
 	    ])
