@@ -8,6 +8,8 @@ const DialogImport = ({
 	goto,
 	todoList,
 	setTodoList,
+	tagList,
+	setTagList,
 	setStatusMsg,
 	dialogImportShow,
 	setDialogImportShow
@@ -50,13 +52,13 @@ const DialogImport = ({
 	        entryCommands.statusClearDelay(setStatusMsg, 2000)
 	        // Combine w/ existing. Reject duplicates
 	        // NOTE: move to 'combiner' function
-	        let _list = [...todoList,...val].filter((todo) => {
+	        setTodoList([...todoList,...val.todos].filter((todo) => {
 	          if (_ids.indexOf(todo.id) < 0) {
 	            _ids.push(todo.id)
 	            return todo
 	          }
-	        })
-	        setTodoList(_list)
+	        }))
+					setTagList(val.tags)
 	      } catch(err) {
 	        importDialogStatusText.current.innerHTML = err
 	      }

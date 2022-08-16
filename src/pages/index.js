@@ -186,6 +186,8 @@ const TodoPage = () => {
           goto={goto}
           todoList={todoList}
           setTodoList={setTodoList}
+          tagList={tagList}
+          setTagList={setTagList}
           setStatusMsg={setStatusMsg}
           dialogImportShow={dialogImportShow}
           setDialogImportShow={setDialogImportShow}
