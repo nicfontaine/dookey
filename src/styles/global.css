@@ -20,7 +20,7 @@ body {
 	/*pointer-events: none;*/
 	/*cursor: none;*/
   color: #ddd;
-	background: #1b1b1b;
+	background: #1d1d1d;
 	margin: 0;
   font-family: "Bitter";
 }
@@ -57,7 +57,7 @@ input, textarea {
   padding-bottom: 1rem;
   display: flex;
   /* background: #2b2b2b; */
-  background: rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.05);
 }
 .entry-form {
   position: relative;
@@ -76,7 +76,7 @@ input, textarea {
   content: "$";
   font-family: "PT Mono";
   font-weight: bold;
-  color: #888;
+  color: #777;
   top: 0.75em;
   /*transform: translateY(-50%);*/
   left: 0.9rem;
@@ -92,7 +92,7 @@ input, textarea {
   /*font-family: "PT Mono";*/
   font-weight: 700;
   font-size: 0.85rem;
-  color: #999;
+  color: #888;
   right: 1.1rem;
   position: absolute;
   top: 0.85em;
@@ -117,7 +117,7 @@ input, textarea {
   border: 1px solid transparent;
   outline: none;
   caret-color: transparent;
-  background: #505050;
+  background: #4a4a4a;
   z-index: 5;
   transition: 0.12s width ease-in, 0.12s padding ease-in, 0.12s border-radius ease-in;
   resize: none;
@@ -160,9 +160,9 @@ input, textarea {
   flex-shrink: 1;
   flex-grow: 1;
   min-height: 0;
-  padding-right: 1.5rem;
-  padding-left: 1.5rem;
-  padding-top: 1.5rem;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  padding-top: 1rem;
   /* margin-top: 1rem; */
   /* border-top: 1px solid rgba(255,255,255,0.08); */
   /* background: #222; */
@@ -498,24 +498,24 @@ input, textarea {
   background:
     /* Shadow Cover TOP */
     linear-gradient(
-      #222 30%,
+      #1d1d1d 30%,
       rgba(255, 255, 255, 0)
     ) center top,
     /* Shadow Cover BOTTOM */
     linear-gradient(
       rgba(255, 255, 255, 0), 
-      #222 70%
+      #1d1d1d 70%
     ) center bottom,
     /* Shadow TOP */
     radial-gradient(
       farthest-side at 50% 0,
-      rgba(0, 0, 0, 0.7),
+      rgba(0, 0, 0, 0.6),
       rgba(0, 0, 0, 0)
     ) center top,
     /* Shadow BOTTOM */
     radial-gradient(
       farthest-side at 50% 100%,
-      rgba(0, 0, 0, 0.7),
+      rgba(0, 0, 0, 0.6),
       rgba(0, 0, 0, 0)
     ) center bottom;
   background-repeat: no-repeat;
