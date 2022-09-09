@@ -16,6 +16,8 @@ const Todo = ({
   todo,
   index,
   activeIndex,
+  activeIndexPrevious,
+  setActiveIndexPrevious,
   todoList,
   setTodoList,
   tagList,
@@ -25,7 +27,6 @@ const Todo = ({
 
   const [editIndex, setEditIndex] = useState(null)
   const [deleteIndex, setDeleteIndex] = useState(null)
-  const [activeIndexPrevious, setActiveIndexPrevious] = useState(-1)
   
   const [tagInput, setTagInput] = useState("")
   const [editTag, setEditTag] = useState(null)

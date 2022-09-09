@@ -1,10 +1,6 @@
 (function(){"use strict"})()
 
 import { useState, useEffect, useRef } from "react"
-import { v4 as uuid } from "uuid"
-import csn from "classnames"
-import autosize from "autosize"
-import entryCommands from "../mod/entry-commands.js"
 
 import Head from "next/head"
 import EntryForm from "../components/EntryForm"
@@ -23,6 +19,7 @@ const TodoPage = () => {
 
   const [todoList, setTodoList] = useState([])
   const [tagList, setTagList] = useState({})
+  const [activeIndexPrevious, setActiveIndexPrevious] = useState(-1)
 
   const [focusElement, setFocusElement] = useState()
 
@@ -35,7 +32,18 @@ const TodoPage = () => {
   const mainRef = useRef(null)
   const todoListRef = useRef(null)
 
-  const [entryRef, setEntryRef] = useState()
+  const focusChange = (i) => {
+    activeIndex = i
+    if (activeIndex === -1) {
+      setFocusElement(document.getElementById("entry-input"))
+    } else if (activeIndex > -1) {
+      if (activeIndex === 0) { todoListRef.current.scrollTop = 0 }
+      let todos = mainRef.current.getElementsByClassName("todo-focus")
+      setFocusElement(todos[activeIndex])
+    } else if (!i) {
+      setFocusElement(null)
+    }
+  }
 
   // Index focus change
   // mainRef, activeIndex, focusElement
@@ -66,50 +74,28 @@ const TodoPage = () => {
     }
   }
 
-  const focusChange = (i) => {
-    activeIndex = i
-    if (activeIndex === -1 && entryRef) {
-      setFocusElement(entryRef)
-    } else if (activeIndex > -1) {
-      if (activeIndex === 0) { todoListRef.current.scrollTop = 0 }
-      let todos = mainRef.current.getElementsByClassName("todo-focus")
-      setFocusElement(todos[activeIndex])
-    }
-  }
-
   // Load
   useEffect(() => {
-    // LS - Todos, Tags
+    // LS - Todos, Tags, Font-size
     let list = JSON.parse(localStorage.getItem("todos"))
     if (list) setTodoList(list)
     let tags = JSON.parse(localStorage.getItem("tags"))
     if (tags) setTagList(tags)
-    // LS - Font size
     let fontSize = JSON.parse(localStorage.getItem("font-size"))
     if (fontSize) { setMainFontSize(fontSize) }
     document.body.tabIndex = -1
-    document.body.addEventListener("focus", (e) => {
-      console.log("Focus event on <body>")
+    document.body.addEventListener("focus", goto.exit)
+    document.body.addEventListener("keyup", (e) => {
+    	if (e.target === document.body && e.key === "/") {
+        goto.entry()
+      }
     })
-    // document.body.addEventListener("keyup", (e) => {
-    // 	e.stopPropagation()
-    // 	if (e.target !== document.body) {
-    // 		console.log("not equal")
-    // 		return;
-    // 	}
-    // 	if (e.key === "/") {
-    // 		console.log("slash")
-    // 		entryRef.focus()
-    // 		goto.entry()
-    // 	}
-    // }, {passive: true})
   }, [])
 
   // Update Todo list (storage)
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todoList))
     focusChange(activeIndex)
-    // let todos = mainRef.current.getElementsByClassName("todo-focus")
   }, [todoList])
 
   useEffect(() => {
@@ -118,7 +104,7 @@ const TodoPage = () => {
 
   // Focus element
   useEffect(() => {
-    if (focusElement) { focusElement.focus() }
+    if (focusElement) focusElement.focus()
   }, [focusElement])
 
   // Main font size change
@@ -139,22 +125,25 @@ const TodoPage = () => {
 
         <div className="main">
 
-          <EntryForm
-            todoListRef={todoListRef}
-            setTodoList={setTodoList}
-            todoList={todoList}
-            tagList={tagList}
-            activeIndex={activeIndex}
-            setStatusMsg={setStatusMsg}
-            commandOptionsDisplay={commandOptionsDisplay}
-            setDialogImportShow={setDialogImportShow}
-            setCommandOptionsDisplay={setCommandOptionsDisplay}
-            setFileOpenSelect={setFileOpenSelect}
-            setFocusElement={setFocusElement}
-            setEntryRef={setEntryRef}
-            goto={goto}
-            setMainFontSize={setMainFontSize}
-          />
+          <div className="entry-container">
+            <EntryForm
+              todoListRef={todoListRef}
+              setTodoList={setTodoList}
+              todoList={todoList}
+              tagList={tagList}
+              activeIndex={activeIndex}
+              activeIndexPrevious={activeIndexPrevious}
+              setActiveIndexPrevious={setActiveIndexPrevious}
+              setStatusMsg={setStatusMsg}
+              commandOptionsDisplay={commandOptionsDisplay}
+              setDialogImportShow={setDialogImportShow}
+              setCommandOptionsDisplay={setCommandOptionsDisplay}
+              setFileOpenSelect={setFileOpenSelect}
+              setFocusElement={setFocusElement}
+              goto={goto}
+              setMainFontSize={setMainFontSize}
+            />
+          </div>
 
           <CommandOptions
             commandOptionsDisplay={commandOptionsDisplay}
@@ -162,7 +151,7 @@ const TodoPage = () => {
           />
 
           <div
-            className={`todo-list ${commandOptionsDisplay ? "blur" : ""}`}
+            className={`todo-list scroll-shadows ${commandOptionsDisplay ? "blur" : ""}`}
             ref={todoListRef}
           >
             { todoList.length >= 1 ? todoList.map((todo, index) => {
@@ -171,6 +160,8 @@ const TodoPage = () => {
                 todo={todo}
                 index={index}
                 activeIndex={activeIndex}
+                activeIndexPrevious={activeIndexPrevious}
+                setActiveIndexPrevious={setActiveIndexPrevious}
                 todoList={todoList}
                 setTodoList={setTodoList}
                 tagList={tagList}

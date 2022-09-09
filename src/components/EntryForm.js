@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react"
 import { v4 as uuid } from 'uuid'
 import TextArea from "textarea-autosize-reactjs"
-import autosize from "autosize"
 
 import entryCommands from "../mod/entry-commands.js"
 
@@ -13,12 +12,13 @@ const EntryForm = ({
 	todoList,
 	tagList,
 	activeIndex,
+	activeIndexPrevious,
+	setActiveIndexPrevious,
 	setStatusMsg,
 	commandOptionsDisplay,
 	setDialogImportShow,
 	setCommandOptionsDisplay,
 	setFileOpenSelect,
-	setEntryRef,
 	goto,
 	setMainFontSize
 }) => {
@@ -26,19 +26,12 @@ const EntryForm = ({
 	const [entryInput, setEntryInput] = useState("")
   const entryInputRef = useRef(null)
   const formRef = useRef(null)
+	const [pickerDisplay, setPickerDisplay] = useState(false)
+	const [emojiTyping, setEmojiTyping] = useState(false)
 
   useEffect(() => {
-  	setEntryRef(entryInputRef.current)
   	entryInputRef.current.focus()
   	entryInputRef.current.value = ""
-    document.body.addEventListener("keydown", (e) => {
-      if (e.target === document.body) {
-        if (e.key === "/") {
-        	e.preventDefault()
-          goto.entry()
-        }
-      }
-    })
   }, [])
 
   // Entry Input
@@ -56,7 +49,11 @@ const EntryForm = ({
 	    e.preventDefault()
 	    // Ignore if a todo is focused
 	    if (activeIndex < 0) {
-	      setEntryInput(e.target.value)
+				let val = e.target.value
+	      setEntryInput(val)
+				if (emojiTyping) {
+					let emo = val.substring(entryInput.lastIndexOf(":") + 1)
+				}
 	    }
 	  },
 
@@ -101,8 +98,7 @@ const EntryForm = ({
 	      	e.preventDefault()
 	      	goto.prev(e)
 	      }
-	    }
-	    if (e.key === "Tab") {
+	    } else if (e.key === "Tab") {
 	      e.preventDefault()
         if (e.shiftKey) {
         	goto.prev()
@@ -111,9 +107,16 @@ const EntryForm = ({
         }
 	    }
 	    // Clear via escape, if viewing command overlay
-	    if (e.key === "Escape" && commandOptionsDisplay) {
+	    else if (e.key === "Escape" && commandOptionsDisplay) {
 	    	setEntryInput("")
 	    }
+
+			if (e.key === ":") {
+				setEmojiTyping(true)
+				setPickerDisplay(true)
+			} else {
+				setPickerDisplay(false)
+			}
 	  },
 
 	  // Clear content
@@ -186,6 +189,7 @@ const EntryForm = ({
 		  <TextArea
 		    type="text"
 		    value={entryInput}
+				id={"entry-input"}
 		    className={`entry-input ${activeIndex === -1 ? "active" : ""}`}
 		    onChange={handleEntryInput.change}
 		    onKeyDown={handleEntryInput.keyDown}
@@ -200,6 +204,7 @@ const EntryForm = ({
 		  >{entryInput}</TextArea>
 
 		</form>
+
 		</>
 	)
 
