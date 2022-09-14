@@ -9,6 +9,7 @@ import StatusBar from "../components/StatusBar"
 import DialogImport from "../components/DialogImport"
 import CommandOptions from "../components/CommandOptions"
 import DialogFileOpen from "../components/DialogFileOpen"
+import introTemplate from "../mod/intro-template"
 
 var activeIndex = -1
 
@@ -83,6 +84,12 @@ const TodoPage = () => {
     if (tags) setTagList(tags)
     let fontSize = JSON.parse(localStorage.getItem("font-size"))
     if (fontSize) { setMainFontSize(fontSize) }
+    // Initialize with boilerplate how-to
+    if ((!list && !tags) || (!list.length && !Object.keys(tags).length)) {
+      console.log("no list no tags")
+      setTodoList(introTemplate.todos)
+      setTagList(introTemplate.tags)
+    }
     document.body.tabIndex = -1
     document.body.addEventListener("focus", goto.exit)
     document.body.addEventListener("keyup", (e) => {
@@ -125,25 +132,24 @@ const TodoPage = () => {
 
         <div className="main">
 
-          <div className="entry-container">
-            <EntryForm
-              todoListRef={todoListRef}
-              setTodoList={setTodoList}
-              todoList={todoList}
-              tagList={tagList}
-              activeIndex={activeIndex}
-              activeIndexPrevious={activeIndexPrevious}
-              setActiveIndexPrevious={setActiveIndexPrevious}
-              setStatusMsg={setStatusMsg}
-              commandOptionsDisplay={commandOptionsDisplay}
-              setDialogImportShow={setDialogImportShow}
-              setCommandOptionsDisplay={setCommandOptionsDisplay}
-              setFileOpenSelect={setFileOpenSelect}
-              setFocusElement={setFocusElement}
-              goto={goto}
-              setMainFontSize={setMainFontSize}
-            />
-          </div>
+          <EntryForm
+            todoListRef={todoListRef}
+            setTodoList={setTodoList}
+            setTagList={setTagList}
+            todoList={todoList}
+            tagList={tagList}
+            activeIndex={activeIndex}
+            activeIndexPrevious={activeIndexPrevious}
+            setActiveIndexPrevious={setActiveIndexPrevious}
+            setStatusMsg={setStatusMsg}
+            commandOptionsDisplay={commandOptionsDisplay}
+            setDialogImportShow={setDialogImportShow}
+            setCommandOptionsDisplay={setCommandOptionsDisplay}
+            setFileOpenSelect={setFileOpenSelect}
+            setFocusElement={setFocusElement}
+            goto={goto}
+            setMainFontSize={setMainFontSize}
+          />
 
           <CommandOptions
             commandOptionsDisplay={commandOptionsDisplay}

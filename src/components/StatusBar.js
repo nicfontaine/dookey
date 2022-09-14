@@ -25,36 +25,6 @@ const StatusBar = ({msg}) => {
 			</div>
 
 			<style jsx>{`
-			  .status-bar {
-			    padding: 0.8em 2rem;
-					background: rgba(255,255,255,0.06);
-					font-family: "PT Mono", monospace;
-					font-size: 0.8rem;
-					color: #aaa;
-					transition: all 0.05s;
-					min-height: 2.3rem;
-					position: relative;
-					z-index: 15;
-			  }
-			  .status-bar.update {
-			  	animation: flash 1 500ms;
-			  }
-			  @keyframes flash {
-			    0% { color: #aaa; background: #151515; }
-			    25% { color: #fff; background: #000; }
-			    50% { color: #aaa; background: #151515; }
-			    75% { color: #fff; background: #000; }
-			    100% { color: #aaa; background: #151515; }
-			  }
-			  .status-bar-inner {
-			  	padding-left: 1.2rem;
-			  }
-			  .status-bar-inner:before {
-			  	content: ">";
-			  	transform: translateX(-200%);
-			  	position: absolute;
-			  	color: #777;
-			  }
 			`}</style>
 		</>
 	)

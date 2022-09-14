@@ -317,7 +317,7 @@ const Todo = ({
           <ReactMarkdown remarkPlugins={[remarkGfm, remarkGemoji]}>{todo.text}</ReactMarkdown>
         </div>
 
-        { todo.tags && todo.tags.length && !editTag ?
+        { todo.tags && todo.tags.length ?
           <div className="todo-tag-list">
             { todo.tags.map((t) => {
               return <div key={tagList[t].id} className="tag" style={{backgroundColor: tagList[t].color}}>{t}</div>

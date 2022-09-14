@@ -9,6 +9,7 @@ import entryCommands from "../mod/entry-commands.js"
 const EntryForm = ({
 	todoListRef,
 	setTodoList,
+	setTagList,
 	todoList,
 	tagList,
 	activeIndex,
@@ -137,35 +138,37 @@ const EntryForm = ({
 	    	let args = val.split("/")[1].split(" ")
 	      let command = args[0]
 	      if (command in entryCommands) {
-	        switch(command) {
-	          case "msg":
-	            entryCommands.msg(setStatusMsg, "test")
-	            break
-	          case "nuke":
-	            entryCommands.nuke(setTodoList, setStatusMsg)
-	            break
-	          case "export":
-	            entryCommands.export(todoList, tagList, setStatusMsg)
-	            break
-	          case "import":
-	          	setDialogImportShow(true)
-	            break
-	          case "save":
-	            entryCommands.save(todoList, tagList, setStatusMsg)
-	            break
-	          case "open":
-	            entryCommands.open(setFileOpenSelect)
-	            break
-	          case "size":
-							let size = args[1].split(" ")[0]
-							if (size) {
-								entryCommands.size(setMainFontSize, Number(size))
-							}
-	          	break
-	        }
-	        handleEntryInput.clear()
-	        return;
-	      }
+					if (command === "msg") {
+						entryCommands.msg(setStatusMsg, "test")
+					} else if (command === "nuke") {
+						entryCommands.nuke(setTodoList, setTagList, setStatusMsg)
+					} else if (command === "export") {
+						entryCommands.export(todoList, tagList, setStatusMsg)
+					} else if (command === "import") {
+						setDialogImportShow(true)
+					} else if (command === "save") {
+						entryCommands.save(todoList, tagList, setStatusMsg)
+					} else if (command === "open") {
+						entryCommands.open(setFileOpenSelect)
+					} else if (command === "kill") {
+						entryCommands.kill(setStatusMsg)
+					} else if (command === "center") {
+						if (args[1] === undefined) {
+							entryCommands.center()	
+						} else {
+							let size = args[1].trim()
+							entryCommands.center(size)
+						}
+					} else if (command === "size") {
+						if (args[1] === undefined) return;
+						let size = args[1].trim()
+						if (size) {
+							entryCommands.size(setMainFontSize, Number(size))
+						}
+					}
+				}
+	      handleEntryInput.clear()
+	      return;
 	    }
 	    setTodoList([
 	      {
@@ -175,35 +178,39 @@ const EntryForm = ({
 	      ...todoList
 	    ])
 	    handleEntryInput.clear()
-	  },
+	  }
 
 	}
 
 	return(
 		<>
-		<form
-			className={`entry-form ${activeIndex === -1 ? "active" : ""}`}
-		  onSubmit={handleEntryInput.submit}
-		  ref={formRef}
-		>
-		  <TextArea
-		    type="text"
-		    value={entryInput}
-				id={"entry-input"}
-		    className={`entry-input ${activeIndex === -1 ? "active" : ""}`}
-		    onChange={handleEntryInput.change}
-		    onKeyDown={handleEntryInput.keyDown}
-		    onClick={handleEntryInput.active}
-		    onFocus={handleEntryInput.focus}
-		    onBlur={handleEntryInput.blur}
-		    tabIndex="0"
-		    rows="1"
-		    autoFocus
-		    placeholder="Add a todo"
-		    ref={entryInputRef}
-		  >{entryInput}</TextArea>
+		<div className="entry-container">
+			<div className="entry-container-inner">
+				<form
+					className={`entry-form ${activeIndex === -1 ? "active" : ""}`}
+					onSubmit={handleEntryInput.submit}
+					ref={formRef}
+				>
+					<TextArea
+						type="text"
+						value={entryInput}
+						id={"entry-input"}
+						className={`entry-input ${activeIndex === -1 ? "active" : ""}`}
+						onChange={handleEntryInput.change}
+						onKeyDown={handleEntryInput.keyDown}
+						onClick={handleEntryInput.active}
+						onFocus={handleEntryInput.focus}
+						onBlur={handleEntryInput.blur}
+						tabIndex="0"
+						rows="1"
+						autoFocus
+						placeholder="Add a todo"
+						ref={entryInputRef}
+					>{entryInput}</TextArea>
 
-		</form>
+				</form>
+			</div>
+		</div>
 
 		</>
 	)

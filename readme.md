@@ -27,7 +27,7 @@
 - `Esc` to cancel your edit
 
 ## Features
-- Markdown support, with Gemoji shortcuts (:+1: 👍️)
+- Markdown support, with Gemoji shortcuts (`:+1:` 👍️)
 
 ## Commands
 - `/export` Copy data to clipboard
@@ -40,19 +40,15 @@
 - Status bar msg won't update, if another msg is still active (before it gets reset)
 - Autosize on edit textarea not working
 - Entry input getting sized smaller on refresh, since it has no value
-- Edit not saving, and focus going back to entry occasionally
 
 ## Tauri Bugs
-- Scroll overflow not working
 - Open from backup file not working
 - Entry input has focus, but not getting class
 
 ## Todo
-- Tags
 - Search
 - Maybe move edit/active outside of data object
 - Textarea styling (height)
-- Tags & filters
+- Tag filters
 - Scroll todolist top, on entry submit
 - Set caret position after todo-input textSurround()
-- Command to populate with random todos

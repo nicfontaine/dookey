@@ -13,6 +13,12 @@
   src: local("PT Mono"),
     url(../fonts/PTMono-Regular.ttf);
 }*/
+:root {
+  --main-bg-color: #22232c;
+  --main-bar-bg-color: rgba(255,255,255,0.06);
+  --main-center-width: 900px;
+}
+
 html {
   font-size: 17px;
 }
@@ -20,7 +26,7 @@ body {
 	/*pointer-events: none;*/
 	/*cursor: none;*/
   color: #ddd;
-	background: #1d1d1d;
+	background: var(--main-bg-color);
 	margin: 0;
   font-family: "Bitter";
 }
@@ -55,9 +61,11 @@ input, textarea {
 .entry-container {
   padding: 1.5rem;
   padding-bottom: 1rem;
-  display: flex;
   /* background: #2b2b2b; */
-  background: rgba(255,255,255,0.05);
+  background: var(--main-bar-bg-color);
+}
+.entry-container-inner {
+  display: flex;
 }
 .entry-form {
   position: relative;
@@ -117,17 +125,18 @@ input, textarea {
   border: 1px solid transparent;
   outline: none;
   caret-color: transparent;
-  background: #4a4a4a;
+  /* background: #4a4a4a; */
+  background: rgba(255,255,255,0.16);
   z-index: 5;
   transition: 0.12s width ease-in, 0.12s padding ease-in, 0.12s border-radius ease-in;
   resize: none;
-  height: 2.4em;
+  /* height: 2.4rem; */
   font-family: inherit;
   line-height: 1.5;
   resize: none;
 }
 .entry-input.active {
-	border-radius: 5px;
+	border-radius: 8px;
   width: 100%;
   padding-left: 2rem;
   box-shadow: 0 2px 6px rgba(0,0,0,0.3);
@@ -173,7 +182,8 @@ input, textarea {
 }
 .todo {
   position: relative;
-  padding: 0.5rem 0.7rem;
+  padding: 0.8rem 0.2rem;
+  margin: 0 0.5rem;
   /*padding-left: 2.2rem;*/
   background: transparent;
   text-align: left;
@@ -185,7 +195,8 @@ input, textarea {
   align-content: center;
   /*align-self: flex-start;*/
   transition: 0.1s opacity;
-  color: #d8d8d8;
+  /* color: #d4d4d4; */
+  color: rgba(255,255,255,0.82);
   cursor: pointer;
   font-family: inherit;
   animation: todoCreate 0.3s 1 forwards;
@@ -201,14 +212,16 @@ input, textarea {
 }
 .todo:focus:not(:active), .todo.active {
   border-bottom: 2px solid transparent;
-  border-radius: 5px;
+  border-radius: 9px;
+  margin: 0;
+  padding-right: 0.7rem;
+  padding-left: 0.7rem;
 }
 .todo.active:not(:first-child) {
   transform: translateY(-2px);
   /* transform: translate3d(0, -2px, 0); */
   /* border-top-width: 4px; */
-  padding-top: calc(0.5rem + 2px);
-  padding-bottom: calc(0.5rem - 2px);
+  padding: calc(0.8rem + 2px) 0.7rem calc(0.8rem - 2px);
 }
 .todo.active:first-child {
   /* transform: none; */
@@ -220,7 +233,8 @@ input, textarea {
 }
 .todo:focus:not(:active) .todo-text,
 .todo.active .todo-text {
-  color: #eee;
+  /* color: #dfdfdf; */
+  color: rgba(255,255,255,0.85);
 }
 .todo-index {
   font-family: "PT Mono";
@@ -278,7 +292,7 @@ input, textarea {
   margin: 0;
 }
 .todo-text strong {
-  color: #e8e8e8;
+  color: rgba(255,255,255,0.89);
 }
 .todo-text ul, .todo-text ol {
   padding-left: 1.2rem;
@@ -368,7 +382,7 @@ input, textarea {
   margin-left: 0;
   /*margin-right: 1rem;*/
   border-radius: 5px;
-  padding: calc(0.5rem + 2px) 0.7rem calc(0.5rem + 2px) 2.2rem;
+  padding: calc(0.8rem + 2px) 0.7rem calc(0.8rem + 2px) 2.2rem;
   /*min-height: 2.56rem;*/
   border: none;
   outline: none;
@@ -393,16 +407,25 @@ input, textarea {
   position: absolute;
   /* bottom: 0; */
   /* transform: translateY(100%); */
-  padding: 0.5rem 0.7rem;
+  padding: 0.8rem 0.7rem 0.8rem 1.2rem;
   background: rgba(0,0,0,0.9);
+  background: linear-gradient(to right, rgba(0,0,0,0.9), rgba(0,0,0,0));
   /* width: 100%; */
-  right: -2px; left: -2px;
+  right: calc(-0.5rem + -2px); left: calc(-0.5rem + -2px);
   top: -2px; bottom: -2px;
-  border-radius: 5px;
+  border-radius: 9px;
   text-align: center;
   display: flex;
   /* justify-content: center; */
   /* right: -2px; left: -2px; */
+}
+.todo.active .todo-tag-edit {
+  right: -2px; left: -2px;
+  top: -2px;
+}
+.todo:not(:first-child) .todo-tag-edit {
+  /* bottom: -4px; */
+  /* transform: translateY(-2px); */
 }
 .todo-tag-edit .heading {
   margin-right: 0.7rem;
@@ -411,7 +434,7 @@ input, textarea {
   display: none;
 }
 .todo-tag-edit form {
-  align-self: center;
+  /* align-self: center; */
 }
 .todo-tag-edit input {
   background: #222;
@@ -422,7 +445,7 @@ input, textarea {
 }
 .todo-tag-edit .icon {
   margin-right: 0.7rem;
-  align-self: center;
+  /* align-self: center; */
   color: rgba(255,255,255,0.7);
   font-size: 1.1rem;
 }
@@ -446,6 +469,7 @@ input, textarea {
   padding: 0.23rem 0.4rem;
   background: rgba(255,255,255,0.12);
   color: #222;
+  color: rgba(0,0,0,0.56);
   line-height: 1;
   border-radius: 4px;
   /* margin-right: 0.3rem; */
@@ -491,6 +515,38 @@ input, textarea {
   text-align: center;
 }
 
+.status-bar {
+  background: var(---main-bar-bg-color);
+  padding: 0.8em 2rem;
+  background: rgba(255,255,255,0.06);
+  font-family: "PT Mono", monospace;
+  font-size: 0.8rem;
+  color: #aaa;
+  transition: all 0.05s;
+  min-height: 2.3rem;
+  position: relative;
+  z-index: 15;
+}
+.status-bar.update {
+  animation: flash 1 500ms;
+}
+@keyframes flash {
+  0% { color: #aaa; background: #151515; }
+  25% { color: #fff; background: #000; }
+  50% { color: #aaa; background: #151515; }
+  75% { color: #fff; background: #000; }
+  100% { color: #aaa; background: #151515; }
+}
+.status-bar-inner {
+  padding-left: 1.2rem;
+}
+.status-bar-inner:before {
+  content: ">";
+  transform: translateX(-200%);
+  position: absolute;
+  color: #777;
+}
+
 .scroll-shadows {
   overflow: auto;
   -webkit-overflow-scrolling: touch;
@@ -498,13 +554,13 @@ input, textarea {
   background:
     /* Shadow Cover TOP */
     linear-gradient(
-      #1d1d1d 30%,
+      var(--main-bg-color) 30%,
       rgba(255, 255, 255, 0)
     ) center top,
     /* Shadow Cover BOTTOM */
     linear-gradient(
       rgba(255, 255, 255, 0), 
-      #1d1d1d 70%
+      var(--main-bg-color) 70%
     ) center bottom,
     /* Shadow TOP */
     radial-gradient(
@@ -521,4 +577,30 @@ input, textarea {
   background-repeat: no-repeat;
   background-size: 100% 35px, 100% 35px, 100% 25px, 100% 25px;
   background-attachment: local, local, scroll, scroll;
+}
+
+.entry-container-inner,
+.todo-list,
+.status-bar-inner,
+.entry-command-options-inner {
+  max-width: 100%;
+  width: auto;
+  margin-right: 0;
+  margin-left: 0;
+  transition: none;
+}
+
+body.center .entry-container-inner,
+body.center .todo-list,
+body.center .status-bar-inner,
+body.center .entry-command-options-inner {
+  width: 100%;
+  max-width: var(--main-center-width);
+  margin-right: auto;
+  margin-left: auto;
+  transition: 0.2s width ease-in, 0.2s max-width ease-in, 0.2s margin ease-in;
+}
+body.center .entry-container-inner {
+  /* width: calc(100% - 2rem); */
+  max-width: calc(var(--main-center-width) - 2rem);
 }
