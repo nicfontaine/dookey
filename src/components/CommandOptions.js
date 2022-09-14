@@ -11,7 +11,7 @@ const CommandOptions = ({
 				className={`entry-command-options
 				${commandOptionsDisplay ? "show" : ""}`}
 			>
-				<div className="entry-command-options-inner pd-l-8 pd-t-4">
+				<div className="entry-command-options-inner pd-t-4">
 					<h3 className="section-heading">Functions</h3>
 					<div className="row d-flx flx-row">
 						<div>
@@ -53,7 +53,6 @@ const CommandOptions = ({
 					padding-top: 4.72rem;
 					background: rgba(0,0,0,0.65);
 					z-index: 10;
-					padding-left: 1rem;
 					transition: opacity 0.15s;
 					pointer-events: none;
 				}
@@ -80,6 +79,10 @@ const CommandOptions = ({
 				.section-heading:first-child {
 					border-top: none;
 					padding-top: 0;
+				}
+				.entry-command-options-inner {
+					padding-left: 2.9rem;
+					padding-right: 2.9rem;
 				}
 				.entry-command-options-inner .row {
 					margin-bottom: 1rem;

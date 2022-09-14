@@ -15,6 +15,7 @@
 }*/
 :root {
   --main-bg-color: #22232c;
+  --main-bg-color-transparent: rgb(34, 35, 44, 0);
   --main-bar-bg-color: rgba(255,255,255,0.06);
   --main-center-width: 900px;
 }
@@ -172,6 +173,7 @@ input, textarea {
   padding-right: 1rem;
   padding-left: 1rem;
   padding-top: 1rem;
+  padding-bottom: 1.5rem;
   /* margin-top: 1rem; */
   /* border-top: 1px solid rgba(255,255,255,0.08); */
   /* background: #222; */
@@ -555,11 +557,11 @@ input, textarea {
     /* Shadow Cover TOP */
     linear-gradient(
       var(--main-bg-color) 30%,
-      rgba(255, 255, 255, 0)
+      var(--main-bg-color-transparent)
     ) center top,
     /* Shadow Cover BOTTOM */
     linear-gradient(
-      rgba(255, 255, 255, 0), 
+      var(--main-bg-color-transparent),
       var(--main-bg-color) 70%
     ) center bottom,
     /* Shadow TOP */
