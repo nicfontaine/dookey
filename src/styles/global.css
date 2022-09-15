@@ -18,6 +18,7 @@
   --main-bg-color-transparent: rgb(34, 35, 44, 0);
   --main-bar-bg-color: rgba(255,255,255,0.06);
   --main-center-width: 900px;
+  --todo-active-background: #0c0c13;
 }
 
 html {
@@ -230,7 +231,7 @@ input, textarea {
 }
 .todo:focus:not(:active), .todo.active, .todo-input {
   /* background: #131313; */
-  background: rgba(0,0,0,0.5);
+  background: var(--todo-active-background);
   z-index: 10;
 }
 .todo:focus:not(:active) .todo-text,
@@ -335,7 +336,7 @@ input, textarea {
   border-radius: 4px;
   font-size: 0.9rem;
   margin: 0 0.1rem;
-  transition: all 0.15s;
+  /* transition: all 0.15s; */
   color: #5ab389;
   line-height: 1.2;
 }
@@ -344,8 +345,9 @@ input, textarea {
   margin-right: 0.4rem;
 }
 .todo.active .todo-text code {
-  border: 1px solid rgba(255,255,255,0.2);
-  background: transparent;
+  /* background: transparent; */
+  background: rgba(255,255,255,0.1);
+  /* border: 1px solid rgba(255,255,255,0.2); */
 }
 .todo-text h1, h2, h3, h4, h5, h6 {
   margin-top: 0;
@@ -366,6 +368,7 @@ input, textarea {
 .todo-text table {
   display: block;
   border-collapse: collapse;
+  margin-top: 0.4rem;
 }
 .todo-text table th {
   background: rgba(255,255,255,0.1);
@@ -530,17 +533,17 @@ input, textarea {
   z-index: 15;
 }
 .status-bar.update {
-  animation: flash 1 500ms;
+  animation: flash 1 850ms;
 }
 @keyframes flash {
-  0% { color: #aaa; background: #151515; }
-  25% { color: #fff; background: #000; }
-  50% { color: #aaa; background: #151515; }
-  75% { color: #fff; background: #000; }
-  100% { color: #aaa; background: #151515; }
+  0% { color: #aaa; background: var(--main-bar-bg-color); }
+  25% { color: #fff; background: rgba(255,255,255,0.16); }
+  50% { color: #aaa; background: var(--main-bar-bg-color); }
+  75% { color: #fff; background: rgba(255,255,255,0.16); }
+  100% { color: #aaa; background: var(--main-bar-bg-color); }
 }
 .status-bar-inner {
-  padding-left: 1.2rem;
+  padding-left: 0.6rem;
 }
 .status-bar-inner:before {
   content: ">";
@@ -605,4 +608,7 @@ body.center .entry-command-options-inner {
 body.center .entry-container-inner {
   /* width: calc(100% - 2rem); */
   max-width: calc(var(--main-center-width) - 2rem);
+}
+body.center .status-bar-inner {
+  padding-left: 2.2rem;
 }
