@@ -3,7 +3,7 @@
 const introTemplate = {
   todos: [
     {
-      "text": "🏫 **Intro**\n- Type out a todo above, and `Enter`\n- Use `Shift + Enter` for a newline\n- Supports markdown!",
+      "text": "🏫 **Intro**\n- Type out a todo above, and `Enter`\n- Use `Shift + Enter` for typing a newline\n- Supports Markdown and [Gemoji ↗](https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md)\n  - `:fire:` :fire:",
       "id": "4dda1c49-1b4a-49bf-8281-c9c800e01bc3",
       "tags": ["Doc"]
     },
@@ -18,7 +18,7 @@ const introTemplate = {
       "tags": ["Keyboard"]
     },
     {
-      "text": "🚀 **Get Started**\n- Use the command `/nuke` to clear all intro content",
+      "text": "🚀 **Get Started**\n- Use the command `/nuke` to clear all intro content\n- If you refresh before adding any notes, this starter template will return",
       "id": "dc86715f-5614-4ddf-b187-1b3c5bc73c61"
     },
     {

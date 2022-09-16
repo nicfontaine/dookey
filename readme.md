@@ -4,17 +4,19 @@
 | Function | Keys |
 |:--------------|:-----------|
 | Move focus down | `Down` or `Tab` |
-| Move focus up | `Up` or `Shift+Tab` |
+| Move focus up | `Up` or `Shift + Tab` |
 | Focus first/last | `Home`/`End` |
 | Edit todo | `E` or `Enter` |
 | Undo Edit | `Esc` |
 | Save Edit | `Enter` |
-| Add newline to edit/entry | `Ctrl+Enter` |
+| Add newline to edit/entry | `Ctrl + Enter` |
 | Delete todo | `D` or `Delete` |
-| Undo delete | `Ctrl+Z` |
-| Move todo up | `Ctrl+Shift+Up` |
-| Move todo down | `Ctrl+Shift+Down` |
+| Undo delete | `Ctrl + Z` |
+| Move todo up | `Ctrl + Shift + Up` |
+| Move todo down | `Ctrl + Shift + Down` |
 | Focus entry input | `/` |
+| Bold selected text while editing | `Ctrl + B` |
+| Italicize selected text while editing | `Ctrl + I` |
 
 ## Input
 **Entry Input**   

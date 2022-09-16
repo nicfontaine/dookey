@@ -11,9 +11,9 @@ const StatusBar = ({msg}) => {
 		if (msg.length) {
 			statusBarRef.current.classList.add("update")
 		}
-		setTimeout(() => {
+		statusBarRef.current.addEventListener("animationend", () => {
 			statusBarRef.current.classList.remove("update")
-		}, 500)
+		})
 	}, [msg])
 
 	return(

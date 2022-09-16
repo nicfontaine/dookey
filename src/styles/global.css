@@ -14,10 +14,13 @@
     url(../fonts/PTMono-Regular.ttf);
 }*/
 :root {
-  --main-bg-color: #22232c;
+  --main-bg-color: #1f2029;
   --main-bg-color-transparent: rgb(34, 35, 44, 0);
-  --main-bar-bg-color: rgba(255,255,255,0.06);
+  --main-bar-bg-color: rgba(255,255,255,0.07);
   --main-center-width: 900px;
+  --main-color-accent-1: #7476ff;
+  --main-color-accent-2: #5ab389;
+  --main-color-accent-3: #68315a;
   --todo-active-background: #0c0c13;
 }
 
@@ -141,7 +144,7 @@ input, textarea {
 	border-radius: 8px;
   width: 100%;
   padding-left: 2rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 7px rgba(0,0,0,0.4);
   z-index: 10;
   /*background: #161616;*/
   caret-color: initial;
@@ -192,7 +195,7 @@ input, textarea {
   text-align: left;
   outline: none;
   border: 2px solid transparent;
-  border-bottom: 2px solid rgb(255, 255, 255, 0.05);
+  border-bottom: 2px solid rgb(255, 255, 255, 0.06);
   /* border-bottom: 2px solid transparent; */
   display: flex;
   align-content: center;
@@ -254,7 +257,7 @@ input, textarea {
 }
 .todo.active .todo-index {
   color: #65beb1;
-  color: #7476ff;
+  color: var(--main-color-accent-1);
   /*font-weight: 600;*/
 }
 .todo.delete {
@@ -331,13 +334,13 @@ input, textarea {
 .todo-text code {
   background: rgba(0,0,0,0.5);
   border: 1px solid transparent;
-  color: #eee;
+  /* color: #eee; */
   padding: 0.1rem 0.3rem;
   border-radius: 4px;
   font-size: 0.9rem;
   margin: 0 0.1rem;
   /* transition: all 0.15s; */
-  color: #5ab389;
+  color: var(--main-color-accent-2);
   line-height: 1.2;
 }
 .todo-text ul li code {
@@ -353,11 +356,20 @@ input, textarea {
   margin-top: 0;
   margin-bottom: 0;
 }
+.todo-text table,
+.todo-text blockquote,
+.todo-text ul,
+.todo-text ol {
+  margin-top: 0.4rem;
+}
 .todo-text blockquote {
-  margin: 0;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 0;
   display: flex;
-  padding: 0.6rem;
+  padding: 0.4rem 0.6rem;
   border-left: 3px solid rgba(255,255,255,0.14);
+  border-left: 3px solid var(--main-color-accent-3);
   background: rgba(255,255,255,0.06);
 }
 .todo-text hr {
@@ -368,7 +380,6 @@ input, textarea {
 .todo-text table {
   display: block;
   border-collapse: collapse;
-  margin-top: 0.4rem;
 }
 .todo-text table th {
   background: rgba(255,255,255,0.1);
@@ -426,11 +437,12 @@ input, textarea {
 }
 .todo.active .todo-tag-edit {
   right: -2px; left: -2px;
-  top: -2px;
+  top: 0;
+  z-index: 20;
 }
 .todo:not(:first-child) .todo-tag-edit {
-  /* bottom: -4px; */
-  /* transform: translateY(-2px); */
+  /* bottom: -3px; */
+  transform: translateY(-2px);
 }
 .todo-tag-edit .heading {
   margin-right: 0.7rem;
@@ -453,6 +465,7 @@ input, textarea {
   /* align-self: center; */
   color: rgba(255,255,255,0.7);
   font-size: 1.1rem;
+  display: none;
 }
 .todo-tag-list {
   /* flex: 1; */
