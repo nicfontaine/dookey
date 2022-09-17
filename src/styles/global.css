@@ -359,8 +359,12 @@ input, textarea {
 .todo-text table,
 .todo-text blockquote,
 .todo-text ul,
-.todo-text ol {
+.todo-text ol,
+.todo-text summary {
   margin-top: 0.4rem;
+}
+.todo-text ul li ul {
+  margin-top: 0;
 }
 .todo-text blockquote {
   margin-left: 0;
@@ -391,6 +395,24 @@ input, textarea {
 .todo-text table th, .todo-text table td {
   border: 1px solid #444;
   padding: 0.1rem 0.4rem;
+}
+.todo-text details {
+  display: contents;
+}
+.todo-text summary {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid transparent;
+  padding: 0.1rem 0.9rem;
+  border-radius: 4px;
+  min-width: 0;
+  width: auto;
+  align-self: flex-start;
+}
+.todo-text details[open] summary {
+  margin-bottom: 0.5rem;
+  background: rgba(255,255,255,0.15);
+  /* background: transparent; */
+  /* border: 1px solid rgba(255,255,255,0.25); */
 }
 
 .todo-input {

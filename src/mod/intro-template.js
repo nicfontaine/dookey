@@ -5,7 +5,7 @@ const introTemplate = {
     {
       "text": "🏫 **Intro**\n- Type out a todo above, and `Enter`\n- Use `Shift + Enter` for typing a newline\n- Supports Markdown and [Gemoji ↗](https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md)\n  - `:fire:` :fire:",
       "id": "4dda1c49-1b4a-49bf-8281-c9c800e01bc3",
-      "tags": ["Doc"]
+      "tags": ["Docs"]
     },
     {
       "text": "🤖 **Commands**\n- Type `/` to display commands like saving, loading, etc.\n- Any console output will display in the footer below",
@@ -18,20 +18,18 @@ const introTemplate = {
       "tags": ["Keyboard"]
     },
     {
+      "text": "🍩 **Extra**\n- Details list will expand when todo is focused\n<details><summary>More Details...</summary><div>- Balin\n- Bifur\n- Bofur\n- Bombur\n- Dori\n- Dwalin\n- Fili\n- Gloin\n- Kili\n- Nori\n- Oin\n- Ori\n- Thorin</div></details>",
+      "id": "7b7ced24-9fd5-4bf8-bd83-18216634e302",
+      "tags": ["Bonus"]
+    },
+    {
       "text": "🚀 **Get Started**\n- Use the command `/nuke` to clear all intro content\n- If you refresh before adding any notes, this starter template will return",
-      "id": "dc86715f-5614-4ddf-b187-1b3c5bc73c61"
-    },
-    {
-      "text": "B",
-      "id": "7b7ced24-9fd5-4bf8-bd83-18216634e302"
-    },
-    {
-      "text": "C",
-      "id": "33646ed3-f8d1-4efa-9e4f-d2532a4d9337"
+      "id": "dc86715f-5614-4ddf-b187-1b3c5bc73c61",
+      "tags": ["Complete!"]
     }
   ],
   tags: {
-    "Doc": {
+    "Docs": {
       "id": "31a73c50-b65a-45f8-9ffc-31fd9424afc1",
       "color": "#E1FCBD"
     },
@@ -46,6 +44,14 @@ const introTemplate = {
     "Keyboard": {
       "id": "403ac178-502e-44da-85e6-6a1085871bd3",
       "color": "#a1d8ea"
+    },
+    "Bonus": {
+      "id": "89bc3811-cc96-4d1a-9ea7-ef7b6d8cacda",
+      "color": "#a1eabf"
+    },
+    "Complete!": {
+      "id": "79cda71b-e04d-4a76-82a8-96e75f343bdc",
+      "color": "#eaa1a1"
     }
   }
 }

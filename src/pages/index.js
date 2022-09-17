@@ -49,6 +49,10 @@ const TodoPage = () => {
   // Index focus change
   // mainRef, activeIndex, focusElement
   const goto = {
+    index: (i) => {
+      setActiveIndexPrevious(activeIndex)
+      focusChange(i)
+    },
     next: () => {
       let todos = mainRef.current.getElementsByClassName("todo-focus")
       if (activeIndex === todos.length-1) { goto.entry() }
@@ -65,9 +69,6 @@ const TodoPage = () => {
     },
     exit: () => {
       goto.index(null)
-    },
-    index: (i) => {
-      focusChange(i)
     },
     element: (e) => {
       activeIndex = null
@@ -112,6 +113,11 @@ const TodoPage = () => {
   // Focus element
   useEffect(() => {
     if (focusElement) focusElement.focus()
+    if (activeIndexPrevious && activeIndexPrevious >= 0) {
+      console.log("aip: " + activeIndexPrevious)
+      let details = todoListRef.current.getElementsByClassName("todo")[activeIndexPrevious].getElementsByTagName("details")
+      for (const d of details) d.open = false
+    }
   }, [focusElement])
 
   // Main font size change

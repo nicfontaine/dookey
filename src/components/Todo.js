@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import csn from "classnames"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
+import rehypeRaw from "rehype-raw"
 import remarkGemoji from "remark-gemoji"
 import * as randomColor from "random-color"
 import { v4 as uuid } from 'uuid'
@@ -104,6 +105,9 @@ const Todo = ({
     },
 
     focus: (e, index) => {
+      // Expand any <details>
+      let details = e.target.getElementsByTagName("details")
+      for (const d of details) d.open = true
       // NOTE: r-click is focusing, so we'll just change the index as well
       // NOTE: This is messing up when moving todos, and focusing the old place
       // goto.index(index)
@@ -314,7 +318,10 @@ const Todo = ({
         {/*{<span className="todo-index">{(index+10).toString(36)}</span>}*/}
 
         <div className="todo-text">
-          <ReactMarkdown remarkPlugins={[remarkGfm, remarkGemoji]}>{todo.text}</ReactMarkdown>
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm, remarkGemoji]}
+            rehypePlugins={[rehypeRaw]}
+          >{todo.text}</ReactMarkdown>
         </div>
 
         { todo.tags && todo.tags.length ?
