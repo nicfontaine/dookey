@@ -80,7 +80,7 @@ input, textarea {
   /* left: 1.5rem; */
   /* display: flex; */
 }
-.entry-form.active {
+.entry-form.active, .entry-form:focus-within {
   /* width: calc(100% - 1.5rem); */
   /* width: calc(100% - 3rem); */
   width: 100%;
@@ -97,7 +97,7 @@ input, textarea {
   position: absolute;
   z-index: 0;
 }
-.entry-form.active:before {
+.entry-form.active:before, .entry-form:focus-within:before {
   display: block;
 }
 .entry-form:after {
@@ -118,7 +118,7 @@ input, textarea {
   user-select: none;
   pointer-events: none;
 }
-.entry-form.active:after {
+.entry-form.active:after, .entry-form:focus-within:after {
   transition: none;
   /*display: none;*/
   opacity: 0;
@@ -140,7 +140,7 @@ input, textarea {
   line-height: 1.5;
   resize: none;
 }
-.entry-input.active {
+.entry-input.active, .entry-input:focus {
 	border-radius: 8px;
   width: 100%;
   padding-left: 2rem;
@@ -188,9 +188,11 @@ input, textarea {
 }
 .todo {
   position: relative;
-  padding: 0.8rem 0.2rem;
+  padding-top: 0.8rem;
+  padding-bottom: calc(0.8rem + 5px);
+  padding-right: 0.2rem;
+  padding-left: 0.2rem;
   margin: 0 0.5rem;
-  /*padding-left: 2.2rem;*/
   background: transparent;
   text-align: left;
   outline: none;
@@ -216,28 +218,31 @@ input, textarea {
 	from { opacity: 0.5; }
 	to { opacity: 1; }
 }
-.todo:focus:not(:active), .todo.active {
+/* .todo.active, .todo:focus:not(:active) { */
+.todo.active, .todo:focus {
   border-bottom: 2px solid transparent;
   border-radius: 9px;
   margin: 0;
   padding-right: 0.7rem;
   padding-left: 0.7rem;
 }
-.todo.active:not(:first-child) {
+.todo.active:not(:first-child),
+.todo:focus:not(:first-child) {
   transform: translateY(-2px);
-  /* transform: translate3d(0, -2px, 0); */
-  /* border-top-width: 4px; */
-  padding: calc(0.8rem + 2px) 0.7rem calc(0.8rem - 2px);
+  padding-top: calc(0.8rem + 2px);
+  padding-bottom: calc(0.8rem + 3px);
 }
 .todo.active:first-child {
   /* transform: none; */
 }
-.todo:focus:not(:active), .todo.active, .todo-input {
+/* .todo:focus:not(:active), .todo.active, .todo-input { */
+.todo:focus, .todo.active, .todo-input {
   /* background: #131313; */
   background: var(--todo-active-background);
   z-index: 10;
 }
-.todo:focus:not(:active) .todo-text,
+/* .todo:focus:not(:active) .todo-text, */
+.todo:focus .todo-text,
 .todo.active .todo-text {
   /* color: #dfdfdf; */
   color: rgba(255,255,255,0.85);
@@ -255,7 +260,8 @@ input, textarea {
 .todo-content {
   flex: 1;
 }
-.todo.active .todo-index {
+.todo.active .todo-index,
+.todo:focus .todo-index {
   color: #65beb1;
   color: var(--main-color-accent-1);
   /*font-weight: 600;*/
@@ -338,16 +344,17 @@ input, textarea {
   padding: 0.1rem 0.3rem;
   border-radius: 4px;
   font-size: 0.9rem;
-  margin: 0 0.1rem;
+  /* margin: 0 0.1rem; */
   /* transition: all 0.15s; */
   color: var(--main-color-accent-2);
   line-height: 1.2;
 }
 .todo-text ul li code {
   align-self: center;
-  margin-right: 0.4rem;
+  /* margin-right: 0.4rem; */
 }
-.todo.active .todo-text code {
+.todo.active .todo-text code,
+.todo:focus .todo-text code {
   /* background: transparent; */
   background: rgba(255,255,255,0.1);
   /* border: 1px solid rgba(255,255,255,0.2); */
@@ -398,21 +405,55 @@ input, textarea {
 }
 .todo-text details {
   display: contents;
+  box-sizing: border-box;
+  position: relative;
+  color: rgba(255,255,255,0);
+  transition: 0.2s all;
+  font-size: 0.6rem;
 }
 .todo-text summary {
   background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.9);
   border: 1px solid transparent;
   padding: 0.1rem 0.9rem;
+  font-size: 0.95rem;
+  padding-left: 2rem;
   border-radius: 4px;
   min-width: 0;
   width: auto;
   align-self: flex-start;
+  position: relative;
 }
 .todo-text details[open] summary {
   margin-bottom: 0.5rem;
   background: rgba(255,255,255,0.15);
   /* background: transparent; */
   /* border: 1px solid rgba(255,255,255,0.25); */
+}
+.todo-text details[open] {
+  color: rgba(255,255,255,0.9);
+  font-size: 1rem;
+}
+details summary::-webkit-details-marker {
+  display:none;
+}
+details > summary:first-of-type {
+  list-style-type: none;
+}
+details[open] > summary:before {
+  transform: rotate(90deg);
+}
+summary:before {
+  content: '';
+  border-width: .4rem;
+  border-style: solid;
+  border-color: transparent transparent transparent rgba(255,255,255,0.6);
+  position: absolute;
+  top: 0.6rem;
+  left: 0.9rem;
+  transform: rotate(0);
+  transform-origin: .2rem 50%;
+  transition: .25s transform ease;
 }
 
 .todo-input {

@@ -24,11 +24,11 @@ const TodoInput = ({
 		// autosize(todoInputRef.current)
 	}, [])
 
-	function textSurround(target, str) {
+	function textSurround(target, _l, _r) {
 		let val = target.value
   	let start = target.selectionStart
   	let end = target.selectionEnd
-  	return `${val.slice(0, start)}${str}${val.slice(start, end)}${str}${val.slice(end)}`
+  	return `${val.slice(0, start)}${_l}${val.slice(start, end)}${_r}${val.slice(end)}`
 	}
 
 	// Todo edit input
@@ -104,12 +104,17 @@ const TodoInput = ({
 	    // Bolden
 	    else if (e.key === "b" && e.ctrlKey) {
 	    	e.preventDefault()
-	    	e.target.value = textSurround(e.target, "**")
+	    	e.target.value = textSurround(e.target, "**", "**")
 	    }
 	    else if (e.key === "i" && e.ctrlKey) {
 	    	e.preventDefault()
-	    	e.target.value = textSurround(e.target, "_")
+	    	e.target.value = textSurround(e.target, "_", "**")
 	    }
+			else if (e.key === "d" && e.ctrlKey) {
+				e.preventDefault()
+				let _l = "<details open><summary>Subtasks...</summary>\n<div>"
+				e.target.value = textSurround(e.target, _l, "</div></details>")
+			}
 	  }
 	}
 	

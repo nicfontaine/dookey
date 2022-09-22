@@ -114,9 +114,12 @@ const TodoPage = () => {
   useEffect(() => {
     if (focusElement) focusElement.focus()
     if (activeIndexPrevious && activeIndexPrevious >= 0) {
-      console.log("aip: " + activeIndexPrevious)
       let details = todoListRef.current.getElementsByClassName("todo")[activeIndexPrevious].getElementsByTagName("details")
-      for (const d of details) d.open = false
+      for (const d of details) {
+        if (activeIndex > -1 && activeIndex === activeIndexPrevious) {
+          d.open = true
+        } else { d.open = false }
+      }
     }
   }, [focusElement])
 

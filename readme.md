@@ -17,6 +17,7 @@
 | Focus entry input | `/` |
 | Bold selected text while editing | `Ctrl + B` |
 | Italicize selected text while editing | `Ctrl + I` |
+| Put selected text in `<details>` tag | `Ctrl + D` |
 
 ## Input
 **Entry Input**   
@@ -42,6 +43,7 @@
 - Status bar msg won't update, if another msg is still active (before it gets reset)
 - Autosize on edit textarea not working
 - Entry input getting sized smaller on refresh, since it has no value
+- Details tag in first todo not auto-open/closing correctly
 
 ## Tauri Bugs
 - Open from backup file not working
