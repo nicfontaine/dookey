@@ -10,6 +10,7 @@ import DialogImport from "../components/DialogImport"
 import CommandOptions from "../components/CommandOptions"
 import DialogFileOpen from "../components/DialogFileOpen"
 import introTemplate from "../mod/intro-template"
+import entryCommands from "../mod/entry-commands"
 
 var activeIndex = -1
 
@@ -20,6 +21,7 @@ const TodoPage = () => {
 
   const [todoList, setTodoList] = useState([])
   const [tagList, setTagList] = useState({})
+  const [settings, setSettings] = useState({fontSize: 17, center: null})
   const [activeIndexPrevious, setActiveIndexPrevious] = useState(-1)
 
   const [focusElement, setFocusElement] = useState()
@@ -28,7 +30,6 @@ const TodoPage = () => {
   const [dialogImportShow, setDialogImportShow] = useState(false)
   const [commandOptionsDisplay, setCommandOptionsDisplay] = useState(false)
   const [fileOpenSelect, setFileOpenSelect] = useState(false)
-  const [mainFontSize, setMainFontSize] = useState(16)
 
   const mainRef = useRef(null)
   const todoListRef = useRef(null)
@@ -83,8 +84,8 @@ const TodoPage = () => {
     if (list) setTodoList(list)
     let tags = JSON.parse(localStorage.getItem("tags"))
     if (tags) setTagList(tags)
-    let fontSize = JSON.parse(localStorage.getItem("font-size"))
-    if (fontSize) { setMainFontSize(fontSize) }
+    let settings = JSON.parse(localStorage.getItem("settings"))
+    if (settings) { setSettings(settings) }
     // Initialize with boilerplate how-to
     if ((!list && !tags) || (!list.length && !Object.keys(tags).length)) {
       console.log("no list no tags")
@@ -123,11 +124,12 @@ const TodoPage = () => {
     }
   }, [focusElement])
 
-  // Main font size change
+  // Settings changes
   useEffect(() => {
-    mainRef.current.closest("html").style.fontSize = mainFontSize + "px"
-    localStorage.setItem("font-size", mainFontSize)
-  }, [mainFontSize])
+    mainRef.current.closest("html").style.fontSize = settings.fontSize + "px"
+    entryCommands.center(settings.center)
+    localStorage.setItem("settings", JSON.stringify(settings))
+  }, [settings])
 
   return (
 
@@ -157,12 +159,13 @@ const TodoPage = () => {
             setFileOpenSelect={setFileOpenSelect}
             setFocusElement={setFocusElement}
             goto={goto}
-            setMainFontSize={setMainFontSize}
+            settings={settings}
+            setSettings={setSettings}
           />
 
           <CommandOptions
             commandOptionsDisplay={commandOptionsDisplay}
-            mainFontSize={mainFontSize}
+            settings={settings}
           />
 
           <div

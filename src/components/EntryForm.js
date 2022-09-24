@@ -21,7 +21,8 @@ const EntryForm = ({
 	setCommandOptionsDisplay,
 	setFileOpenSelect,
 	goto,
-	setMainFontSize
+	settings,
+	setSettings
 }) => {
 
 	const [entryInput, setEntryInput] = useState("")
@@ -154,16 +155,19 @@ const EntryForm = ({
 						entryCommands.kill(setStatusMsg)
 					} else if (command === "center") {
 						if (args[1] === undefined) {
-							entryCommands.center()	
+							setSettings({...settings, center: null})
+							// entryCommands.center()	
 						} else {
 							let size = args[1].trim()
-							entryCommands.center(size)
+							setSettings({...settings, center: size})
+							// entryCommands.center(size)
 						}
 					} else if (command === "size") {
 						if (args[1] === undefined) return;
 						let size = args[1].trim()
 						if (size) {
-							entryCommands.size(setMainFontSize, Number(size))
+							setSettings({...settings, fontSize: size })
+							// entryCommands.size(setMainFontSize, Number(size))
 						}
 					}
 				}

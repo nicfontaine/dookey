@@ -2,7 +2,7 @@
 
 const CommandOptions = ({
 	commandOptionsDisplay,
-	mainFontSize
+	settings
 }) => {
 
 	return(
@@ -32,8 +32,8 @@ const CommandOptions = ({
 					<h3 className="section-heading">Style</h3>
 					<div className="row d-flx flx-row">
 						<div>
-							<div className="mg-b-5"><span className="code">/size {mainFontSize}</span></div>
-							<div className="mg-b-5"><span className="code">/center 800</span></div>
+							<div className="mg-b-5"><span className="code">/size {settings.fontSize}</span></div>
+							<div className="mg-b-5"><span className="code">/center {settings.center || "<number>"}</span></div>
 							<div className="mg-b-5"><span className="code">/center</span></div>
 						</div>
 						<div className="desc">
