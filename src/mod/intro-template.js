@@ -3,22 +3,22 @@
 const introTemplate = {
   todos: [
     {
-      "text": "🏫 **Intro**\n- Type out a todo above, and `Enter`\n- Use `Shift + Enter` for typing a newline\n- Supports Markdown and [Gemoji ↗](https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md)\n  - `:fire:` :fire:",
+      "text": "🏫 **Intro**\n- Start typing out a todo above\n- Use `Shift + Enter` to type a newline\n- Create your new todo with `Enter`\n- Supports Markdown and [Emojis ↗](https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md) :fire: `:fire:`",
       "id": "4dda1c49-1b4a-49bf-8281-c9c800e01bc3",
       "tags": ["Docs"]
     },
     {
-      "text": "🤖 **Commands**\n- Type `/` to display commands like saving, loading, etc.\n- Any console output will display in the footer below",
+      "text": "💻 **DooKey** is entirely **keyboard-navigable** by design\n- Move focus: `Down`, `Up`\n- Edit todo: `E`\n- Delete todo: `D`\n- All Shortcuts: [Github ↗](https://github.com/nicfontaine/dookey)",
+      "id": "a0db2091-5d80-48b3-b2cb-70743395d0d4",
+      "tags": ["Shortcuts"]
+    },
+    {
+      "text": "🤖 **Input Commands**\n- Type `/` in the top input to display commands &amp; settings\n- You can jump focus from any todo back-to-top via `/`\n",
       "id": "ab3201bc-2be9-4096-a19f-f97cb55fc85f",
       "tags": ["Function","Style"]
     },
     {
-      "text": "🧭 **Navigation**\n| Function | Shortcut |\n|:--------------|:-----------|\n| Move focus | `Down` & `Up` |\n| Edit todo | `E`, `Enter` |\n| Delete todo | `D`, `Delete` |\n| Add/edit tags | `T` |\n| All shortcuts | [Github ↗](https://github.com/nicfontaine/dookey)|",
-      "id": "a0db2091-5d80-48b3-b2cb-70743395d0d4",
-      "tags": ["Keyboard"]
-    },
-    {
-      "text": "🍩 **Extra**\n- Details list will expand when todo is focused\n<details><summary>More Details...</summary><div>- Balin\n- Bifur\n- Bofur\n- Bombur\n- Dori\n- Dwalin\n- Fili\n- Gloin\n- Kili\n- Nori\n- Oin\n- Ori\n- Thorin</div></details>",
+      "text": "🍩 **Extra**\n- `<details>` will collapse info\n- Use `O` or `Space` to toggle open\n<details><summary>More Details...</summary><div>While editing, you can turn highlighted text into details with <code>Ctrl + G</code></div></details>",
       "id": "7b7ced24-9fd5-4bf8-bd83-18216634e302",
       "tags": ["Bonus"]
     },
@@ -41,7 +41,7 @@ const introTemplate = {
       "id": "d6704dd7-5aa4-449b-86d2-0d4caa84a3a8",
       "color": "#BEBDFC"
     },
-    "Keyboard": {
+    "Shortcuts": {
       "id": "403ac178-502e-44da-85e6-6a1085871bd3",
       "color": "#a1d8ea"
     },
@@ -53,6 +53,11 @@ const introTemplate = {
       "id": "79cda71b-e04d-4a76-82a8-96e75f343bdc",
       "color": "#eaa1a1"
     }
+  },
+  settings: {
+    title: "✌️ Welcome",
+    fontSize: "17",
+    center: "800"
   }
 }
 

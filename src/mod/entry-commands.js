@@ -4,25 +4,26 @@ import { writeText } from "@tauri-apps/api/clipboard"
 const entryCommands = {
 
   // Generic message. Not implemented
-  msg: (setStatusMsg, msg) => {
+  msg(setStatusMsg, msg) {
     setStatusMsg(msg)
     entryCommands.statusClearDelay(setStatusMsg, 4000)
   },
 
-  statusClearDelay: (set, time) => {
+  statusClearDelay(set, time) {
     setTimeout(() => set(""), time)
   },
 
   // NOTE: Should have a cleaner way to not have to pass these, or something
-  nuke: (setTodoList, setTagList, setStatusMsg) => {
+  nuke(setTodoList, setTagList, setStatusMsg, setSettings, settingsDefault) {
     setTodoList([])
     setTagList({})
+    setSettings(settingsDefault)
     setStatusMsg("Todo list cleared")
     entryCommands.statusClearDelay(setStatusMsg, 4000)
   },
 
-  export: async (todos, tags, setStatusMsg) => {
-    let txt = JSON.stringify({todos, tags })
+  async export (todos, tags, settings, setStatusMsg) {
+    let txt = JSON.stringify({todos, tags, settings})
     if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined') {
       if ("clipboard" in navigator) {
         navigator.clipboard.writeText(txt)
@@ -37,19 +38,25 @@ const entryCommands = {
     }
   },
 
-  import: (importDialog, importInput, importDialogStatusText) => {
+  import(importDialog, importInput, importDialogStatusText) {
     importDialogStatusText.current.innerHTML = ""
     importInput.current.focus()
   },
 
   // Open saved backup
-  open: (setFileOpenSelect) => {
+  open(setFileOpenSelect) {
     setFileOpenSelect(true)
   },
 
-  size: (setMainFontSize, size) => {
+  size(setMainFontSize, size) {
     setMainFontSize(size)
   },
+
+  full() {},
+
+  title() {},
+
+  help() {},
 
   center(size) {
     if (size && Number(size) > 0) {
@@ -60,11 +67,11 @@ const entryCommands = {
     }
   },
 
-  save: async (todos, tags, setStatusMsg) => {
+  async save (todos, tags, settings, setStatusMsg) {
     const response = await fetch("/api/backup", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({todos, tags})
+      body: JSON.stringify({todos, tags, settings})
     })
     const res = await response.json()
     if (res.err) { setStatusMsg(res.err) }

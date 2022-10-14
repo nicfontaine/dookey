@@ -3,8 +3,13 @@
 import { useState, useEffect, useRef } from "react"
 import { v4 as uuid } from 'uuid'
 import TextArea from "textarea-autosize-reactjs"
+import { useDispatch } from "react-redux"
+import { setCenter, setTitle, setFontSize } from "../feature/settingsSlice"
+
+import { FlameIcon } from "@primer/octicons-react"
 
 import entryCommands from "../mod/entry-commands.js"
+
 
 const EntryForm = ({
 	todoListRef,
@@ -22,8 +27,11 @@ const EntryForm = ({
 	setFileOpenSelect,
 	goto,
 	settings,
-	setSettings
+	setSettings,
+	settingsDefault
 }) => {
+	
+	const dispatch = useDispatch()
 
 	const [entryInput, setEntryInput] = useState("")
   const entryInputRef = useRef(null)
@@ -56,6 +64,7 @@ const EntryForm = ({
 				if (emojiTyping) {
 					let emo = val.substring(entryInput.lastIndexOf(":") + 1)
 				}
+				if (todoListRef.current.scrollTop > 0) todoListRef.current.scrollTop = 0
 	    }
 	  },
 
@@ -91,12 +100,12 @@ const EntryForm = ({
 	      return;
 	    }
 	    if (e.key === "ArrowDown") {
-	      if (!entryInputRef.current.value.length) {
+	      if (!entryInputRef.current.value.length && !e.ctrlKey) {
 	      	e.preventDefault()
 	      	goto.next(e)
 	      }
 	    } else if (e.key === "ArrowUp") {
-	      if (!entryInputRef.current.value.length) {
+	      if (!entryInputRef.current.value.length && !e.ctrlKey) {
 	      	e.preventDefault()
 	      	goto.prev(e)
 	      }
@@ -136,37 +145,44 @@ const EntryForm = ({
 	    // Commands
 	    if (val.indexOf("/") === 0) {
 	    	// NOTE: Cleanup and move
-	    	let args = val.split("/")[1].split(" ")
+	    	let args = val.replace(/  +/g, ' ').split("/")[1].split(" ")
 	      let command = args[0]
 	      if (command in entryCommands) {
 					if (command === "msg") {
 						entryCommands.msg(setStatusMsg, "test")
 					} else if (command === "nuke") {
-						entryCommands.nuke(setTodoList, setTagList, setStatusMsg)
+						entryCommands.nuke(setTodoList, setTagList, setStatusMsg, setSettings, settingsDefault)
 					} else if (command === "export") {
-						entryCommands.export(todoList, tagList, setStatusMsg)
+						entryCommands.export(todoList, tagList, settings, setStatusMsg)
 					} else if (command === "import") {
 						setDialogImportShow(true)
 					} else if (command === "save") {
-						entryCommands.save(todoList, tagList, setStatusMsg)
+						entryCommands.save(todoList, tagList, settings, setStatusMsg)
 					} else if (command === "open") {
 						entryCommands.open(setFileOpenSelect)
 					} else if (command === "kill") {
 						entryCommands.kill(setStatusMsg)
+					} else if (command === "help") {
+						window.open(process.env.APP_HELP)
+					} else if (command === "title") {
+						let title = args.splice(1).join(" ")
+						setSettings({...settings, title: title })
+						dispatch(setTitle(title))
+					} else if (command === "full") {
+						setSettings({...settings, center: null})
+						dispatch(setCenter(null))
 					} else if (command === "center") {
-						if (args[1] === undefined) {
-							setSettings({...settings, center: null})
-							// entryCommands.center()	
-						} else {
+						if (args[1] !== undefined) {
 							let size = args[1].trim()
 							setSettings({...settings, center: size})
-							// entryCommands.center(size)
+							dispatch(setCenter(size))
 						}
 					} else if (command === "size") {
 						if (args[1] === undefined) return;
 						let size = args[1].trim()
 						if (size) {
 							setSettings({...settings, fontSize: size })
+							dispatch(setFontSize(size))
 							// entryCommands.size(setMainFontSize, Number(size))
 						}
 					}
@@ -195,6 +211,10 @@ const EntryForm = ({
 					onSubmit={handleEntryInput.submit}
 					ref={formRef}
 				>
+					<div className="entry-form-icon-main noevents">
+						<FlameIcon size={18} />
+					</div>
+
 					<TextArea
 						type="text"
 						value={entryInput}

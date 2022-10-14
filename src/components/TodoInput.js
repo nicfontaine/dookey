@@ -5,6 +5,8 @@ import autosize from "autosize"
 import TextArea from "textarea-autosize-reactjs"
 import csn from "classnames"
 
+var isTypingEmoji = false
+
 const TodoInput = ({
 		todo,
 		index,
@@ -99,7 +101,11 @@ const TodoInput = ({
 	    }
 	    else if (e.key === "Tab") {
 	      e.preventDefault()
-	      // NOTE: would be nice to have tabbed entry functionality
+				let targ = e.target
+				let start = targ.selectionStart
+				let end = targ.selectionEnd
+				e.target.value = e.target.value.substring(0, start) + "\t" + e.target.value.substring(end)
+				e.target.selectionStart = e.target.selectionEnd = start + 1
 	    }
 	    // Bolden
 	    else if (e.key === "b" && e.ctrlKey) {
@@ -110,12 +116,34 @@ const TodoInput = ({
 	    	e.preventDefault()
 	    	e.target.value = textSurround(e.target, "_", "**")
 	    }
-			else if (e.key === "d" && e.ctrlKey) {
+			else if (e.key === "g" && e.ctrlKey) {
 				e.preventDefault()
 				let _l = "<details open><summary>Subtasks...</summary>\n<div>"
 				e.target.value = textSurround(e.target, _l, "</div></details>")
 			}
-	  }
+			else if (e.key === ":") {
+				isTypingEmoji = true
+			}
+			else if (e.key === " ") {
+				isTypingEmoji = false
+			}
+			else if (e.key === "Backspace") {
+				if (e.target.value[e.target.selectionStart-1] === ":") {
+					isTypingEmoji = false
+				}
+			}
+	  },
+
+		keyUp(e) {
+			// NOTE: Backspacing not handled. Completely deleting, or space, then backspace back to string
+			if (isTypingEmoji) {
+				let str = todoInputText.split(":")[1]
+				if (str.length) {
+					console.log(`emoji search: ${str}`)
+				}
+			}
+		}
+
 	}
 	
 	return(
@@ -125,6 +153,7 @@ const TodoInput = ({
 			  value={todoInputText}
 			  onChange={handleTodoInput.change}
 			  onKeyDown={handleTodoInput.keyDown}
+				onKeyUp={handleTodoInput.keyUp}
 			  onFocus={handleTodoInput.focus}
 			  // onBlur={handleTodoInput.blur}
 			  autoFocus

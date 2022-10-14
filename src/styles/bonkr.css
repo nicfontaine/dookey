@@ -400,3 +400,7 @@ body.dialog-active {
   position: absolute;
   z-index: 110;
   top: 0; right: 0; }
+
+.noevents {
+  pointer-events: none;
+}

@@ -12,7 +12,8 @@ const DialogImport = ({
 	setTagList,
 	setStatusMsg,
 	dialogImportShow,
-	setDialogImportShow
+	setDialogImportShow,
+	setSettings
 }) => {
 
 	const importInput = useRef(null)
@@ -59,6 +60,7 @@ const DialogImport = ({
 	          }
 	        }))
 					setTagList(val.tags)
+					setSettings(val.settings)
 	      } catch(err) {
 	        importDialogStatusText.current.innerHTML = err
 	      }
