@@ -21,6 +21,8 @@
     "express": "^4.17.2",
     "fs-extra": "^10.0.1",
     "fs-then": "^0.2.0",
+    "fuzzy-search": "^3.2.1",
+    "gemoji": "^7.1.0",
     "next-connect": "^0.12.1",
     "random-color": "^1.0.1",
     "react": "^17.0.2",

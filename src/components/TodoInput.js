@@ -1,9 +1,16 @@
-(function(){"use strict"})()
+// (function(){"use strict"})()
 
 import { useState, useRef, useEffect } from "react"
 import autosize from "autosize"
 import TextArea from "textarea-autosize-reactjs"
 import csn from "classnames"
+import FuzzySearch from "fuzzy-search"
+import { gemoji } from "gemoji"
+
+const fuzzysearch = new FuzzySearch(gemoji,
+	["names"],
+	{sort: true}
+)
 
 var isTypingEmoji = false
 
@@ -21,10 +28,25 @@ const TodoInput = ({
 	const [todoInputText, setTodoInputText] = useState(todo.text)
 	const todoTextBackup = todo.text
 	const todoInputRef = useRef(null)
+	const [emojiSearchString, setEmojiSearchString] = useState("")
+	const [emojiList, setEmojiList] = useState([])
 
 	useEffect(() => {
 		// autosize(todoInputRef.current)
 	}, [])
+
+	useEffect(() => {
+		if (emojiSearchString.length) {
+			let search = fuzzysearch.search(emojiSearchString).slice(0, 6).map((s, i) => {
+				s.active = i === 0 ? true : false
+				return s
+			})
+			if (search.length) setEmojiList(search)
+			else setEmojiList([])
+		} else {
+			setEmojiList([])
+		}
+	}, [emojiSearchString])
 
 	function textSurround(target, _l, _r) {
 		let val = target.value
@@ -123,25 +145,73 @@ const TodoInput = ({
 			}
 			else if (e.key === ":") {
 				isTypingEmoji = true
-			}
-			else if (e.key === " ") {
-				isTypingEmoji = false
+				// Initializing emoji search
 			}
 			else if (e.key === "Backspace") {
+				// Backspace 1 colon, last of emoji-word
 				if (e.target.value[e.target.selectionStart-1] === ":") {
+					// Disabling emoji search
 					isTypingEmoji = false
+					if (emojiSearchString.length) setEmojiSearchString("")
 				}
+			}
+
+			if (e.key === " " || e.key === "Enter") {
+				// Disabling emoji search
+				isTypingEmoji = false
+				if (emojiSearchString.length) setEmojiSearchString("")
 			}
 	  },
 
 		keyUp(e) {
-			// NOTE: Backspacing not handled. Completely deleting, or space, then backspace back to string
-			if (isTypingEmoji) {
-				let str = todoInputText.split(":")[1]
-				if (str.length) {
-					console.log(`emoji search: ${str}`)
+			
+			const val = e.target.value
+			let start = e.target.selectionStart-1
+
+			if (!val.length || val[start] === " ") {
+				isTypingEmoji = false
+				setEmojiSearchString("")
+				return;
+			}
+			
+			// Increment start to end of word
+			let b = val[start]
+			while (b && b !== " ") {
+				start++
+				b = val[start]
+			}
+
+			let word = ""
+			let str = ""
+			let c = val[start-1]
+			while (c) {
+				// console.log(`[${c}]`)
+				// NOTE: Needs to work for newlines, after end of emoji string too
+				if (c === " ") {
+					word = ""
+					break;
+				}
+				start--
+				c = val[start]
+				word += c
+				if (c === ":") {
+					str = word
+					break;
 				}
 			}
+			str = str.split("").reverse().join("")
+
+			// NOTE: Not working when moving caret to colon at string start
+			// if (str.length) isTypingEmoji = true
+			if (str) {
+				isTypingEmoji = true
+			} else {
+				isTypingEmoji = false
+				str = ""
+			}
+
+			setEmojiSearchString(str.split(":")[1] || "")
+
 		}
 
 	}
@@ -149,6 +219,10 @@ const TodoInput = ({
 	return(
 		// <div style={{position:"relative"}}>
 			// {<span className="todo-index">{index+1}</span>}
+		<>
+
+		<div className="todo-edit-active">
+			
 			<TextArea className="todo-input todo-focus" type="text"
 			  value={todoInputText}
 			  onChange={handleTodoInput.change}
@@ -161,7 +235,28 @@ const TodoInput = ({
 			  rows="1"
 			  ref={todoInputRef}
 			></TextArea>
-		// </div>
+
+			{isTypingEmoji ? 
+				<>
+					<div className="emoji-list-container">
+						<div className="emoji-list">
+							{ emojiList.length ? emojiList.map((emoji, index) => {
+								return (
+									<div className={`emoji-list-item ${emoji.active ? "active" : ""}`} key={emoji.emoji}>
+										<div className="emoji">{emoji.emoji}</div>
+										<code className="code">:{emoji.names.join(",")}</code>
+									</div>
+								)
+							}) : <div className="emoji-list-item-null">{emojiSearchString.length ? "No matches found" : "type for emoji search..."}</div> }
+						</div>
+						<div className="emoji-list-how-to"><code>Tab</code> to change selection. <code>Enter</code> to select</div>
+					</div>
+				</>
+			: null}
+
+			</div>
+
+		</>
 	)
 
 }
