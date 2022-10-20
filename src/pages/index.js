@@ -17,6 +17,7 @@ import CommandOptions from "../components/CommandOptions"
 import DialogFileOpen from "../components/DialogFileOpen"
 import introTemplate from "../mod/intro-template"
 import entryCommands from "../mod/entry-commands"
+import settingsDefault from "../mod/settings-default"
 
 var activeIndex = -1
 
@@ -27,7 +28,6 @@ const TodoPage = () => {
 
   const [todoList, setTodoList] = useState([])
   const [tagList, setTagList] = useState({})
-  const settingsDefault = { fontSize: 17, center: 850, title: "🗒️ Todo List" }
   const [settings, setSettings] = useState(settingsDefault)
   const [activeIndexPrevious, setActiveIndexPrevious] = useState(-1)
 
@@ -90,18 +90,33 @@ const TodoPage = () => {
   // Load
   useEffect(() => {
     // LS - Todos, Tags, Font-size
-    let list = JSON.parse(localStorage.getItem("todos"))
-    if (list) setTodoList(list)
-    let tags = JSON.parse(localStorage.getItem("tags"))
-    if (tags) setTagList(tags)
-    let settings = JSON.parse(localStorage.getItem("settings"))
-    if (settings) { setSettings(settings) }
+    let _list = JSON.parse(localStorage.getItem("todos"))
+    if (_list) setTodoList(_list)
+    let _tags = JSON.parse(localStorage.getItem("tags"))
+    if (_tags) setTagList(_tags)
+    let _settings = JSON.parse(localStorage.getItem("settings"))
+    if (!_settings) _settings = introTemplate.settings
+    setSettings(_settings)
     // Initialize with boilerplate how-to
-    if ((!list && !tags) || (!list.length && !Object.keys(tags).length)) {
+    if ((!_list && !_tags) || (!_list.length && !Object.keys(_tags).length)) {
       setTodoList(introTemplate.todos)
       setTagList(introTemplate.tags)
-      setSettings(introTemplate.settings)
     }
+    // Set absolute backup path, from relative
+    // Get absolute backups path
+    ;(async () => {
+      const response = await fetch("/api/set-backups-location", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({backups: _settings.backups})
+      })
+      const res = await response.json()
+      if (res.err) {
+        setStatusMsg(JSON.stringify(res.err))
+        return;
+      }
+      setSettings({..._settings, backupsAbsolute: res.backupsAbsolute})
+    })()
     document.body.tabIndex = -1
     document.body.addEventListener("focus", goto.exit)
     document.body.addEventListener("keyup", (e) => {

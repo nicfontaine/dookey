@@ -16,10 +16,13 @@ export const settingsSlice = createSlice({
     },
     setTitle: (state, action) => {
       state.value.fontSize = action.payload
+    },
+    setBackups: (state, action) => {
+      state.value.backups = action.payload
     }
   }
 })
 
-export const { setFontSize, setCenter, setTitle } = settingsSlice.actions
+export const { setFontSize, setCenter, setTitle, setBackups } = settingsSlice.actions
 
 export default settingsSlice.reducer

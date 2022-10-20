@@ -58,6 +58,17 @@ const entryCommands = {
 
   help() {},
 
+  async backups(backups, settings, setSettings, setStatusMsg) {
+    const response = await fetch("/api/set-backups-location", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({backups})
+    })
+    const res = await response.json()
+    if (res.err) { setStatusMsg(JSON.stringify(res.err)) }
+    setSettings({...settings, backupsAbsolute: res.backupsAbsolute, backups})
+  },
+
   center(size) {
     if (size && Number(size) > 0) {
       document.querySelector(":root").style.setProperty("--main-center-width", `${size}px`)
@@ -67,15 +78,16 @@ const entryCommands = {
     }
   },
 
-  async save (todos, tags, settings, setStatusMsg) {
+  async save (todos, tags, settings, setSettings, setStatusMsg) {
     const response = await fetch("/api/backup", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({todos, tags, settings})
     })
     const res = await response.json()
-    if (res.err) { setStatusMsg(res.err) }
+    if (res.err) { setStatusMsg(JSON.stringify(res.err)) }
     setStatusMsg("Saved to: " + res.path)
+    setSettings({...settings, backupsAbsolute: res.backups})
     entryCommands.statusClearDelay(setStatusMsg, 4000)
   },
 

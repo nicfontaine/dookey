@@ -36,6 +36,8 @@ const TodoInput = ({
 	}, [])
 
 	useEffect(() => {
+		let sel = window.getSelection().getRangeAt(0)
+		console.log(sel)
 		if (emojiSearchString.length) {
 			let search = fuzzysearch.search(emojiSearchString).slice(0, 6).map((s, i) => {
 				s.active = i === 0 ? true : false

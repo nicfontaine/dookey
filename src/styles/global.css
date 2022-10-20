@@ -110,6 +110,9 @@ input, textarea {
   /* background: var(--main-bar-bg-color); */
   transition: all 0.3s ease-out;
 }
+.entry-container.commands-display .entry-input {
+  font-family: "PT Mono";
+}
 .hide .entry-container {
   overflow: hidden;
   height: 0;
@@ -429,7 +432,8 @@ input, textarea {
 }
 .todo-text ul, .todo-text ol {
   padding-left: 1.2rem;
-  display: flex;
+  /* display: flex; */
+  white-space: initial;
   flex-direction: column;
   margin: 0;
   flex-basis: 100%;

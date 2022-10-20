@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import { v4 as uuid } from 'uuid'
 import TextArea from "textarea-autosize-reactjs"
 import { useDispatch } from "react-redux"
-import { setCenter, setTitle, setFontSize } from "../feature/settingsSlice"
+import { setCenter, setTitle, setFontSize, setBackups } from "../feature/settingsSlice"
 
 import { FlameIcon } from "@primer/octicons-react"
 
@@ -98,7 +98,15 @@ const EntryForm = ({
 	    } else if (e.shiftKey && e.key === "Enter") {
 	      // setEntryInput(entryInput + "\n")
 	      return;
-	    }
+	    } else if (e.key === " ") {
+				if (entryInput[0] === "/") {
+					if (entryInput.trim().split("/")[1] === "backups") {
+						console.log("here")
+						setEntryInput(`${entryInput} ${settings.backups}`)
+					}
+				}
+			}
+
 	    if (e.key === "ArrowDown") {
 	      if (!entryInputRef.current.value.length && !e.ctrlKey) {
 	      	e.preventDefault()
@@ -145,8 +153,9 @@ const EntryForm = ({
 	    // Commands
 	    if (val.indexOf("/") === 0) {
 	    	// NOTE: Cleanup and move
-	    	let args = val.replace(/  +/g, ' ').split("/")[1].split(" ")
-	      let command = args[0]
+				val = val.replace(/  +/g, ' ').substring(val.indexOf("/")+1, val.length)
+	      let command = val.substring(0, val.indexOf(" ")) || val
+	    	let args = val.substring(val.indexOf(" ")+1, val.length).split(" ")
 	      if (command in entryCommands) {
 					if (command === "msg") {
 						entryCommands.msg(setStatusMsg, "test")
@@ -157,7 +166,7 @@ const EntryForm = ({
 					} else if (command === "import") {
 						setDialogImportShow(true)
 					} else if (command === "save") {
-						entryCommands.save(todoList, tagList, settings, setStatusMsg)
+						entryCommands.save(todoList, tagList, settings, setSettings, setStatusMsg)
 					} else if (command === "open") {
 						entryCommands.open(setFileOpenSelect)
 					} else if (command === "kill") {
@@ -165,25 +174,35 @@ const EntryForm = ({
 					} else if (command === "help") {
 						window.open(process.env.APP_HELP)
 					} else if (command === "title") {
-						let title = args.splice(1).join(" ")
+						let title = args.join(" ")
 						setSettings({...settings, title: title })
 						dispatch(setTitle(title))
 					} else if (command === "full") {
 						setSettings({...settings, center: null})
 						dispatch(setCenter(null))
 					} else if (command === "center") {
-						if (args[1] !== undefined) {
-							let size = args[1].trim()
+						if (args[0] !== undefined) {
+							let size = args[0].trim()
 							setSettings({...settings, center: size})
 							dispatch(setCenter(size))
 						}
 					} else if (command === "size") {
-						if (args[1] === undefined) return;
-						let size = args[1].trim()
+						if (args[0] === undefined) return;
+						let size = args[0].trim()
 						if (size) {
 							setSettings({...settings, fontSize: size })
 							dispatch(setFontSize(size))
 							// entryCommands.size(setMainFontSize, Number(size))
+						}
+					} else if (command === "backups") {
+						if (!args) {
+							setEntryInput(`${entryInput} ${settings.backupsAbsolute}`)
+						}
+						let location = args[0].trim()
+						if (location) {
+							setSettings({...settings, backups: location})
+							dispatch(setBackups(location))
+							entryCommands.backups(location, settings, setSettings, setStatusMsg)
 						}
 					}
 				}
@@ -204,7 +223,7 @@ const EntryForm = ({
 
 	return(
 		<>
-		<div className="entry-container">
+		<div className={`entry-container ${commandOptionsDisplay ? "commands-display" : ""}`}>
 			<div className="entry-container-inner">
 				<form
 					className={`entry-form ${activeIndex === -1 ? "active" : ""}`}

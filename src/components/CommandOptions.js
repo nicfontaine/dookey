@@ -55,12 +55,14 @@ const CommandOptions = ({
 							<div className="row"><span className="code">/size</span><span className="code">{settings.fontSize || "<number>"}</span></div>
 							<div className="row"><span className="code">/center</span> <span className="code">{settings.center || "<number>"}</span></div>
 							<div className="row"><span className="code">/full</span></div>
+							<div className="row"><span className="code">/backups {settings.backups}</span></div>
 						</div>
 						<div className="desc">
 							<div className="row">Set a custom header name</div>
 							<div className="row">Set font-size to number</div>
 							<div className="row">Center layout to any pixel-width</div>
 							<div className="row">Full-width layout (default)</div>
+							<div className="row">Change backup file location</div>
 						</div>
 					</div>
 				</div>
