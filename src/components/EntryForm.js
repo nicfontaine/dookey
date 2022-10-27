@@ -5,11 +5,10 @@ import { v4 as uuid } from 'uuid'
 import TextArea from "textarea-autosize-reactjs"
 import { useDispatch } from "react-redux"
 import { setCenter, setTitle, setFontSize, setBackups } from "../feature/settingsSlice"
-
 import { FlameIcon } from "@primer/octicons-react"
+import EmojiPopup from "./EmojiPopup"
 
 import entryCommands from "../mod/entry-commands.js"
-
 
 const EntryForm = ({
 	todoListRef,
@@ -18,8 +17,6 @@ const EntryForm = ({
 	todoList,
 	tagList,
 	activeIndex,
-	activeIndexPrevious,
-	setActiveIndexPrevious,
 	setStatusMsg,
 	commandOptionsDisplay,
 	setDialogImportShow,
@@ -36,8 +33,9 @@ const EntryForm = ({
 	const [entryInput, setEntryInput] = useState("")
   const entryInputRef = useRef(null)
   const formRef = useRef(null)
-	const [pickerDisplay, setPickerDisplay] = useState(false)
-	const [emojiTyping, setEmojiTyping] = useState(false)
+	const [emojiPopupActive, setEmojiPopupActive] = useState(false)
+	const [emojiKeyUpEvent, setEmojiKeyUpEvent] = useState("")
+	const [emojiKeyDownEvent, setEmojiKeyDownEvent] = useState("")
 
   useEffect(() => {
   	entryInputRef.current.focus()
@@ -55,30 +53,27 @@ const EntryForm = ({
 
 	const handleEntryInput = {
 	  
-	  change: (e) => {
+	  change(e) {
 	    e.preventDefault()
 	    // Ignore if a todo is focused
 	    if (activeIndex < 0) {
 				let val = e.target.value
 	      setEntryInput(val)
-				if (emojiTyping) {
-					let emo = val.substring(entryInput.lastIndexOf(":") + 1)
-				}
 				if (todoListRef.current.scrollTop > 0) todoListRef.current.scrollTop = 0
 	    }
 	  },
 
-	  active: () => {
+	  active() {
 	  	goto.entry()
 	    if (todoListRef.current) {
 	    	todoListRef.current.scrollTop = 0
 	    }
 	  },
 
-	  focus: (e) => {},
+	  focus(e) {},
 
 	  // In case focus leaves, but active doesn't change. Like to <body>
-	  blur: (e) => {
+	  blur(e) {
 	  	// Changing windows/tabs doesn't really blur the input
 	  	if (e.target !== document.activeElement) {
 		  	formRef.current.classList.remove("active")
@@ -86,11 +81,19 @@ const EntryForm = ({
 	  	}
 	  },
 
-	  submit: (e) => {
+	  submit(e) {
 	    e.preventDefault()
 	  },
 
-	  keyDown: (e) => {
+	  keyDown(e) {
+			setEmojiKeyDownEvent(e)
+			if (emojiPopupActive) {
+				if (e.key === "Enter" || e.key === "ArrowDown" || e.key === "ArrowUp" || e.key === "Tab") {
+					e.preventDefault()
+					return;
+				}
+			}
+
 	    if (!e.shiftKey && e.key === "Enter") {
 	      e.preventDefault()
 	      handleEntryInput.confirm()
@@ -101,7 +104,6 @@ const EntryForm = ({
 	    } else if (e.key === " ") {
 				if (entryInput[0] === "/") {
 					if (entryInput.trim().split("/")[1] === "backups") {
-						console.log("here")
 						setEntryInput(`${entryInput} ${settings.backups}`)
 					}
 				}
@@ -129,22 +131,19 @@ const EntryForm = ({
 	    else if (e.key === "Escape" && commandOptionsDisplay) {
 	    	setEntryInput("")
 	    }
-
-			if (e.key === ":") {
-				setEmojiTyping(true)
-				setPickerDisplay(true)
-			} else {
-				setPickerDisplay(false)
-			}
 	  },
 
+		keyUp(e) {
+			setEmojiKeyUpEvent(e)
+		},
+
 	  // Clear content
-	  clear: () => {
+	  clear() {
 	    setEntryInput("")
 	  },
 
 	  // User entry
-	  confirm: () => {
+	  confirm() {
 	    let val = entryInput.trim()
 	    if (!val.length) {
 	      handleEntryInput.clear()
@@ -241,6 +240,7 @@ const EntryForm = ({
 						className={`entry-input ${activeIndex === -1 ? "active" : ""}`}
 						onChange={handleEntryInput.change}
 						onKeyDown={handleEntryInput.keyDown}
+						onKeyUp={handleEntryInput.keyUp}
 						onClick={handleEntryInput.active}
 						onFocus={handleEntryInput.focus}
 						onBlur={handleEntryInput.blur}
@@ -250,6 +250,16 @@ const EntryForm = ({
 						placeholder="Add a todo"
 						ref={entryInputRef}
 					>{entryInput}</TextArea>
+
+					<EmojiPopup
+						active={emojiPopupActive}
+						setActive={setEmojiPopupActive}
+						inputText={entryInput}
+						setInputText={setEntryInput}
+						keyUpEvent={emojiKeyUpEvent}
+						keyDownEvent={emojiKeyDownEvent}
+					>
+					</EmojiPopup>
 
 				</form>
 			</div>

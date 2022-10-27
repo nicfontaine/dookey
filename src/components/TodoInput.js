@@ -1,18 +1,8 @@
-// (function(){"use strict"})()
+(function(){"use strict"})()
 
 import { useState, useRef, useEffect } from "react"
-import autosize from "autosize"
 import TextArea from "textarea-autosize-reactjs"
-import csn from "classnames"
-import FuzzySearch from "fuzzy-search"
-import { gemoji } from "gemoji"
-
-const fuzzysearch = new FuzzySearch(gemoji,
-	["names"],
-	{sort: true}
-)
-
-var isTypingEmoji = false
+import EmojiPopup from "./EmojiPopup"
 
 const TodoInput = ({
 		todo,
@@ -26,29 +16,18 @@ const TodoInput = ({
 	}) => {
 
 	const [todoInputText, setTodoInputText] = useState(todo.text)
+	const [todoCaretStart, setTodoCaretStart] = useState(todo.text.length-1)
 	const todoTextBackup = todo.text
 	const todoInputRef = useRef(null)
-	const [emojiSearchString, setEmojiSearchString] = useState("")
-	const [emojiList, setEmojiList] = useState([])
 
-	useEffect(() => {
-		// autosize(todoInputRef.current)
-	}, [])
+	const [emojiPopupActive, setEmojiPopupActive] = useState(false)
+	const [emojiKeyUpEvent, setEmojiKeyUpEvent] = useState("")
+	const [emojiKeyDownEvent, setEmojiKeyDownEvent] = useState("")
 
-	useEffect(() => {
-		let sel = window.getSelection().getRangeAt(0)
-		console.log(sel)
-		if (emojiSearchString.length) {
-			let search = fuzzysearch.search(emojiSearchString).slice(0, 6).map((s, i) => {
-				s.active = i === 0 ? true : false
-				return s
-			})
-			if (search.length) setEmojiList(search)
-			else setEmojiList([])
-		} else {
-			setEmojiList([])
-		}
-	}, [emojiSearchString])
+	// useEffect(() => {
+	// 	todoInputRef.current.selectionStart = todoCaretStart
+	// 	todoInputRef.current.selectionEnd = todoCaretStart
+	// }, [todoInputText])
 
 	function textSurround(target, _l, _r) {
 		let val = target.value
@@ -61,13 +40,13 @@ const TodoInput = ({
 	const handleTodoInput = {
 
 	  // Input value change
-	  change: (e) => {
+	  change(e) {
 	    setTodoInputText(e.target.value)
 	    // e.target.style.minHeight = e.target.scrollHeight + "px"
 	    // autosize.update(e.target)
 	  },
 
-	  focus: (e) => {
+	  focus(e) {
 	    // Move cursor to end
 	    setTimeout(() => {
 	      e.target.selectionStart = e.target.selectionEnd = e.target.value.length
@@ -77,11 +56,11 @@ const TodoInput = ({
 	    // autosize.update(e.target)
 	  },
 
-	  blur: (e) => {
+	  blur(e) {
 	    handleTodoInput.unEdit(e)
 	  },
 
-	  unEdit: (e) => {
+	  unEdit(e) {
 	    setEditIndex(null)
 	    let _list = todoList
 	    let val = e.target.value
@@ -100,7 +79,8 @@ const TodoInput = ({
 	  },
 
 	  // Handle special keys like enter, escape, etc
-	  keyDown: (e) => {
+	  keyDown(e) {
+			setEmojiKeyDownEvent(e)
 	    // "ESC"
 	    if (e.key === "Escape") {
 	      e.preventDefault()
@@ -113,120 +93,64 @@ const TodoInput = ({
 	      goto.index(activeIndexPrevious)
 	      setEditIndex(null)
 	    }
+			else if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+				if (emojiPopupActive) {
+					e.preventDefault()
+					return;
+				}
+			}
 	    // Unedit, or carraige return
 	    else if (e.key === "Enter") {
+				if (emojiPopupActive) {
+					e.preventDefault()
+					return;
+				}
 	      if (e.ctrlKey) {
 	        e.preventDefault()
 	        handleTodoInput.unEdit(e)
-	      } else {
-	        // e.target.value += "\n"
-	        // autosize.update(e.target)
 	      }
 	    }
 	    else if (e.key === "Tab") {
 	      e.preventDefault()
+				if (emojiPopupActive) return;
 				let targ = e.target
 				let start = targ.selectionStart
 				let end = targ.selectionEnd
-				e.target.value = e.target.value.substring(0, start) + "\t" + e.target.value.substring(end)
+				setTodoCaretStart(start)
+				setTodoInputText(e.target.value.substring(0, start) + "\t" + e.target.value.substring(end))
 				e.target.selectionStart = e.target.selectionEnd = start + 1
 	    }
 	    // Bolden
 	    else if (e.key === "b" && e.ctrlKey) {
 	    	e.preventDefault()
-	    	e.target.value = textSurround(e.target, "**", "**")
+				setTodoCaretStart(e.target.selectionStart)
+	    	setTodoInputText(textSurround(e.target, "**", "**"))
 	    }
 	    else if (e.key === "i" && e.ctrlKey) {
 	    	e.preventDefault()
-	    	e.target.value = textSurround(e.target, "_", "**")
+				setTodoCaretStart(e.target.selectionStart)
+	    	setTodoInputText(textSurround(e.target, "_", "**"))
 	    }
 			else if (e.key === "g" && e.ctrlKey) {
 				e.preventDefault()
 				let _l = "<details open><summary>Subtasks...</summary>\n<div>"
-				e.target.value = textSurround(e.target, _l, "</div></details>")
-			}
-			else if (e.key === ":") {
-				isTypingEmoji = true
-				// Initializing emoji search
-			}
-			else if (e.key === "Backspace") {
-				// Backspace 1 colon, last of emoji-word
-				if (e.target.value[e.target.selectionStart-1] === ":") {
-					// Disabling emoji search
-					isTypingEmoji = false
-					if (emojiSearchString.length) setEmojiSearchString("")
-				}
-			}
-
-			if (e.key === " " || e.key === "Enter") {
-				// Disabling emoji search
-				isTypingEmoji = false
-				if (emojiSearchString.length) setEmojiSearchString("")
+				setTodoCaretStart(e.target.selectionStart)
+				setTodoInputText(textSurround(e.target, _l, "</div></details>"))
 			}
 	  },
 
 		keyUp(e) {
-			
-			const val = e.target.value
-			let start = e.target.selectionStart-1
-
-			if (!val.length || val[start] === " ") {
-				isTypingEmoji = false
-				setEmojiSearchString("")
-				return;
-			}
-			
-			// Increment start to end of word
-			let b = val[start]
-			while (b && b !== " ") {
-				start++
-				b = val[start]
-			}
-
-			let word = ""
-			let str = ""
-			let c = val[start-1]
-			while (c) {
-				// console.log(`[${c}]`)
-				// NOTE: Needs to work for newlines, after end of emoji string too
-				if (c === " ") {
-					word = ""
-					break;
-				}
-				start--
-				c = val[start]
-				word += c
-				if (c === ":") {
-					str = word
-					break;
-				}
-			}
-			str = str.split("").reverse().join("")
-
-			// NOTE: Not working when moving caret to colon at string start
-			// if (str.length) isTypingEmoji = true
-			if (str) {
-				isTypingEmoji = true
-			} else {
-				isTypingEmoji = false
-				str = ""
-			}
-
-			setEmojiSearchString(str.split(":")[1] || "")
-
+			setEmojiKeyUpEvent(e)
 		}
 
 	}
 	
 	return(
-		// <div style={{position:"relative"}}>
-			// {<span className="todo-index">{index+1}</span>}
 		<>
-
 		<div className="todo-edit-active">
 			
 			<TextArea className="todo-input todo-focus" type="text"
-			  value={todoInputText}
+			  value={todoInputText || ""}
 			  onChange={handleTodoInput.change}
 			  onKeyDown={handleTodoInput.keyDown}
 				onKeyUp={handleTodoInput.keyUp}
@@ -238,26 +162,17 @@ const TodoInput = ({
 			  ref={todoInputRef}
 			></TextArea>
 
-			{isTypingEmoji ? 
-				<>
-					<div className="emoji-list-container">
-						<div className="emoji-list">
-							{ emojiList.length ? emojiList.map((emoji, index) => {
-								return (
-									<div className={`emoji-list-item ${emoji.active ? "active" : ""}`} key={emoji.emoji}>
-										<div className="emoji">{emoji.emoji}</div>
-										<code className="code">:{emoji.names.join(",")}</code>
-									</div>
-								)
-							}) : <div className="emoji-list-item-null">{emojiSearchString.length ? "No matches found" : "type for emoji search..."}</div> }
-						</div>
-						<div className="emoji-list-how-to"><code>Tab</code> to change selection. <code>Enter</code> to select</div>
-					</div>
-				</>
-			: null}
+			<EmojiPopup
+				active={emojiPopupActive}
+				setActive={setEmojiPopupActive}
+				inputText={todoInputText}
+				setInputText={setTodoInputText}
+				keyUpEvent={emojiKeyUpEvent}
+				keyDownEvent={emojiKeyDownEvent}
+			>
+			</EmojiPopup>
 
-			</div>
-
+		</div>
 		</>
 	)
 

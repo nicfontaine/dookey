@@ -213,8 +213,6 @@ const TodoPage = () => {
               todoList={todoList}
               tagList={tagList}
               activeIndex={activeIndex}
-              activeIndexPrevious={activeIndexPrevious}
-              setActiveIndexPrevious={setActiveIndexPrevious}
               setStatusMsg={setStatusMsg}
               commandOptionsDisplay={commandOptionsDisplay}
               setDialogImportShow={setDialogImportShow}

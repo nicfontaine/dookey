@@ -70,7 +70,7 @@ const Todo = ({
 
     archiveStart (e) {
       setAnimOutIndex(activeIndex)
-      setTimeout(() => handleTodo.archive(activeIndex), 150)
+      setTimeout(() => handleTodo.archive(), 150)
     },
 
     archive () {

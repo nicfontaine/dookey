@@ -32,7 +32,15 @@
 | Scroll list down | `Ctrl + Down` |
 | Bold selected text while editing | `Ctrl + B` |
 | Italicize selected text while editing | `Ctrl + I` |
-| Put selected text in `<details>` tag | `Ctrl + D` |
+| Put selected text in `<details>` tag * | `Ctrl + D` |
+\* **NOTE:** `details` uses html, so markdown won't work inside
+
+#### Emojis
+| Function | Keys |
+|:--------------|:-----------|
+| Display search list | `:<text>` |
+| Navigate list | `Up` or `Down` |
+| Choose from list | `Enter` or `Tab` |
 
 ## Input
 **Entry Input**   
