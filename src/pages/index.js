@@ -139,20 +139,20 @@ const TodoPage = () => {
   // Focus element
   useEffect(() => {
     if (focusElement) focusElement.focus()
-    if (activeIndexPrevious && activeIndexPrevious >= 0) {
-      let previous = todoListRef.current.getElementsByClassName("todo")[activeIndexPrevious]
-      if (!previous) return;
-      let details = previous.getElementsByTagName("details")
-      for (const d of details) {
-        if (activeIndex > -1 && activeIndex === activeIndexPrevious) {
-          d.open = true
-          d.classList.add("open")
-        } else {
-          d.open = false
-          d.classList.remove("open")
-        }
-      }
-    }
+    // if (activeIndexPrevious && activeIndexPrevious >= 0) {
+    //   let previous = todoListRef.current.getElementsByClassName("todo")[activeIndexPrevious]
+    //   if (!previous) return;
+    //   let details = previous.getElementsByTagName("details")
+    //   for (const d of details) {
+    //     if (activeIndex > -1 && activeIndex === activeIndexPrevious) {
+    //       d.open = true
+    //       d.classList.add("open")
+    //     } else {
+    //       d.open = false
+    //       d.classList.remove("open")
+    //     }
+    //   }
+    // }
   }, [focusElement])
 
   // Settings changes

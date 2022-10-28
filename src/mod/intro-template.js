@@ -57,7 +57,8 @@ const introTemplate = {
   settings: {
     title: "✌️ Welcome",
     fontSize: "17",
-    center: "800"
+    center: "800",
+    backups: "./backups/"
   }
 }
 
