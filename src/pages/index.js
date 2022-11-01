@@ -27,6 +27,7 @@ const TodoPage = () => {
   // todoList, setTodoList, focusElement, setFocusElement, mainRef, todoListRef
 
   const [todoList, setTodoList] = useState([])
+  const [archiveList, setArchiveList] = useState([])
   const [tagList, setTagList] = useState({})
   const [settings, setSettings] = useState(settingsDefault)
   const [activeIndexPrevious, setActiveIndexPrevious] = useState(-1)
@@ -90,15 +91,17 @@ const TodoPage = () => {
   // Load
   useEffect(() => {
     // LS - Todos, Tags, Font-size
-    let _list = JSON.parse(localStorage.getItem("todos"))
-    if (_list) setTodoList(_list)
+    let _todos = JSON.parse(localStorage.getItem("todos"))
+    if (_todos) setTodoList(_todos)
+    let _archive = JSON.parse(localStorage.getItem("archive"))
+    if (_archive) setArchiveList(_archive)
     let _tags = JSON.parse(localStorage.getItem("tags"))
     if (_tags) setTagList(_tags)
     let _settings = JSON.parse(localStorage.getItem("settings"))
     if (!_settings) _settings = introTemplate.settings
     setSettings(_settings)
     // Initialize with boilerplate how-to
-    if ((!_list && !_tags) || (!_list.length && !Object.keys(_tags).length)) {
+    if ((!_todos && !_tags) || (!_todos.length && !Object.keys(_tags).length)) {
       setTodoList(introTemplate.todos)
       setTagList(introTemplate.tags)
     }
@@ -131,7 +134,9 @@ const TodoPage = () => {
     localStorage.setItem("todos", JSON.stringify(todoList))
     focusChange(activeIndex)
   }, [todoList])
-
+  useEffect(() => {
+    localStorage.setItem("archive", JSON.stringify(archiveList))
+  }, [archiveList])
   useEffect(() => {
     localStorage.setItem("tags", JSON.stringify(tagList))
   }, [tagList])
@@ -164,13 +169,13 @@ const TodoPage = () => {
 
   const handleTodoList = {
     scroll(e) {
-      if (e.target.scrollTop > 0) {
-        mainHeadingRef.current.classList.add("scrolled")
-        entryFormRef.current.classList.add("hide")
-      } else {
-        mainHeadingRef.current.classList.remove("scrolled")
-        entryFormRef.current.classList.remove("hide")
-      }
+      // if (e.target.scrollTop > 0) {
+      //   mainHeadingRef.current.classList.add("scrolled")
+      //   entryFormRef.current.classList.add("hide")
+      // } else {
+      //   mainHeadingRef.current.classList.remove("scrolled")
+      //   entryFormRef.current.classList.remove("hide")
+      // }
     }
   }
 
@@ -199,6 +204,7 @@ const TodoPage = () => {
         <div className="main">
 
           <div className="top-container">
+
             <div className="top-background-image"></div>
 
             <div className="main-heading" ref={mainHeadingRef}>
@@ -250,42 +256,47 @@ const TodoPage = () => {
                   setActiveIndexPrevious={setActiveIndexPrevious}
                   todoList={todoList}
                   setTodoList={setTodoList}
+                  archiveList={archiveList}
+                  setArchiveList={setArchiveList}
                   tagList={tagList}
                   setTagList={setTagList}
                   goto={goto}
-                  todoListRef={todoListRef}
                 />
               }
             }) : undefined }
 
-            <div className="divider-archived">
-              <ArchiveIcon size={16} className="icon"/>
-              <span className="mg-l-3">Archived</span>
-            </div>
+            {/* { archiveList.length ?
+              <div className="divider-archived">
+                <ArchiveIcon size={16} className="icon"/>
+                <span className="mg-l-3">Archived</span>
+              </div>
+            : null } */}
 
-            <div className="d-flx w-full flx-col">
-            { todoList.length >= 1 ? todoList.map((todo, index) => {
-              if (todo.archive) {
+            { archiveList.length ?
+              archiveList.map((todo, index) => {
                 return <Todo
                   key={todo.id}
                   todo={todo}
-                  index={index}
+                  index={index + todoList.length}
                   activeIndex={activeIndex}
                   activeIndexPrevious={activeIndexPrevious}
                   setActiveIndexPrevious={setActiveIndexPrevious}
                   todoList={todoList}
                   setTodoList={setTodoList}
+                  archiveList={archiveList}
+                  setArchiveList={setArchiveList}
                   tagList={tagList}
                   setTagList={setTagList}
                   goto={goto}
-                  todoListRef={todoListRef}
+                  archived={true}
                 />
-              }
-            }) : undefined }
-            </div>
+              })
+            : null }
+
           </div>
 
         </div>
+
 
         <DialogImport
           goto={goto}

@@ -22,10 +22,12 @@ const Todo = ({
   setActiveIndexPrevious,
   todoList,
   setTodoList,
+  archiveList,
+  setArchiveList,
   tagList,
   setTagList,
   goto,
-  todoListRef
+  archived
 }) => {
 
   const [editIndex, setEditIndex] = useState(null)
@@ -45,7 +47,6 @@ const Todo = ({
       if (activeIndex > 0) {
         let _list = todoList.map((todo) => todo)
         _list.splice(activeIndex - 1, 0, _list.splice(activeIndex, 1)[0])
-        // console.log("activeIndex " + activeIndex)
         setTodoList(_list)
       }
     },
@@ -53,7 +54,6 @@ const Todo = ({
       if (activeIndex < todoList.length-1) {
         let _list = todoList.map((todo) => todo)
         _list.splice(activeIndex + 1, 0, _list.splice(activeIndex, 1)[0])
-        // console.log("activeIndex " + activeIndex)
         setTodoList(_list)
       }
     }
@@ -70,22 +70,12 @@ const Todo = ({
 
     archiveStart (e) {
       setAnimOutIndex(activeIndex)
-      setTimeout(() => handleTodo.archive(), 150)
+      setTimeout(() => handleTodo.archive(activeIndex), 150)
     },
 
-    archive () {
-      let a = [], b = [], c = [], i = 0
-      for (let t of todoList) {
-        if (!"archive" in t) t.archive = false
-        if (i === activeIndex) {
-          t.archive = !t.archive
-          t.archive ? b.push(t) : a.push(t)
-        } else {
-          t.archive ? c.push(t) : a.push(t)
-        }
-        i++
-      }
-      setTodoList(a.concat(b, c))
+    archive (_ind) {
+      setArchiveList([...archiveList, todoList[activeIndex]])
+      handleTodo.delete(activeIndex)
     },
 
     // Mark task for delete
@@ -98,7 +88,6 @@ const Todo = ({
 
     // Remove from data, and list. Set next active position
     delete (_ind) {
-      // Remove from todo list
       let _list = todoList.filter((todo, index) => {
         if (index !== _ind) { return todo }
       })
@@ -336,8 +325,8 @@ const Todo = ({
       <button
         className={csn("todo todo-focus",
         {active:isActive},
-        {archive:todo.archive},
-        {animOut:isAnimOut}
+        {animOut:isAnimOut},
+        {archive:archived || false}
         )}
         onClick={(e) => handleTodo.click(e, index)}
         onFocus={(e) => handleTodo.focus(e, index)}
@@ -349,7 +338,7 @@ const Todo = ({
         tabIndex="0"
       >
         
-        { !todo.archive ?
+        { !archived ?
           <span className="todo-index">{index+1}</span> :
           <span className="todo-index">
             <CheckCircleFillIcon size={17}/>

@@ -15,7 +15,7 @@ const EmojiPopup = ({
   keyDownEvent
 }) => {
 
-  const listMax = 6
+  var listMax = 6
   const [emojiList, setEmojiList] = useState([])
   const [emojiSearchString, setEmojiSearchString] = useState("")
   const [emojiSelect, setEmojiSelect] = useState("")
@@ -50,6 +50,7 @@ const EmojiPopup = ({
 
   const listEmojis = function(str) {
     let list = emojiList
+    if (index > list.length) index = 0
     if (str && str.length) {
 			let search = fuzzysearch.search(str).slice(0, listMax)
 			if (search.length) list = search
@@ -65,12 +66,14 @@ const EmojiPopup = ({
 
   const list = {
     next() {
-      index = (index+1) % listMax
+      let max = listMax < emojiList.length ? listMax : emojiList.length
+      index = (index+1) % max
       listEmojis()
     },
     prev() {
       index--
-      index = index < 0 ? listMax-1 : index
+      let max = listMax < emojiList.length ? listMax : emojiList.length
+      index = index < 0 ? max-1 : index
       listEmojis()
     },
     select() {
