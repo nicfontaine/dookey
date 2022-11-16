@@ -261,12 +261,7 @@ input, textarea {
   display: block;
 }
 .todo-list {
-  display: flex;
-  flex-direction: column;
   overflow-y: auto;
-  flex-shrink: 1;
-  flex-grow: 1;
-  min-height: 0;
   padding-right: 1rem;
   padding-left: 1rem;
   padding-top: 1rem;
@@ -279,23 +274,35 @@ input, textarea {
 .todo-list.blur {
   filter: blur(3px);
 }
+.todo-list-inner {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 1;
+  flex-grow: 1;
+  min-height: 0;
+}
 .todo-list .divider-archived {
-  font-weight: bold;
-  font-style: italic;
-  text-align: center;
-  padding: 0.6rem 0 1.5rem 0;
+  /* font-weight: bold; */
+  /* font-style: italic; */
+  text-transform: uppercase;
+  /* font-size: 0.87rem; */
+  padding: 0.6rem 0.7rem;
   /* background: rgb(53 54 70); */
+  /* background: rgb(255, 255, 255, 0.06); */
   border-bottom: 2px solid rgb(255, 255, 255, 0.06);
-  color: rgba(255,255,255,0.75);
-  letter-spacing: 4px;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 2px;
+  border-left: 2px solid transparent;
+  border-right: 2px solid transparent;
   /* transform: translateY(-2px); */
-  margin: 1rem 0.5rem;
+  margin: 2rem 0 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .todo-list .divider-archived .icon {
   color: rgb(255 255 255 / 38%);
+  color: #63c06d;
 }
 .todo {
   position: relative;
@@ -316,6 +323,7 @@ input, textarea {
   /*align-self: flex-start;*/
   transition: 0.1s opacity;
   /* color: #d4d4d4; */
+  border-radius: 0;
   color: rgba(255,255,255,0.82);
   cursor: pointer;
   font-family: inherit;

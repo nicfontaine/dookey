@@ -16,7 +16,8 @@ export default async function handler(request, response) {
 		try {
 			await fsx.ensureFile(filePath)
 			await fs.writeFile(filePath, JSON.stringify(request.body))
-			return response.status(200).json({path: filePath, backupsAbsolute})
+			const fullPath = path.resolve(filePath)
+			return response.status(200).json({path: fullPath, backupsAbsolute})
 		} catch(err) {
 			return response.status(500).json({path: filePath, err: err})
 		}

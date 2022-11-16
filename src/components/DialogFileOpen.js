@@ -1,8 +1,4 @@
-(function(){"use strict"})()
-
 import { useEffect, useRef } from "react"
-
-import entryCommands from "../mod/entry-commands.js"
 
 export default function DialogFileOpen({
 	setStatusMsg,

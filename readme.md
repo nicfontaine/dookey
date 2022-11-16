@@ -70,6 +70,8 @@
 - `/full` Full-width layout (default)
 
 ## Bugs
+- Can't enter same emoji, because react state doesn't change
+- Can't unarchive first in archive list. Ends up with [undefined]
 - Status bar msg won't update, if another msg is still active (before it gets reset)
 - Autosize on edit textarea not working
 - Entry input getting sized smaller on refresh, since it has no value

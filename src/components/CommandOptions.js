@@ -1,5 +1,3 @@
-(function(){"use strict"})()
-
 const CommandOptions = ({
 	commandOptionsDisplay,
 	settings,
