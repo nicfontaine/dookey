@@ -7,26 +7,18 @@ import emojiSubstring from "../mod/emoji-substring"
 const fuzzysearch = new FuzzySearch(gemoji, ["names"], {sort: true})
 var index = 0
 
-const EmojiPopup = ({
-	active,
-	setActive,
-	inputText,
-	setInputText,
-	keyUpEvent,
-	keyDownEvent,
-	listMax = 6
-}) => {
+const EmojiPopup = ({ active, setActive, inputText, setInputText, keyUpEvent, keyDownEvent, listMax = 6 }) => {
 
 	const [emojiList, setEmojiList] = useState([])
 	const [emojiSearchString, setEmojiSearchString] = useState("")
 	const [emojiSelect, setEmojiSelect] = useState("")
 
-	useEffect(() => {
-		keyDownEvent && keyDown(keyDownEvent)
+	// Keyevents
+	useEffect(() => { 
+		if (Object.keys(keyDownEvent).length) keyDown(keyDownEvent)
 	}, [keyDownEvent])
-	
-	useEffect(() => {
-		keyUpEvent && keyUp(keyUpEvent)
+	useEffect(() => { 
+		if (Object.keys(keyUpEvent).length) keyUp(keyUpEvent)
 	}, [keyUpEvent])
 
 	useEffect(() => {
@@ -45,15 +37,12 @@ const EmojiPopup = ({
 	const list = {
 
 		next() {
-			let max = listMax < emojiList.length ? listMax : emojiList.length
-			index = (index+1) % max
+			index = (index+1) % list.checkMax()
 			list.update()
 		},
 
 		prev() {
-			index--
-			let max = listMax < emojiList.length ? listMax : emojiList.length
-			index = index < 0 ? max-1 : index
+			index = index-1 < 0 ? list.checkMax()-1 : index-1
 			list.update()
 		},
 
@@ -61,12 +50,13 @@ const EmojiPopup = ({
 			setEmojiSelect(emojiList[index].emoji)
 		},
 
+		checkMax: () => listMax < emojiList.length ? listMax : emojiList.length,
+
 		update(str) {
-			let list = emojiList
+			let list = emojiList.slice()
 			if (str && str.length) {
 				let search = fuzzysearch.search(str).slice(0, listMax)
-				if (search.length) list = search
-				else list = []
+				list = search.length ? search : []
 			}
 			if (index >= list.length) index = 0
 			list = list.map((s, i) => {
@@ -74,7 +64,6 @@ const EmojiPopup = ({
 				return s
 			})
 			setEmojiList(list)
-			return list
 		}
 		
 	}
@@ -88,6 +77,9 @@ const EmojiPopup = ({
 				list.next()
 			} else if (key === "Enter" || key === "Tab") {
 				list.select()
+			} else if (key === "Escape") {
+				// NOTE: This is overridden by keyup check. So would need to set a bypass, and determine a reset case
+				// setActive(false)
 			}
 		}
 	}
@@ -97,15 +89,13 @@ const EmojiPopup = ({
 		const start = e.target.selectionStart-1
 		var active = active
 		var str = ""
-		// Possible state change
+		// Possible state change cases
 		if (key === ":") {
 			active = true
 		} else if (key === " ") {
 			active = false
-		} else if (key === "Backspace") {
-			if (inputText[start] === ":") {
-				active = false
-			}
+		} else if (key === "Backspace" && inputText[start] === ":") {
+			active = false
 		}
 		str = emojiSubstring(inputText, start)
 		active =  str.length ? true : false

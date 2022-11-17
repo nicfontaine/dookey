@@ -1,4 +1,8 @@
 {
+	"env": {
+		"browser": true,
+		"node": true
+	},
 	"extends": [
 		"eslint:recommended",
 		"plugin:react/recommended"
@@ -16,6 +20,7 @@
 		"strict": ["error", "global"],
 		"func-style": ["error", "expression"],
 		"react/react-in-jsx-scope": "off",
-		"arrow-parens": ["error", "always"]
+		"arrow-parens": ["error", "always"],
+		"no-unused-vars": "off"
 	}
 }

@@ -36,6 +36,7 @@ const CommandOptions = ({
 							<div className="row"><span className="code">/open</span></div>
 							<div className="row"><span className="code">/nuke</span></div>
 							<div className="row"><span className="code">/help</span></div>
+							<div className="row"><span className="code">/clock</span></div>
 						</div>
 						<div className="desc">
 							<div className="row">Copy data to clipboard</div>
@@ -44,6 +45,7 @@ const CommandOptions = ({
 							<div className="row">Load from backup file</div>
 							<div className="row">Delete all notes</div>
 							<div className="row">Goto README for more info</div>
+							<div className="row">Display a clock overlay</div>
 						</div>
 					</div>
 					<h2 className="section-heading"><span className="mg-r-1">⚙️</span> Settings</h2>

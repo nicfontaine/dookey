@@ -121,8 +121,10 @@ const TodoPage = () => {
 		// NOTE: This is causing a ref error at line 54
 		document.body.addEventListener("focus", goto.exit)
 		document.body.addEventListener("keyup", (e) => {
-			if (e.target === document.body && e.key === "/") {
-				goto.entry()
+			if (e.target === document.body) {
+				if (e.key === "/" || (e.key === "l" && e.ctrlKey)) {
+					goto.entry()
+				}
 			}
 		})
 	}, [])

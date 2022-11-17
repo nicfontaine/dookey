@@ -8,6 +8,10 @@ const entryCommands = {
 		entryCommands.statusClearDelay(setStatusMsg, 4000)
 	},
 
+	clock(clockActive, setClockActive) {
+		setClockActive(true)
+	},
+
 	statusClearDelay(set, time) {
 		setTimeout(() => set(""), time)
 	},

@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux"
 import { setCenter, setTitle, setFontSize, setBackups } from "../feature/settingsSlice"
 import { FlameIcon } from "@primer/octicons-react"
 import EmojiPopup from "./EmojiPopup"
+import Clock from "../components/Clock"
 
 import entryCommands from "../mod/entry-commands.js"
 
@@ -34,8 +35,9 @@ const EntryForm = ({
 	const entryInputRef = useRef(null)
 	const formRef = useRef(null)
 	const [emojiPopupActive, setEmojiPopupActive] = useState(false)
-	const [emojiKeyUpEvent, setEmojiKeyUpEvent] = useState("")
-	const [emojiKeyDownEvent, setEmojiKeyDownEvent] = useState("")
+	const [emojiKeyUpEvent, setEmojiKeyUpEvent] = useState({})
+	const [emojiKeyDownEvent, setEmojiKeyDownEvent] = useState({})
+	const [clockActive, setClockActive] = useState(false)
 
 	useEffect(() => {
 		entryInputRef.current.focus()
@@ -155,9 +157,12 @@ const EntryForm = ({
 				val = val.replace(/  +/g, ' ').substring(val.indexOf("/")+1, val.length)
 				let command = val.substring(0, val.indexOf(" ")) || val
 				let args = val.substring(val.indexOf(" ")+1, val.length).split(" ")
+
 				if (command in entryCommands) {
 					if (command === "msg") {
 						entryCommands.msg(setStatusMsg, "test")
+					} else if (command === "clock") {
+						entryCommands.clock(clockActive, setClockActive)
 					} else if (command === "nuke") {
 						entryCommands.nuke(setTodoList, setArchiveList, setTagList, setStatusMsg, setSettings, settingsDefault)
 					} else if (command === "export") {
@@ -205,6 +210,7 @@ const EntryForm = ({
 						}
 					}
 				}
+
 				handleEntryInput.clear()
 				return;
 			}
@@ -265,6 +271,8 @@ const EntryForm = ({
 				</form>
 			</div>
 		</div>
+
+		<Clock active={clockActive} setActive={setClockActive}/>
 
 		</>
 	)

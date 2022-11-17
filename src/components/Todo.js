@@ -215,7 +215,7 @@ const Todo = ({
 					handleTodo.archiveStart(e)
 				}
 			}
-			else if (e.key === "/") {
+			else if (e.key === "/" || (e.key === "l" && e.ctrlKey)) {
 				e.preventDefault()
 				goto.index(-1)
 			}

@@ -905,6 +905,43 @@ summary:before {
   color: rgba(255,255,255,0.9);
 }
 
+/* Clock */
+.clock-outer {
+  position: fixed;
+  top: 0; right: 0; bottom: 0; left: 0;
+  background: #111;
+  z-index: 25;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+.clock-inner {
+  align-self: center;
+  margin-bottom: 2rem;
+}
+.clock-time {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  font-family: "PT Mono", monospace;
+  font-size: 8rem;
+}
+.clock-h, .clock-m {
+  margin-right: 1rem;
+}
+.clock-h {
+  color: rgba(255,255,255,0.8);
+}
+.clock-m {
+  color: rgba(255,255,255,0.5);
+}
+.clock-s {
+  color: rgba(255,255,255,0.2);
+}
+.clock-msg {
+  color: rgba(255,255,255,0.3);
+}
+
 body.center .entry-container-inner,
 body.center .todo-list,
 body.center .status-bar-inner,
