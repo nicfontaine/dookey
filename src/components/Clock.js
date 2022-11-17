@@ -4,24 +4,21 @@ import Time from "../mod/time"
 
 const Clock = ({ active, setActive }) => {
 
+  const [clockState, setClockState] = useState([])
+
+  const time = new Time(clockState, setClockState)
+  time.start()
+
   const keyDown = function(e) {
     if (e.key === "Escape") {
-      console.log("ESC")
       setActive(false)
       document.removeEventListener("keydown", keyDown)
     }
   }
 
   useEffect(() => {
-    if (active) {
-      document.addEventListener("keydown", keyDown)
-    }
+    if (active) document.addEventListener("keydown", keyDown)
   }, [active])
-
-  const [clockState, setClockState] = useState([])
-
-  const time = new Time(clockState, setClockState)
-  time.start()
 
   return (
     <>
