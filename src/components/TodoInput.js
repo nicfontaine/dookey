@@ -21,8 +21,8 @@ const TodoInput = ({
 	const todoInputRef = useRef(null)
 
 	const [emojiPopupActive, setEmojiPopupActive] = useState(false)
-	const [emojiKeyUpEvent, setEmojiKeyUpEvent] = useState("")
-	const [emojiKeyDownEvent, setEmojiKeyDownEvent] = useState("")
+	const [emojiKeyUpEvent, setEmojiKeyUpEvent] = useState({})
+	const [emojiKeyDownEvent, setEmojiKeyDownEvent] = useState({})
 
 	// useEffect(() => {
 	// 	todoInputRef.current.selectionStart = todoCaretStart

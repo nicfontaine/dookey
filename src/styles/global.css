@@ -914,6 +914,13 @@ summary:before {
   display: flex;
   justify-content: center;
   text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.75s;
+}
+.clock-outer.active {
+  opacity: 1;
+  pointer-events: auto;
 }
 .clock-inner {
   align-self: center;
@@ -925,6 +932,7 @@ summary:before {
   justify-content: center;
   font-family: "PT Mono", monospace;
   font-size: 8rem;
+  margin-bottom: 1rem;
 }
 .clock-h, .clock-m {
   margin-right: 1rem;

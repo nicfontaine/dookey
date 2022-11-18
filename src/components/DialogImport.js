@@ -8,9 +8,12 @@ const DialogImport = ({
 	setTodoList,
 	tagList,
 	setTagList,
+	archiveList,
+	setArchiveList,
 	setStatusMsg,
 	dialogImportShow,
 	setDialogImportShow,
+	settings,
 	setSettings
 }) => {
 
@@ -57,8 +60,10 @@ const DialogImport = ({
 							return todo
 						}
 					}))
-					setTagList(val.tags)
-					setSettings(val.settings)
+					// NOTE: Merge archive, settings, tags
+					setArchiveList([...archiveList, ...val.archive])
+					setTagList({...tagList, ...val.tags})
+					setSettings({...settings, ...val.settings})
 				} catch(err) {
 					importDialogStatusText.current.innerHTML = err
 				}

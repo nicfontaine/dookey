@@ -10,7 +10,7 @@ import EntryForm from "../components/EntryForm"
 import Todo from "../components/Todo"
 import StatusBar from "../components/StatusBar"
 import DialogImport from "../components/DialogImport"
-import CommandOptions from "../components/CommandOptions"
+import CommandOptions from "../components/EntryCommandOptions"
 import DialogFileOpen from "../components/DialogFileOpen"
 import introTemplate from "../mod/intro-template"
 import entryCommands from "../mod/entry-commands"
@@ -294,10 +294,13 @@ const TodoPage = () => {
 					setTodoList={setTodoList}
 					tagList={tagList}
 					setTagList={setTagList}
+					archiveList={archiveList}
+					setArchiveList={setArchiveList}
 					setStatusMsg={setStatusMsg}
 					dialogImportShow={dialogImportShow}
 					setDialogImportShow={setDialogImportShow}
 					setFocusElement={setFocusElement}
+					settings={settings}
 					setSettings={setSettings}
 				/>
 

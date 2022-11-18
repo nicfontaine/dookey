@@ -56,6 +56,7 @@ const EntryForm = ({
 	const handleEntryInput = {
 		
 		change(e) {
+			if (clockActive) return;
 			e.preventDefault()
 			// Ignore if a todo is focused
 			if (activeIndex < 0) {

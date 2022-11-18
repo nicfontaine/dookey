@@ -87,3 +87,5 @@
 - Tag filters
 - Scroll todolist top, on entry submit
 - Set caret position after todo-input textSurround()
+- Match searched character matches in EmojiPopup list (like slack)
+- Add some sort of effect or transition after a command is entered/cleared
