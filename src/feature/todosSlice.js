@@ -1,17 +1,17 @@
-(function(){"use strict"})()
 
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState = {
-	value: []
-}
+	value: [],
+};
 
 export const todosSlice = createSlice({
 	name: "todos",
 	initialState,
 	reducers: {
 		addTodo: (state, action) => {
-			state.value.push(action.payload)
+			state.value.push(action.payload);
 		},
 		moveTodo: (state, action) => {
 
@@ -20,11 +20,11 @@ export const todosSlice = createSlice({
 			
 		},
 		deleteTodo: (state, action) => {
-			state.value.splice(action.payload, 1)
+			state.value.splice(action.payload, 1);
 		},
-	}
-})
+	},
+});
 
-export const { addTodo, moveTodo, archiveTodo, deleteTodo } = todosSlice.actions
+export const { addTodo, moveTodo, archiveTodo, deleteTodo } = todosSlice.actions;
 
-export default todosSlice.reducer
+export default todosSlice.reducer;

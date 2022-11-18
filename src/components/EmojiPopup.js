@@ -1,112 +1,116 @@
-import { useState, useEffect } from "react"
-import PropTypes from "prop-types"
-import { gemoji } from "gemoji"
-import FuzzySearch from "fuzzy-search"
-import emojiSubstring from "../mod/emoji-substring"
+import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+import { gemoji } from "gemoji";
+import FuzzySearch from "fuzzy-search";
+import emojiSubstring from "../mod/emoji-substring";
 
-const fuzzysearch = new FuzzySearch(gemoji, ["names"], {sort: true})
-var index = 0
+const fuzzysearch = new FuzzySearch(gemoji, ["names"], { sort: true });
+var index = 0;
 
 const EmojiPopup = ({ active, setActive, inputText, setInputText, keyUpEvent, keyDownEvent, listMax = 6 }) => {
 
-	const [emojiList, setEmojiList] = useState([])
-	const [emojiSearchString, setEmojiSearchString] = useState("")
-	const [emojiSelect, setEmojiSelect] = useState("")
+	const [emojiList, setEmojiList] = useState([]);
+	const [emojiSearchString, setEmojiSearchString] = useState("");
+	const [emojiSelect, setEmojiSelect] = useState("");
 
 	// Keyevents
 	useEffect(() => { 
-		if (Object.keys(keyDownEvent).length) keyDown(keyDownEvent)
-	}, [keyDownEvent])
+		if (Object.keys(keyDownEvent).length) keyDown(keyDownEvent);
+	}, [keyDownEvent]);
 	useEffect(() => { 
-		if (Object.keys(keyUpEvent).length) keyUp(keyUpEvent)
-	}, [keyUpEvent])
+		if (Object.keys(keyUpEvent).length) keyUp(keyUpEvent);
+	}, [keyUpEvent]);
 
 	useEffect(() => {
-		list.update(emojiSearchString)
-	}, [emojiSearchString])
+		list.update(emojiSearchString);
+	}, [emojiSearchString]);
 
 	useEffect(() => {
 		if (emojiSelect) {
-			setInputText(inputText.replace(`:${emojiSearchString}`, emojiSelect))
-			setActive(false)
-			setEmojiSearchString("")
-			setEmojiSelect("")
+			setInputText(inputText.replace(`:${emojiSearchString}`, emojiSelect));
+			setActive(false);
+			setEmojiSearchString("");
+			setEmojiSelect("");
 		}
-	}, [emojiSelect])
+	}, [emojiSelect]);
 
 	const list = {
 
-		next() {
-			index = (index+1) % list.checkMax()
-			list.update()
+		next () {
+			index = (index + 1) % list.checkMax();
+			list.update();
 		},
 
-		prev() {
-			index = index-1 < 0 ? list.checkMax()-1 : index-1
-			list.update()
+		prev () {
+			index = index - 1 < 0 ? list.checkMax() - 1 : index - 1;
+			list.update();
 		},
 
-		select() {
-			setEmojiSelect(emojiList[index].emoji)
+		select () {
+			setEmojiSelect(emojiList[index].emoji);
 		},
 
 		checkMax: () => listMax < emojiList.length ? listMax : emojiList.length,
 
-		update(str) {
-			let list = emojiList.slice()
+		update (str) {
+			let list = emojiList.slice();
 			if (str && str.length) {
-				let search = fuzzysearch.search(str).slice(0, listMax)
-				list = search.length ? search : []
+				let search = fuzzysearch.search(str).slice(0, listMax);
+				list = search.length ? search : [];
 			}
-			if (index >= list.length) index = 0
+			if (index >= list.length) index = 0;
 			list = list.map((s, i) => {
-				s.active = i === index ? true : false
-				return s
-			})
-			setEmojiList(list)
-		}
+				s.active = i === index ? true : false;
+				return s;
+			});
+			setEmojiList(list);
+		},
 		
-	}
+	};
 
-	const keyDown = function(e) {
-		const key = e.key
+	const keyDown = function (e) {
+		const key = e.key;
 		if (active) {
 			if (key === "ArrowUp") {
-				list.prev()
+				list.prev();
 			} else if (key === "ArrowDown") {
-				list.next()
+				list.next();
 			} else if (key === "Enter" || key === "Tab") {
-				list.select()
+				list.select();
 			} else if (key === "Escape") {
-				// NOTE: This is overridden by keyup check. So would need to set a bypass, and determine a reset case
-				// setActive(false)
+				/*
+				 * NOTE: This is overridden by keyup check. So would need to set a bypass, and determine a reset case
+				 * setActive(false)
+				 */
 			}
 		}
-	}
+	};
 
-	const keyUp = function(e) {
-		const key = e.key
-		const start = e.target.selectionStart-1
-		var active = active
-		var str = ""
+	const keyUp = function (e) {
+		const key = e.key;
+		const start = e.target.selectionStart - 1;
+		var active = active;
+		var str = "";
 		// Possible state change cases
 		if (key === ":") {
-			active = true
+			active = true;
 		} else if (key === " ") {
-			active = false
+			active = false;
 		} else if (key === "Backspace" && inputText[start] === ":") {
-			active = false
+			active = false;
 		}
-		str = emojiSubstring(inputText, start)
-		active =  str.length ? true : false
-		setEmojiSearchString(str)
-		setActive(active)
-	}
+		str = emojiSubstring(inputText, start);
+		active =  str.length ? true : false;
+		setEmojiSearchString(str);
+		setActive(active);
+	};
 
-	// const testKeycode = function(code) {
-	// 	if (code.match(/^[0-9a-z-_]+$/)) return true;
-	// 	return false;
-	// }
+	/*
+	 * const testKeycode = function(code) {
+	 * 	if (code.match(/^[0-9a-z-_]+$/)) return true;
+	 * 	return false;
+	 * }
+	 */
 
 	return (
 		<>
@@ -119,16 +123,16 @@ const EmojiPopup = ({ active, setActive, inputText, setInputText, keyUpEvent, ke
 									<div className="emoji">{emoji.emoji}</div>
 									<code className="code">:{emoji.names.join(",")}</code>
 								</div>
-							)
+							);
 						}) : <div className="emoji-list-item-null">{emojiSearchString.length ? "No matches found" : "type for emoji search..."}</div> }
 					</div>
 					<div className="emoji-list-how-to"><code>Up/Down</code> to change selection. <code>Enter</code> to select</div>
 				</div>
 			}
 		</>
-	)  
+	);  
 	
-}
+};
 
 EmojiPopup.propTypes = {
 	active: PropTypes.bool,
@@ -137,7 +141,7 @@ EmojiPopup.propTypes = {
 	setInputText: PropTypes.func,
 	keyUpEvent: PropTypes.object,
 	keyDownEvent: PropTypes.object,
-	listMax: PropTypes.number
-}
+	listMax: PropTypes.number,
+};
 
-export default EmojiPopup
+export default EmojiPopup;

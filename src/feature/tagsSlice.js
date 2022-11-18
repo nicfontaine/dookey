@@ -1,10 +1,10 @@
-(function(){"use strict"})()
 
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState = {
-	value: {}
-}
+	value: {},
+};
 
 export const tagsSlice = createSlice({
 	name: "tags",
@@ -16,9 +16,9 @@ export const tagsSlice = createSlice({
 		deleteTag: (state, action) => {
 			// state.value.splice(action.payload, 1)
 		},
-	}
-})
+	},
+});
 
-export const { addTodo, moveTodo, archiveTodo, deleteTodo } = tagsSlice.actions
+export const { addTodo, moveTodo, archiveTodo, deleteTodo } = tagsSlice.actions;
 
-export default tagsSlice.reducer
+export default tagsSlice.reducer;

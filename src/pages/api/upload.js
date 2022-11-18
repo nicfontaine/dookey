@@ -1,17 +1,15 @@
-(function(){"use strict"})()
+const fs = require("fs-then");
 
-const fs = require("fs-then")
-
-export default async function handler(request, response) {
+export default async function handler (request, response) {
 	
-	const { method } = request
+	const { method } = request;
 	
 	if (method === "POST") {
 		try {
-			let file = await fs.readFile(filePath)
-			return response.status(200).json({data: file})
+			let file = await fs.readFile(filePath);
+			return response.status(200).json({ data: file });
 		} catch(err) {
-			return response.status(500).json({err: err})
+			return response.status(500).json({ err: err });
 		}
 	}
 

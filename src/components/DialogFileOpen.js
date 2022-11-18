@@ -1,37 +1,37 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef } from "react";
 
-export default function DialogFileOpen({
+export default function DialogFileOpen ({
 	setStatusMsg,
 	fileOpenSelect,
 	setFileOpenSelect,
 	setTodoList,
-	setTagList
+	setTagList,
 }) {
 
-	const input = useRef(null)
+	const input = useRef(null);
 
 	useEffect(() => {
 		if (fileOpenSelect) {
-			input.current.click()
-			setFileOpenSelect(false)
+			input.current.click();
+			setFileOpenSelect(false);
 		}
-	}, [fileOpenSelect])
+	}, [fileOpenSelect]);
 	
 	const fileUpload = (e) => {
-		let file = e.target.files[0]
-		if (!file) return
-		let reader = new FileReader()
+		let file = e.target.files[0];
+		if (!file) return;
+		let reader = new FileReader();
 		reader.addEventListener("load", (e) => {
-			let { todos, tags} = JSON.parse(reader.result)
-			setTodoList(todos)
-			setTagList(tags)
-			setStatusMsg("Loaded from file")
-		})
+			let { todos, tags } = JSON.parse(reader.result);
+			setTodoList(todos);
+			setTagList(tags);
+			setStatusMsg("Loaded from file");
+		});
 		reader.addEventListener("error", (e) => {
-			setStatusMsg("Failed to read file")
-		})
-		reader.readAsText(file)
-	}
+			setStatusMsg("Failed to read file");
+		});
+		reader.readAsText(file);
+	};
 
 	return(
 		<>
@@ -48,6 +48,6 @@ export default function DialogFileOpen({
 				}
 			`}</style>
 		</>
-	)
+	);
 
 }

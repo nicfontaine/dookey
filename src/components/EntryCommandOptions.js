@@ -1,7 +1,7 @@
 const EntryCommandOptions = ({
 	commandOptionsDisplay,
 	settings,
-	tagList
+	tagList,
 }) => {
 
 	return(
@@ -20,11 +20,11 @@ const EntryCommandOptions = ({
 									<div
 										key={tagList[tagName].id}
 										className="tag"
-										style={{backgroundColor: tagList[tagName].color}}
+										style={{ backgroundColor: tagList[tagName].color }}
 									>{tagName}</div>
-									)
-								}) : <span className="text-italic">(Tags here)</span>}
-							</div>
+								);
+							}) : <span className="text-italic">(Tags here)</span>}
+						</div>
 					</div>
 
 					<h2 className="section-heading"><span className="mg-r-1">🏭</span> Functions</h2>
@@ -128,7 +128,7 @@ const EntryCommandOptions = ({
 				}
 			`}</style>
 		</>
-	)
-}
+	);
+};
 
-export default EntryCommandOptions
+export default EntryCommandOptions;

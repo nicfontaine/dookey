@@ -1,18 +1,18 @@
-import { useEffect, useRef } from "react"
-import autosize from "autosize"
+import { useEffect, useRef } from "react";
+import autosize from "autosize";
 
-const StatusBar = ({msg}) => {
+const StatusBar = ({ msg }) => {
 
-	const statusBarRef = useRef(null)
+	const statusBarRef = useRef(null);
 
 	useEffect(() => {
 		if (msg.length) {
-			statusBarRef.current.classList.add("update")
+			statusBarRef.current.classList.add("update");
 		}
 		statusBarRef.current.addEventListener("animationend", () => {
-			statusBarRef.current.classList.remove("update")
-		})
-	}, [msg])
+			statusBarRef.current.classList.remove("update");
+		});
+	}, [msg]);
 
 	return(
 		<>
@@ -25,8 +25,8 @@ const StatusBar = ({msg}) => {
 			<style jsx>{`
 			`}</style>
 		</>
-	)
+	);
 
-}
+};
 
-export default StatusBar
+export default StatusBar;

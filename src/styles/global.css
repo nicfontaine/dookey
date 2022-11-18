@@ -928,23 +928,28 @@ summary:before {
 }
 .clock-time {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
+  /* align-items: center; */
   font-family: "PT Mono", monospace;
-  font-size: 8rem;
+  font-weight: bold;
+  /* font-size: 12rem; */
+  font-size: 23vh;
+  line-height: 1;
   margin-bottom: 1rem;
 }
 .clock-h, .clock-m {
-  margin-right: 1rem;
+  /* margin-right: 2rem; */
 }
 .clock-h {
-  color: rgba(255,255,255,0.8);
+  color: rgba(255,255,255,0.7);
 }
 .clock-m {
-  color: rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.4);
 }
 .clock-s {
-  color: rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.05);
+  /* display: none; */
 }
 .clock-msg {
   color: rgba(255,255,255,0.3);
