@@ -75,6 +75,7 @@
 - Status bar msg won't update, if another msg is still active (before it gets reset)
 - Autosize on edit textarea not working
 - Entry input getting sized smaller on refresh, since it has no value
+- Lose todo focus on edit archived todo
 
 ## Tauri Bugs
 - Open from backup file not working
@@ -89,3 +90,4 @@
 - Set caret position after todo-input textSurround()
 - Match searched character matches in EmojiPopup list (like slack)
 - Add some sort of effect or transition after a command is entered/cleared
+- Emoji replace :abc: after space, if it matches

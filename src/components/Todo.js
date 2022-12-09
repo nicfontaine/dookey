@@ -209,12 +209,17 @@ const Todo = ({
 			if (e.key === "Enter") {
 				e.preventDefault();
 				handleTodo.edit(e);
-			} else if (e.key === "Delete" || e.key === "d") {
+			} else if (e.key === "Delete") {
 				e.preventDefault();
 				handleTodo.deleteStart(e);
 			} else if (e.key === "e") {
 				e.preventDefault();
 				handleTodo.edit(e);
+			} else if (e.key === "t") {
+				e.preventDefault();
+				handleTagInput.active();
+			} else if (e.key === "d") {
+				// Date
 			} else if (e.key === "a") {
 				e.preventDefault();
 				if (activeIndex >= todoList.length) {
@@ -225,9 +230,6 @@ const Todo = ({
 			} else if (e.key === "/" || (e.key === "l" && e.ctrlKey)) {
 				e.preventDefault();
 				goto.index(-1);
-			} else if (e.key === "t") {
-				e.preventDefault();
-				handleTagInput.active();
 			} else if (e.key === "o" || e.key === " ") {
 				let details = e.target.getElementsByTagName("details");
 				for (const d of details) {

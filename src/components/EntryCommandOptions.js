@@ -90,11 +90,13 @@ const EntryCommandOptions = ({
 					padding-left: 1.1rem;
 				}
 				.entry-command-options .code {
-					font-family: "PT Mono";
+					font-family: "DM Mono";
 					background: rgba(255,255,255,0.2);
 					padding: 0.05rem 0.35rem;
 					border-radius: 4px;
 					margin-right: 0.8rem;
+					font-size: 0.92rem;
+					line-height: 1;
 				}
 				.section-heading {
 					margin-bottom: 1rem;

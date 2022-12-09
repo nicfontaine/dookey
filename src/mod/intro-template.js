@@ -6,7 +6,7 @@ const introTemplate = {
 			"tags": ["Docs"],
 		},
 		{
-			"text": "💻 **DooKey** is entirely **keyboard-navigable** by design\n- Move focus: `Down`, `Up`\n- Edit todo: `E`\n- Delete todo: `D`\n- All Shortcuts: [Github ↗](https://github.com/nicfontaine/dookey)",
+			"text": "💻 **DooKey** is entirely **keyboard-navigable** by design\n- Move focus: `Down`, `Up`\n- Edit todo: `E`\n- Delete todo: `Delete`\n- All Shortcuts: [Github ↗](https://github.com/nicfontaine/dookey)",
 			"id": "a0db2091-5d80-48b3-b2cb-70743395d0d4",
 			"tags": ["Shortcuts"],
 		},

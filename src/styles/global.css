@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,400;0,700;1,400&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=PT+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&display=swap');
 
 /*@font-face {
   font-family: "Bitter";
@@ -9,8 +10,8 @@
 }
 
 @font-face {
-  font-family: "PT Mono";
-  src: local("PT Mono"),
+  font-family: "DM Mono";
+  src: local("DM Mono"),
     url(../fonts/PTMono-Regular.ttf);
 }*/
 :root {
@@ -111,7 +112,7 @@ input, textarea {
   transition: all 0.3s ease-out;
 }
 .entry-container.commands-display .entry-input {
-  font-family: "PT Mono";
+  font-family: "DM Mono";
   /* font-size: 0.95rem; */
 }
 .hide .entry-container {
@@ -141,7 +142,7 @@ input, textarea {
 }
 .entry-form:before {
   content: "$";
-  font-family: "PT Mono";
+  font-family: "DM Mono";
   font-weight: bold;
   color: #777;
   color: rgba(255,255,255,0.35);
@@ -168,7 +169,7 @@ input, textarea {
 }
 .entry-form:after {
   content: "/";
-  /*font-family: "PT Mono";*/
+  /*font-family: "DM Mono";*/
   font-weight: 700;
   font-size: 0.8rem;
   color: #888;
@@ -339,7 +340,7 @@ input, textarea {
 	to { opacity: 1; }
 }
 /* .todo.active, .todo:focus:not(:active) { */
-.todo.active, .todo:focus {
+.todo.active, .todo:focus, .todo:focus-within {
   border-bottom: 2px solid transparent;
   border-radius: 9px;
   margin: 0;
@@ -384,7 +385,7 @@ input, textarea {
   color: #44804a;
 }
 .todo-index {
-  font-family: "PT Mono";
+  font-family: "DM Mono";
   align-self: flex-start;
   color: rgba(255,255,255,0.21);
   text-transform: uppercase;
@@ -654,7 +655,9 @@ summary:before {
   background: rgba(0,0,0,0.9);
   background: linear-gradient(to right, rgba(0,0,0,0.9), rgba(0,0,0,0));
   /* width: 100%; */
-  right: calc(-0.5rem + -2px); left: calc(-0.5rem + -2px);
+  right: calc(-0.5rem + -2px);
+	left: calc(-0.5rem + -2px);
+	left: -2px;
   top: -2px; bottom: -2px;
   border-radius: 9px;
   text-align: center;
@@ -720,7 +723,7 @@ summary:before {
   /* margin-right: 0.3rem; */
   font-size: 0.88rem;
   font-weight: bold;
-  font-family: "PT Mono"
+  font-family: "DM Mono"
 }
 .todo .tag {
   margin-bottom: 0.3rem;
@@ -766,7 +769,7 @@ summary:before {
   background: var(---main-bar-bg-color);
   padding: 0.8em 2rem;
   background: rgba(255,255,255,0.06);
-  font-family: "PT Mono", monospace;
+  font-family: "DM Mono", monospace;
   font-size: 0.8rem;
   color: #aaa;
   transition: all 0.05s;
@@ -931,10 +934,10 @@ summary:before {
   flex-direction: column;
   justify-content: center;
   /* align-items: center; */
-  font-family: "PT Mono", monospace;
-  font-weight: bold;
+  font-family: "DM Mono", monospace;
+  font-weight: 500;
   /* font-size: 12rem; */
-  font-size: 23vh;
+  font-size: 27vh;
   line-height: 1;
   margin-bottom: 1rem;
 }
