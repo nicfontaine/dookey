@@ -346,6 +346,7 @@ input, textarea {
   margin: 0;
   padding-right: 0.7rem;
   padding-left: 0.7rem;
+  box-shadow: 0 0 1px var(--main-color-accent-1);
 }
 .todo.active:not(:first-child),
 .todo:focus:not(:first-child) {
