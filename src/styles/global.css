@@ -412,9 +412,15 @@ input, textarea {
 .todo.animOut .todo-content {
   /*overflow: hidden;*/
 }
-.todo.animOut .todo-text {
+.todo.animOut .todo-text,
+.todo.animOut .todo-text strong,
+.todo.animOut .todo-text a {
 	/*white-space: nowrap;*/
 	color: #777;
+}
+.todo.animOut .todo-text code,
+.todo.animOut .tag {
+	opacity: 0.5;
 }
 @keyframes animOut {
 	from { width: 100%; }
