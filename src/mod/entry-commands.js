@@ -84,11 +84,11 @@ const entryCommands = {
 		}
 	},
 
-	async save (todos, tags, settings, setSettings, setStatusMsg) {
+	async save (todos, archive, tags, settings, setSettings, setStatusMsg) {
 		const response = await fetch("/api/backup", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ todos, tags, settings }),
+			body: JSON.stringify({ todos, archive, tags, settings }),
 		});
 		const res = await response.json();
 		if (res.err) {

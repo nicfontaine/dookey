@@ -6,6 +6,8 @@ export default function DialogFileOpen ({
 	setFileOpenSelect,
 	setTodoList,
 	setTagList,
+	setSettings,
+	setArchiveList
 }) {
 
 	const input = useRef(null);
@@ -22,9 +24,11 @@ export default function DialogFileOpen ({
 		if (!file) return;
 		let reader = new FileReader();
 		reader.addEventListener("load", (e) => {
-			let { todos, tags } = JSON.parse(reader.result);
+			let { todos, tags, archive, settings } = JSON.parse(reader.result);
+			setSettings(settings);
 			setTodoList(todos);
 			setTagList(tags);
+			setArchiveList(archive);
 			setStatusMsg("Loaded from file");
 		});
 		reader.addEventListener("error", (e) => {

@@ -320,6 +320,8 @@ const TodoPage = () => {
 					setFileOpenSelect={setFileOpenSelect}
 					setTodoList={setTodoList}
 					setTagList={setTagList}
+					setArchiveList={setArchiveList}
+					setSettings={setSettings}
 				/>
 
 				<StatusBar msg={statusMsg} />

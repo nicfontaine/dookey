@@ -171,7 +171,7 @@ const EntryForm = ({
 					} else if (command === "import") {
 						setDialogImportShow(true);
 					} else if (command === "save") {
-						entryCommands.save(todoList, tagList, settings, setSettings, setStatusMsg);
+						entryCommands.save(todoList, archiveList, tagList, settings, setSettings, setStatusMsg);
 					} else if (command === "open") {
 						entryCommands.open(setFileOpenSelect);
 					} else if (command === "kill") {

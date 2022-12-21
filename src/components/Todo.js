@@ -407,9 +407,11 @@ const Todo = ({
 
 				{ todo.tags && todo.tags.length ?
 					<div className="todo-tag-list">
-						{ todo.tags.map((t) => {
-							return <div key={tagList[t].id} className="tag" style={{ backgroundColor: tagList[t].color }}>{t}</div>;
-						}) }
+						{ todo.tags.slice().filter((t) => tagList[t])
+							.map((t) => {
+								return <div key={tagList[t].id} className="tag" style={{ backgroundColor: tagList[t].color }}>{t}</div>;
+							})
+						}
 					</div>
 					: null }
 
