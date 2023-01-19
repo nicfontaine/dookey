@@ -4,6 +4,10 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import remarkGemoji from "remark-gemoji";
+import { useDispatch } from "react-redux";
+import { addTodo, setTodoTags, deleteTodo } from "/src/feature/todosSlice";
+import { addTag } from "/src/feature/tagsSlice";
+import { addArchive, deleteArchive } from "/src/feature/archivesSlice";
 import * as randomColor from "random-color";
 import { v4 as uuid } from 'uuid';
 import { CheckCircleFillIcon } from "@primer/octicons-react";
@@ -27,6 +31,8 @@ const Todo = ({
 	goto,
 	archived,
 }) => {
+
+	const dispatch = useDispatch();
 
 	const [editIndex, setEditIndex] = useState(null);
 	const [animOutIndex, setAnimOutIndex] = useState(null);
@@ -95,6 +101,7 @@ const Todo = ({
 		},
 
 		archive () {
+			dispatch(addArchive(todoList[activeIndex]));
 			setArchiveList([todoList[activeIndex], ...archiveList]);
 			handleTodo.delete(activeIndex);
 		},
@@ -102,6 +109,8 @@ const Todo = ({
 		unArchive () {
 			let _index = activeIndex - todoList.length;
 			let _td = archiveList[_index];
+			dispatch(addTodo(archiveList[_index]));
+			dispatch(deleteArchive(archiveList[_index]));
 			setArchiveList(archiveList.filter((todo, index) => {
 				if (index !== _index) {
 					return todo; 
@@ -116,7 +125,6 @@ const Todo = ({
 			setAnimOutIndex(activeIndex);
 			deleteStore.push({ todo: todoList[activeIndex], index });
 			setTimeout(() => handleTodo.delete(activeIndex), 150);
-			
 		},
 
 		// Remove from data, and list. Set next active position
@@ -129,6 +137,7 @@ const Todo = ({
 					}
 				});
 				handleTodo.postDeleteIndex(_list.length + archiveList.length);
+				dispatch(deleteTodo(todoList[_index]));
 				setTodoList(_list);
 			} else {
 				_index -= todoList.length;
@@ -138,6 +147,7 @@ const Todo = ({
 					}
 				});
 				handleTodo.postDeleteIndex(_list.length + todoList.length);
+				dispatch(deleteArchive(archiveList[_index]));
 				setArchiveList(_list);
 			}
 		},
@@ -305,26 +315,33 @@ const Todo = ({
 		submit (e) {
 			e.preventDefault();
 			let inputTags = tagInputRef.current.value.replace(/\s/g, "").split(",");
-			inputTags = inputTags.filter((a) => {
-				if (a.length && a !== ",") {
-					return a;
-				}
-			});
+			inputTags = inputTags.filter((a) => a.length && a !== ",");
+			let _td = { ...todoList[index], tags: inputTags };
+			console.log(_td);
 			setTodoList(todoList.map((todo, index) => {
 				if (index === activeIndexPrevious) {
 					todo.tags = inputTags;
 				}
 				return todo;
 			}));
+			dispatch(setTodoTags(_td));
 			let _tglist = Object.assign({}, tagList);
-			let ts = [...inputTags];
-			while (ts.length) {
-				let tg = ts.shift();
-				if (!(tg in _tglist)) {
+			inputTags.forEach((t) => {
+				if (!(t in _tglist)) {
 					let color = randomColor(0.25, 0.99).hexString();
-					_tglist[tg] = { id: uuid(), color };
+					let _t = { id: uuid(), color };
+					dispatch(addTag({ [t]: _t }));
+					_tglist[t] = _t;
 				}
-			}
+			});
+			// let ts = [...inputTags];
+			// while (ts.length) {
+			// 	let tg = ts.shift();
+			// 	if (!(tg in _tglist)) {
+			// 		let color = randomColor(0.25, 0.99).hexString();
+			// 		_tglist[tg] = { id: uuid(), color };
+			// 	}
+			// }
 			setTagList(_tglist);
 			handleTagInput.deactive(e);
 		},

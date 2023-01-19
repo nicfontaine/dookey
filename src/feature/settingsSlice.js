@@ -5,7 +5,7 @@ const initialState = {
 };
 
 export const settingsSlice = createSlice({
-	name: "tags",
+	name: "settings",
 	initialState,
 	reducers: {
 		setFontSize: (state, action) => {

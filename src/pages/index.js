@@ -161,6 +161,11 @@ const TodoPage = () => {
 		mainRef.current.closest("html").style.fontSize = settings.fontSize + "px";
 		entryCommands.center(settings.center);
 		localStorage.setItem("settings", JSON.stringify(settings));
+		if (!settings.title.length) {
+			mainHeadingRef.current.classList.add("scrolled")
+		} else {
+			mainHeadingRef.current.classList.remove("scrolled")
+		}
 	}, [settings]);
 
 	const handleTodoList = {

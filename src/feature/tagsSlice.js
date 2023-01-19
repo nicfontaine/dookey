@@ -11,7 +11,7 @@ export const tagsSlice = createSlice({
 	initialState,
 	reducers: {
 		addTag: (state, action) => {
-			// state.value.push(action.payload)
+			state.value = { ...state.value, ...action.payload };
 		},
 		deleteTag: (state, action) => {
 			// state.value.splice(action.payload, 1)
@@ -19,6 +19,6 @@ export const tagsSlice = createSlice({
 	},
 });
 
-export const { addTodo, moveTodo, archiveTodo, deleteTodo } = tagsSlice.actions;
+export const { addTag, deleteTag } = tagsSlice.actions;
 
 export default tagsSlice.reducer;

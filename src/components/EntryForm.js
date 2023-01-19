@@ -2,10 +2,11 @@ import { useState, useEffect, useRef } from "react";
 import { v4 as uuid } from 'uuid';
 import TextArea from "textarea-autosize-reactjs";
 import { useDispatch } from "react-redux";
-import { setCenter, setTitle, setFontSize, setBackups } from "../feature/settingsSlice";
+import { setCenter, setTitle, setFontSize, setBackups } from "/src/feature/settingsSlice";
+import { addTodo } from "/src/feature/todosSlice";
 import { FlameIcon } from "@primer/octicons-react";
 import EmojiPopup from "./EmojiPopup";
-import Clock from "../components/Clock";
+import Clock from "/src/components/Clock";
 
 import entryCommands from "../mod/entry-commands.js";
 
@@ -156,8 +157,11 @@ const EntryForm = ({
 			if (val.indexOf("/") === 0) {
 				// NOTE: Cleanup and move
 				val = val.replace(/  +/g, ' ').substring(val.indexOf("/") + 1, val.length);
-				let command = val.substring(0, val.indexOf(" ")) || val;
-				let args = val.substring(val.indexOf(" ") + 1, val.length).split(" ");
+				// let command = val.substring(0, val.indexOf(" ")) || val;
+				// let args = val.substring(val.indexOf(" ") + 1, val.length).split(" ");
+				let args = val.split(" ");
+				let command = args.shift();
+				console.log(command, args);
 
 				if (command in entryCommands) {
 					if (command === "msg") {
@@ -180,6 +184,7 @@ const EntryForm = ({
 						window.open(process.env.APP_HELP);
 					} else if (command === "title") {
 						let title = args.join(" ");
+						console.log(args)
 						setSettings({ ...settings, title: title });
 						dispatch(setTitle(title));
 					} else if (command === "full") {
@@ -215,13 +220,13 @@ const EntryForm = ({
 				handleEntryInput.clear();
 				return;
 			}
-			setTodoList([
-				{
-					text: val,
-					id: uuid(),
-				},
-				...todoList,
-			]);
+			const _td = {
+				text: val,
+				id: uuid(),
+				tags: []
+			};
+			setTodoList([ _td, ...todoList, ]);
+			dispatch(addTodo(_td));
 			handleEntryInput.clear();
 		},
 
