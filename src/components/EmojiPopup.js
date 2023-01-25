@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { gemoji } from "gemoji";
 import FuzzySearch from "fuzzy-search";
-import emojiSubstring from "../mod/emoji-substring";
+import emojiSubstring from "../util/emoji-substring";
 
 const fuzzysearch = new FuzzySearch(gemoji, ["names"], { sort: true });
 var index = 0;
@@ -89,28 +89,20 @@ const EmojiPopup = ({ active, setActive, inputText, setInputText, keyUpEvent, ke
 	const keyUp = function (e) {
 		const key = e.key;
 		const start = e.target.selectionStart - 1;
-		var active = active;
-		var str = "";
+		var _active = active;
 		// Possible state change cases
 		if (key === ":") {
-			active = true;
+			_active = true;
 		} else if (key === " ") {
-			active = false;
+			_active = false;
 		} else if (key === "Backspace" && inputText[start] === ":") {
-			active = false;
+			_active = false;
 		}
-		str = emojiSubstring(inputText, start);
-		active =  str.length ? true : false;
+		const str = emojiSubstring(inputText, start);
+		_active =  str.length ? true : false;
 		setEmojiSearchString(str);
-		setActive(active);
+		setActive(_active);
 	};
-
-	/*
-	 * const testKeycode = function(code) {
-	 * 	if (code.match(/^[0-9a-z-_]+$/)) return true;
-	 * 	return false;
-	 * }
-	 */
 
 	return (
 		<>

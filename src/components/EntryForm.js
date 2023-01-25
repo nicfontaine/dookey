@@ -8,7 +8,7 @@ import { FlameIcon } from "@primer/octicons-react";
 import EmojiPopup from "./EmojiPopup";
 import Clock from "/src/components/Clock";
 
-import entryCommands from "../mod/entry-commands.js";
+import entryCommands from "../util/entry-commands.js";
 
 const EntryForm = ({
 	todoListRef,
@@ -161,7 +161,7 @@ const EntryForm = ({
 				// let args = val.substring(val.indexOf(" ") + 1, val.length).split(" ");
 				let args = val.split(" ");
 				let command = args.shift();
-				console.log(command, args);
+				// console.log(command, args);
 
 				if (command in entryCommands) {
 					if (command === "msg") {

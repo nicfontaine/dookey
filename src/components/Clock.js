@@ -1,27 +1,27 @@
 import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
-import Time from "../mod/time";
+import Time from "../util/time";
 
 const Clock = ({ active, setActive }) => {
 
 	const [clockState, setClockState] = useState(["HH", "MM", "SS"]);
+	Time.createState(clockState, setClockState);
 	const clockOuterRef = useRef(null);
-	const time = new Time(clockState, setClockState);
 
 	const keyDown = function (e) {
 		if (e.key === "Escape") {
 			setActive(false);
-			time.stop();
+			Time.stop();
 			document.removeEventListener("keydown", keyDown);
 			clockOuterRef.current.classList.remove("active");
 		} else if (e.key === " ") {
-			time.pauseToggle();
+			Time.pauseToggle();
 		}
 	};
 
 	useEffect(() => {
 		if (active) {
-			time.start();
+			Time.start();
 			document.addEventListener("keydown", keyDown);
 			clockOuterRef.current.classList.add("active");
 		}

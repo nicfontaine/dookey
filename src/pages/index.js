@@ -12,9 +12,9 @@ import StatusBar from "../components/StatusBar";
 import DialogImport from "../components/DialogImport";
 import CommandOptions from "../components/EntryCommandOptions";
 import DialogFileOpen from "../components/DialogFileOpen";
-import introTemplate from "../mod/intro-template";
-import entryCommands from "../mod/entry-commands";
-import settingsDefault from "../mod/settings-default";
+import introTemplate from "../util/intro-template";
+import entryCommands from "../util/entry-commands";
+import settingsDefault from "../util/settings-default";
 
 var activeIndex = -1;
 

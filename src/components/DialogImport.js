@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-import entryCommands from "../mod/entry-commands.js";
+import entryCommands from "../util/entry-commands.js";
 
 const DialogImport = ({
 	goto,

@@ -1,41 +1,42 @@
-class Time {
-	#setClock;
-	constructor (clock, setClock) {
-		this.clock = clock;
-		this.#setClock = setClock;
+export default class Time {
+
+	static #clock;
+	static #setClock;
+
+	static createState = (clock, setClock) => {
+		this["#clock"] = clock;
+		this["#setClock"] = setClock;
 	}
     
-	start () {
+	static start () {
 		this.#tick();
 		this.timer = setInterval(this.#tick.bind(this), 1000);
 	}
 	
-	stop () {
+	static stop () {
 		this.#clear();
-		this.#setClock(["00", "00", "00"]);
+		this["#setClock"](["00", "00", "00"]);
 	}
 
-	pauseToggle () {
+	static pauseToggle () {
 		this.timer ? this.#clear() : this.start();
 	}
 
-	#tick () {
+	static #tick () {
 		let d = new Date();
 		let h = this.#zero(d.getHours().toString());
 		let m = this.#zero(d.getMinutes().toString());
 		let s = this.#zero(d.getSeconds().toString());
-		this.#setClock([h, m, s]);
+		this["#setClock"]([h, m, s]);
 	}
 
-	#clear () {
+	static #clear () {
 		clearInterval(this.timer);
 		this.timer = undefined;
 	}
 
-	#zero (t) {
+	static #zero (t) {
 		return t.length < 2 ? `0${t}` : t;
 	}
     
 }
-
-export default Time;

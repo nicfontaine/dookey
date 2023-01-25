@@ -71,7 +71,7 @@ body {
 }
 .main-heading.scrolled {
   padding-top: 1rem;
-  padding-bottom: 1rem;
+  padding-bottom: 0;
 }
 .top-container {
   position: relative;
