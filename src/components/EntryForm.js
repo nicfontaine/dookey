@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid';
 import TextArea from "textarea-autosize-reactjs";
 import { useDispatch, useSelector } from "react-redux";
 import { setCenter, setTitle, setFontSize, setBackups, setBackupsAbsolute } from "/src/feature/settingsSlice";
-import { addTodo } from "/src/feature/todosSlice";
+import { addTodo, unshiftTodo } from "/src/feature/todosSlice";
 import { FlameIcon } from "@primer/octicons-react";
 import EmojiPopup from "./EmojiPopup";
 import Clock from "/src/components/Clock";
@@ -15,6 +15,7 @@ import { resetTags } from "../feature/tagsSlice";
 import entryCommands from "../util/entry-commands.js";
 
 const EntryForm = ({
+	entryInputRef,
 	todoListRef,
 	activeIndex,
 	setStatusMsg,
@@ -33,7 +34,6 @@ const EntryForm = ({
 	const settings = useSelector((state) => state.settings.value);
 
 	const [entryInput, setEntryInput] = useState("");
-	const entryInputRef = useRef(null);
 	const formRef = useRef(null);
 	const [emojiPopupActive, setEmojiPopupActive] = useState(false);
 	const [emojiKeyUpEvent, setEmojiKeyUpEvent] = useState({});
@@ -229,7 +229,7 @@ const EntryForm = ({
 				tags: [],
 			};
 			// setTodoList([_td, ...todoList]);
-			dispatch(addTodo(_td));
+			dispatch(unshiftTodo(_td));
 			handleEntryInput.clear();
 		},
 

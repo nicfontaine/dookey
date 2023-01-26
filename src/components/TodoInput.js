@@ -10,12 +10,12 @@ const TodoInput = ({
 	goto,
 	editIndex,
 	setEditIndex,
-	activeIndexPrevious,
 }) => {
 
 	const dispatch = useDispatch();
 	const todoList = useSelector((state) => state.todos.value);
 	const archiveList = useSelector((state) => state.archives.value);
+	const itemFocus = useSelector((state) => state.itemFocus.value);
 
 	const [todoInputText, setTodoInputText] = useState(todo.text);
 	const [todoCaretStart, setTodoCaretStart] = useState(todo.text.length - 1);
@@ -72,12 +72,13 @@ const TodoInput = ({
 			setEditIndex(null);
 			let val = e.target.value;
 			// NOTE: Not correctly focusing archived todo
-			goto.index(activeIndexPrevious);
-			if (activeIndexPrevious < todoList.length) {
-				let _td = { ...todoList[activeIndexPrevious], text: val };
+			const ip = itemFocus.indexPrevious;
+			goto.index(ip);
+			if (ip < todoList.length) {
+				let _td = { ...todoList[ip], text: val };
 				dispatch(setTodoText(_td));
 			} else {
-				let _td = { ...archiveList[activeIndexPrevious - todoList.length], text: val };
+				let _td = { ...archiveList[ip - todoList.length], text: val };
 				dispatch(setArchiveText(_td));
 			}
 		},
@@ -90,7 +91,7 @@ const TodoInput = ({
 				e.preventDefault();
 				let _td = { ...todoList[editIndex], text: todoTextBackup };
 				dispatch(setTodoText(_td));
-				goto.index(activeIndexPrevious);
+				goto.index(itemFocus.indexPrevious);
 				setEditIndex(null);
 			} else if (e.key === "ArrowUp" || e.key === "ArrowDown") {
 				if (emojiPopupActive) {

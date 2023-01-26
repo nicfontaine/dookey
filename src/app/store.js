@@ -7,12 +7,14 @@ import todosReducer from "/src/feature/todosSlice";
 import archivesReducer from "/src/feature/archivesSlice";
 import tagsReducer from "/src/feature/tagsSlice";
 import settingsReducer from "/src/feature/settingsSlice";
+import itemFocusReducer from "../feature/itemFocusSlice";
 
 const reducers = combineReducers({
 	todos: todosReducer,
 	archives: archivesReducer,
 	tags: tagsReducer,
 	settings: settingsReducer,
+	itemFocus: itemFocusReducer,
 });
 
 const persistConfig = {

@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { current } from "@reduxjs/toolkit";
-import { addArchive } from "./archivesSlice";
 
 const initialState = {
 	value: [],
@@ -13,6 +12,19 @@ export const todosSlice = createSlice({
 		addTodo: (state, action) => {
 			state.value.push(action.payload);
 		},
+		unshiftTodo: (state, action) => {
+			state.value.unshift(action.payload);
+		},
+		insertTodoAt: (state, action) => {
+			const { todo, index } = action.payload;
+			let list = state.value.slice();
+			list.splice(index, 0, todo);
+			state.value = list;
+		},
+		deleteTodo: (state, action) => {
+			const list = state.value.filter((todo) => todo.id !== action.payload.id);
+			state.value = list;
+		},
 		setTodoText: (state, action) => {
 			const todo = state.value.find((todo) => todo.id === action.payload.id);
 			todo.text = action.payload.text;
@@ -21,15 +33,17 @@ export const todosSlice = createSlice({
 			const todo = state.value.find((todo) => todo.id === action.payload.id);
 			if (todo) todo.tags = action.payload.tags;
 		},
-		moveTodo: (state, action) => {
-
+		moveTodoUp: (state, action) => {
+			const i = action.payload;
+			let list = state.value.map((t) => t);
+			list.splice(i - 1, 0, list.splice(i, 1)[0]);
+			state.value = list;
 		},
-		archiveTodo: (state, action) => {
-			addArchive(action.payload);
-			// archiveTodo(action.payload);
-		},
-		deleteTodo: (state, action) => {
-			state.value.splice(action.payload, 1);
+		moveTodoDown: (state, action) => {
+			const i = action.payload;
+			let list = state.value.map((t) => t);
+			list.splice(i + 1, 0, list.splice(i, 1)[0]);
+			state.value = list;
 		},
 		mergeTodoList: (state, action) => {
 			let _ids = [];
@@ -49,11 +63,13 @@ export const todosSlice = createSlice({
 
 export const {
 	addTodo,
-	setTodoTags,
-	moveTodo,
-	archiveTodo,
+	unshiftTodo,
+	insertTodoAt,
 	deleteTodo,
+	setTodoTags,
 	setTodoText,
+	moveTodoUp,
+	moveTodoDown,
 	mergeTodoList,
 	setTodos,
 	resetTodos,

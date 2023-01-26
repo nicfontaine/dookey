@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import Head from "next/head";
 import ReactMarkdown from "react-markdown";
@@ -13,21 +13,25 @@ import StatusBar from "../components/StatusBar";
 import DialogImport from "../components/DialogImport";
 import EntryCommandOptions from "../components/EntryCommandOptions";
 import DialogFileOpen from "../components/DialogFileOpen";
-import introTemplate from "../util/intro-template";
 import entryCommands from "../util/entry-commands";
+import introTemplate from "../util/intro-template";
 import settingsDefault from "../util/settings-default";
+import { setFocusIndexPrevious } from "../feature/itemFocusSlice";
+import GoTo from "../util/goto.js";
 
 var activeIndex = -1;
 
 const TodoPage = () => {
 
+	const dispatch = useDispatch();
+
 	const todoList = useSelector((state) => state.todos.value);
 	const archiveList = useSelector((state) => state.archives.value);
 	const settings = useSelector((state) => state.settings.value);
+	const itemFocus = useSelector((state) => state.itemFocus.value);
 	
-	const [activeIndexPrevious, setActiveIndexPrevious] = useState(-1);
-
 	const [focusElement, setFocusElement] = useState();
+	GoTo.setFocusElement = setFocusElement;
 
 	const [statusMsg, setStatusMsg] = useState("");
 	const [dialogImportShow, setDialogImportShow] = useState(false);
@@ -36,35 +40,44 @@ const TodoPage = () => {
 
 	const mainRef = useRef(null);
 	const mainHeadingRef = useRef(null);
-	const entryFormRef = useRef(null);
+	const entryInputRef = useRef(null);
 	const todoListRef = useRef(null);
 
-	const focusChange = (i) => {
-		activeIndex = i;
-		if (activeIndex === -1) {
-			setFocusElement(document.getElementById("entry-input"));
-			todoListRef.current.scrollTop = 0;
-		} else if (activeIndex > -1) {
-			if (activeIndex === 0) {
-				todoListRef.current.scrollTop = 0; 
+	// setFocusElement(), activeIndex =
+	const focusChange = {
+		
+		element (e) {
+			activeIndex = null;
+			setFocusElement(e);
+		},
+		
+		index (i) {
+			activeIndex = i;
+			if (activeIndex < 1) todoListRef.current.scrollTop = 0;
+			if (activeIndex === -1) {
+				setFocusElement(entryInputRef.current);
+			} else if (activeIndex > -1) {
+				// TODO: Cleanup
+				let todos = mainRef.current.getElementsByClassName("todo-focus");
+				setFocusElement(todos[activeIndex]);
+			} else if (!i) {
+				setFocusElement(null);
 			}
-			let todos = mainRef.current.getElementsByClassName("todo-focus");
-			setFocusElement(todos[activeIndex]);
-		} else if (!i) {
-			setFocusElement(null);
-		}
+		},
+
 	};
 
-	/*
-	 * Index focus change
-	 * mainRef, activeIndex, focusElement
-	 */
+	// Index focus change. mainRef, activeIndex, focusElement
+	// focusChange(), setFocusIndexPrevious() , setFocusElement()
 	const goto = {
-		index: (i) => {
-			setActiveIndexPrevious(activeIndex);
-			focusChange(i);
+		index (i) {
+			dispatch(setFocusIndexPrevious(activeIndex));
+			focusChange.index(i);
 		},
-		next: () => {
+		element (e) {
+			focusChange.element(e);
+		},
+		next () {
 			let todos = mainRef.current.getElementsByClassName("todo-focus");
 			if (activeIndex === todos.length - 1) {
 				goto.entry(); 
@@ -72,7 +85,7 @@ const TodoPage = () => {
 				goto.index(activeIndex + 1); 
 			}
 		},
-		prev: () => {
+		prev () {
 			let todos = mainRef.current.getElementsByClassName("todo-focus");
 			if (activeIndex === -1) {
 				goto.index(todos.length - 1); 
@@ -82,39 +95,25 @@ const TodoPage = () => {
 				goto.index(activeIndex - 1);
 			}
 		},
-		entry: () => {
+		entry () {
 			goto.index(-1);
 		},
-		exit: () => {
+		exit () {
 			goto.index(null);
-		},
-		element: (e) => {
-			activeIndex = null;
-			setFocusElement(e);
 		},
 	};
 
 	// Load
 	useEffect(() => {
-		// LS - Todos, Tags, Font-size
-		// let _todos = JSON.parse(localStorage.getItem("todos"));
-		// if (_todos) setTodoList(_todos);
-		// let _archive = JSON.parse(localStorage.getItem("archive"));
-		// if (_archive) setArchiveList(_archive);
-		// let _tags = JSON.parse(localStorage.getItem("tags"));
-		// if (_tags) setTagList(_tags);
+		// TODO: Check settings, insert introTemplate settings, todos, tags
 		// let _settings = JSON.parse(localStorage.getItem("settings"));
 		// if (!_settings) _settings = introTemplate.settings;
-		// setSettings(_settings);
 		// // Initialize with boilerplate how-to
 		// if ((!_todos && !_tags) || (!_todos.length && !Object.keys(_tags).length)) {
 		// 	setTodoList(introTemplate.todos);
 		// 	setTagList(introTemplate.tags);
 		// }
-		/*
-		 * Set absolute backup path, from relative
-		 * Get absolute backups path
-		 */
+		// Set absolute backup path, from relative, Get absolute backups path
 		// (async () => {
 		// 	const response = await fetch("/api/set-backups-location", {
 		// 		method: "POST",
@@ -140,17 +139,9 @@ const TodoPage = () => {
 		});
 	}, []);
 
-	// Update Todo list (storage)
 	useEffect(() => {
-		// localStorage.setItem("todos", JSON.stringify(todoList));
-		focusChange(activeIndex);
+		goto.index(activeIndex);
 	}, [todoList]);
-	// useEffect(() => {
-	// 	localStorage.setItem("archive", JSON.stringify(archiveList));
-	// }, [archiveList]);
-	// useEffect(() => {
-	// 	localStorage.setItem("tags", JSON.stringify(tagList));
-	// }, [tagList]);
 
 	// Focus element
 	useEffect(() => {
@@ -169,20 +160,7 @@ const TodoPage = () => {
 		}
 	}, [settings]);
 
-	const handleTodoList = {
-		scroll (e) {
-			/*
-			 * if (e.target.scrollTop > 0) {
-			 *   mainHeadingRef.current.classList.add("scrolled")
-			 *   entryFormRef.current.classList.add("hide")
-			 * } else {
-			 *   mainHeadingRef.current.classList.remove("scrolled")
-			 *   entryFormRef.current.classList.remove("hide")
-			 * }
-			 */
-		},
-	};
-
+	// Scroll main list up/down with shortcuts
 	const handleMain = {
 		scrollDistance: 30,
 		keyDown (e) {
@@ -214,8 +192,9 @@ const TodoPage = () => {
 							<ReactMarkdown remarkPlugins={[remarkGemoji]}>{settings.title}</ReactMarkdown>
 						</div>
 
-						<div ref={entryFormRef}>
+						<div>
 							<EntryForm
+								entryInputRef={entryInputRef}
 								todoListRef={todoListRef}
 								activeIndex={activeIndex}
 								setStatusMsg={setStatusMsg}
@@ -235,7 +214,6 @@ const TodoPage = () => {
 
 					<div
 						className={`todo-list scroll-shadows ${commandOptionsDisplay ? "blur" : ""}`}
-						onScroll={handleTodoList.scroll}
 						ref={todoListRef}
 					>
 						<div className="todo-list-inner">
@@ -244,9 +222,8 @@ const TodoPage = () => {
 									key={todo.id}
 									todo={todo}
 									index={index}
+									archived={false}
 									activeIndex={activeIndex}
-									activeIndexPrevious={activeIndexPrevious}
-									setActiveIndexPrevious={setActiveIndexPrevious}
 									goto={goto}
 								/>;
 							}) : undefined }
@@ -266,11 +243,9 @@ const TodoPage = () => {
 										key={todo.id}
 										todo={todo}
 										index={index + todoList.length}
-										activeIndex={activeIndex}
-										activeIndexPrevious={activeIndexPrevious}
-										setActiveIndexPrevious={setActiveIndexPrevious}
-										goto={goto}
 										archived={true}
+										activeIndex={activeIndex}
+										goto={goto}
 									/>;
 								})
 								: null }

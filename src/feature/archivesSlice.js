@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { addTodo } from "./todosSlice";
+import todosSlice, { addTodo } from "./todosSlice";
 import { useDispatch } from "react-redux";
 
 const initialState = {
@@ -13,19 +13,28 @@ export const archivesSlice = createSlice({
 		addArchive: (state, action) => {
 			state.value.push(action.payload);
 		},
+		unshiftArchive: (state, action) => {
+			state.value.unshift(action.payload);
+		},
+		deleteArchive: (state, action) => {
+			const list = state.value.filter((archive) => archive.id !== action.payload.id);
+			state.value = list;
+		},
 		setArchiveText: (state, action) => {
-			console.log(action.payload.id);
 			const archive = state.value.find((archive) => archive.id === action.payload.id);
 			archive.text = action.payload.text;
 		},
 		moveArchiveUp: (state, action) => {
-
+			const i = action.payload;
+			let list = state.value.map((t) => t);
+			list.splice(i - 1, 0, list.splice(i, 1)[0]);
+			state.value = list;
 		},
 		moveArchiveDown: (state, action) => {
-
-		},
-		deleteArchive: (state, action) => {
-			state.value.splice(action.payload, 1);
+			const i = action.payload;
+			let list = state.value.map((t) => t);
+			list.splice(i + 1, 0, list.splice(i, 1)[0]);
+			state.value = list;
 		},
 		mergeArchiveList: (state, action) => {
 			let _ids = [];
@@ -45,6 +54,7 @@ export const archivesSlice = createSlice({
 
 export const {
 	addArchive,
+	unshiftArchive,
 	moveArchiveUp,
 	moveArchiveDown,
 	deleteArchive,
