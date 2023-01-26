@@ -1,4 +1,5 @@
 import { writeText } from "@tauri-apps/api/clipboard";
+import { setBackupsAbsolute } from "../feature/settingsSlice";
 
 const entryCommands = {
 
@@ -17,11 +18,11 @@ const entryCommands = {
 	},
 
 	// NOTE: Should have a cleaner way to not have to pass these, or something
-	nuke (setTodoList, setArchiveList, setTagList, setStatusMsg, setSettings, settingsDefault) {
-		setTodoList([]);
-		setArchiveList([]);
-		setTagList({});
-		setSettings(settingsDefault);
+	nuke (setStatusMsg) {
+		// setTodoList([]);
+		// setArchiveList([]);
+		// setTagList({});
+		// setSettings(settingsDefault);
 		setStatusMsg("Todo list cleared");
 		entryCommands.statusClearDelay(setStatusMsg, 4000);
 	},
@@ -62,7 +63,7 @@ const entryCommands = {
 
 	help () {},
 
-	async backups (backups, settings, setSettings, setStatusMsg) {
+	async backups (backups, setBackupsAbsolute, setStatusMsg) {
 		const response = await fetch("/api/set-backups-location", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
@@ -72,7 +73,8 @@ const entryCommands = {
 		if (res.err) {
 			setStatusMsg(JSON.stringify(res.err)); 
 		}
-		setSettings({ ...settings, backups, backupsAbsolute: res.backupsAbsolute });
+		setBackupsAbsolute(res.backupsAbsolute);
+		// setSettings({ ...settings, backups, backupsAbsolute: res.backupsAbsolute });
 	},
 
 	center (size) {
@@ -84,7 +86,7 @@ const entryCommands = {
 		}
 	},
 
-	async save (todos, archive, tags, settings, setSettings, setStatusMsg) {
+	async save (todos, archive, tags, settings, setBackupsAbsolute, setStatusMsg) {
 		const response = await fetch("/api/backup", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
@@ -95,7 +97,7 @@ const entryCommands = {
 			setStatusMsg(JSON.stringify(res.err)); 
 		}
 		setStatusMsg("Saved to: " + res.path);
-		setSettings({ ...settings, backupsAbsolute: res.backups });
+		setBackupsAbsolute(res.backups);
 		entryCommands.statusClearDelay(setStatusMsg, 8000);
 	},
 

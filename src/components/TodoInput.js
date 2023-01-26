@@ -1,19 +1,21 @@
 import { useState, useRef } from "react";
 import TextArea from "textarea-autosize-reactjs";
 import EmojiPopup from "./EmojiPopup";
+import { useSelector, useDispatch } from "react-redux";
+import { setTodoText } from "../feature/todosSlice";
+import { setArchiveText } from "../feature/archivesSlice";
 
 const TodoInput = ({
 	todo,
-	index,
-	todoList,
 	goto,
-	setTodoList,
-	archiveList,
-	setArchiveList,
 	editIndex,
 	setEditIndex,
 	activeIndexPrevious,
 }) => {
+
+	const dispatch = useDispatch();
+	const todoList = useSelector((state) => state.todos.value);
+	const archiveList = useSelector((state) => state.archives.value);
 
 	const [todoInputText, setTodoInputText] = useState(todo.text);
 	const [todoCaretStart, setTodoCaretStart] = useState(todo.text.length - 1);
@@ -31,12 +33,12 @@ const TodoInput = ({
 	 * }, [todoInputText])
 	 */
 
-	function textSurround (target, _l, _r) {
+	const textSurround = function (target, _l, _r) {
 		let val = target.value;
 		let start = target.selectionStart;
 		let end = target.selectionEnd;
 		return `${val.slice(0, start)}${_l}${val.slice(start, end)}${_r}${val.slice(end)}`;
-	}
+	};
 
 	// Todo edit input
 	const handleTodoInput = {
@@ -72,19 +74,11 @@ const TodoInput = ({
 			// NOTE: Not correctly focusing archived todo
 			goto.index(activeIndexPrevious);
 			if (activeIndexPrevious < todoList.length) {
-				setTodoList(todoList.map((todo, index) => {
-					if (index === activeIndexPrevious) todo.text = val;
-					return todo;
-				}).filter((todo) => {
-					if (todo.text.length) return todo;
-				}));
+				let _td = { ...todoList[activeIndexPrevious], text: val };
+				dispatch(setTodoText(_td));
 			} else {
-				setArchiveList(archiveList.map((todo, index) => {
-					if (index === activeIndexPrevious - todoList.length) todo.text = val;
-					return todo;
-				}).filter((todo) => {
-					if (todo.text.length) return todo;
-				}));
+				let _td = { ...archiveList[activeIndexPrevious - todoList.length], text: val };
+				dispatch(setArchiveText(_td));
 			}
 		},
 
@@ -94,12 +88,8 @@ const TodoInput = ({
 			// "ESC"
 			if (e.key === "Escape") {
 				e.preventDefault();
-				setTodoList(todoList.map((todo, index) => {
-					if (index === editIndex) {
-						todo.text = todoTextBackup;
-					}
-					return todo;
-				}));
+				let _td = { ...todoList[editIndex], text: todoTextBackup };
+				dispatch(setTodoText(_td));
 				goto.index(activeIndexPrevious);
 				setEditIndex(null);
 			} else if (e.key === "ArrowUp" || e.key === "ArrowDown") {
@@ -107,9 +97,8 @@ const TodoInput = ({
 					e.preventDefault();
 					return;
 				}
-			}
-			// Unedit, or carraige return
-			else if (e.key === "Enter") {
+			} else if (e.key === "Enter") {
+				// Unedit, or carraige return
 				if (emojiPopupActive) {
 					e.preventDefault();
 					return;
@@ -127,9 +116,8 @@ const TodoInput = ({
 				setTodoCaretStart(start);
 				setTodoInputText(e.target.value.substring(0, start) + "\t" + e.target.value.substring(end));
 				e.target.selectionStart = e.target.selectionEnd = start + 1;
-			}
-			// Bolden
-			else if (e.key === "b" && e.ctrlKey) {
+			} else if (e.key === "b" && e.ctrlKey) {
+				// Bolden
 				e.preventDefault();
 				setTodoCaretStart(e.target.selectionStart);
 				setTodoInputText(textSurround(e.target, "**", "**"));

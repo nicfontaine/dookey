@@ -1,21 +1,21 @@
 import { useState, useEffect, useRef } from "react";
 import { v4 as uuid } from 'uuid';
 import TextArea from "textarea-autosize-reactjs";
-import { useDispatch } from "react-redux";
-import { setCenter, setTitle, setFontSize, setBackups } from "/src/feature/settingsSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setCenter, setTitle, setFontSize, setBackups, setBackupsAbsolute } from "/src/feature/settingsSlice";
 import { addTodo } from "/src/feature/todosSlice";
 import { FlameIcon } from "@primer/octicons-react";
 import EmojiPopup from "./EmojiPopup";
 import Clock from "/src/components/Clock";
+import { resetSettings } from "../feature/settingsSlice";
+import { resetTodos } from "../feature/todosSlice";
+import { resetArchives } from "../feature/archivesSlice";
+import { resetTags } from "../feature/tagsSlice";
 
 import entryCommands from "../util/entry-commands.js";
 
 const EntryForm = ({
 	todoListRef,
-	setTodoList,
-	setTagList,
-	todoList,
-	tagList,
 	activeIndex,
 	setStatusMsg,
 	commandOptionsDisplay,
@@ -23,14 +23,14 @@ const EntryForm = ({
 	setCommandOptionsDisplay,
 	setFileOpenSelect,
 	goto,
-	settings,
-	setSettings,
-	settingsDefault,
-	archiveList,
-	setArchiveList,
 }) => {
 	
 	const dispatch = useDispatch();
+
+	const todoList = useSelector((state) => state.todos.value);
+	const archiveList = useSelector((state) => state.archives.value);
+	const tagList = useSelector((state) => state.tags.value);
+	const settings = useSelector((state) => state.settings.value);
 
 	const [entryInput, setEntryInput] = useState("");
 	const entryInputRef = useRef(null);
@@ -130,9 +130,8 @@ const EntryForm = ({
 				} else {
 					goto.next();
 				}
-			}
-			// Clear via escape, if viewing command overlay
-			else if (e.key === "Escape" && commandOptionsDisplay) {
+			} else if (e.key === "Escape" && commandOptionsDisplay) {
+				// Clear via escape, if viewing command overlay
 				setEntryInput("");
 			}
 		},
@@ -169,13 +168,17 @@ const EntryForm = ({
 					} else if (command === "clock") {
 						entryCommands.clock(clockActive, setClockActive);
 					} else if (command === "nuke") {
-						entryCommands.nuke(setTodoList, setArchiveList, setTagList, setStatusMsg, setSettings, settingsDefault);
+						dispatch(resetSettings());
+						dispatch(resetTags());
+						dispatch(resetTodos());
+						dispatch(resetArchives());
+						entryCommands.nuke(setStatusMsg);
 					} else if (command === "export") {
 						entryCommands.export(todoList, tagList, settings, setStatusMsg, archiveList);
 					} else if (command === "import") {
 						setDialogImportShow(true);
 					} else if (command === "save") {
-						entryCommands.save(todoList, archiveList, tagList, settings, setSettings, setStatusMsg);
+						entryCommands.save(todoList, archiveList, tagList, settings, dispatch(setBackupsAbsolute), setStatusMsg);
 					} else if (command === "open") {
 						entryCommands.open(setFileOpenSelect);
 					} else if (command === "kill") {
@@ -184,23 +187,23 @@ const EntryForm = ({
 						window.open(process.env.APP_HELP);
 					} else if (command === "title") {
 						let title = args.join(" ");
-						console.log(args)
-						setSettings({ ...settings, title: title });
+						console.log(args);
+						// setSettings({ ...settings, title: title });
 						dispatch(setTitle(title));
 					} else if (command === "full") {
-						setSettings({ ...settings, center: null });
+						// setSettings({ ...settings, center: null });
 						dispatch(setCenter(null));
 					} else if (command === "center") {
 						if (args[0] !== undefined) {
 							let size = args[0].trim();
-							setSettings({ ...settings, center: size });
+							// setSettings({ ...settings, center: size });
 							dispatch(setCenter(size));
 						}
 					} else if (command === "size") {
 						if (args[0] === undefined) return;
 						let size = args[0].trim();
 						if (size) {
-							setSettings({ ...settings, fontSize: size });
+							// setSettings({ ...settings, fontSize: size });
 							dispatch(setFontSize(size));
 							// entryCommands.size(setMainFontSize, Number(size))
 						}
@@ -210,9 +213,9 @@ const EntryForm = ({
 						}
 						let location = args[0].trim();
 						if (location) {
-							setSettings({ ...settings, backups: location });
+							// setSettings({ ...settings, backups: location });
 							dispatch(setBackups(location));
-							entryCommands.backups(location, settings, setSettings, setStatusMsg);
+							entryCommands.backups(location, dispatch(setBackupsAbsolute), setStatusMsg);
 						}
 					}
 				}
@@ -223,9 +226,9 @@ const EntryForm = ({
 			const _td = {
 				text: val,
 				id: uuid(),
-				tags: []
+				tags: [],
 			};
-			setTodoList([ _td, ...todoList, ]);
+			// setTodoList([_td, ...todoList]);
 			dispatch(addTodo(_td));
 			handleEntryInput.clear();
 		},

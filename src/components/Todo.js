@@ -4,10 +4,10 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import remarkGemoji from "remark-gemoji";
-import { useDispatch } from "react-redux";
-import { addTodo, setTodoTags, deleteTodo } from "/src/feature/todosSlice";
-import { addTag } from "/src/feature/tagsSlice";
-import { addArchive, deleteArchive } from "/src/feature/archivesSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addTodo, setTodoTags, deleteTodo, archiveTodo } from "/src/feature/todosSlice";
+import { addArchive, deleteArchive, unArchive } from "/src/feature/archivesSlice";
+import { addTag, setTags } from "/src/feature/tagsSlice";
 import * as randomColor from "random-color";
 import { v4 as uuid } from 'uuid';
 import { CheckCircleFillIcon } from "@primer/octicons-react";
@@ -22,17 +22,14 @@ const Todo = ({
 	activeIndex,
 	activeIndexPrevious,
 	setActiveIndexPrevious,
-	todoList,
-	setTodoList,
-	archiveList,
-	setArchiveList,
-	tagList,
-	setTagList,
 	goto,
 	archived,
 }) => {
 
 	const dispatch = useDispatch();
+	const todoList = useSelector((state) => state.todos.value);
+	const archiveList = useSelector((state) => state.archives.value);
+	const tagList = useSelector((state) => state.tags.value);
 
 	const [editIndex, setEditIndex] = useState(null);
 	const [animOutIndex, setAnimOutIndex] = useState(null);
@@ -55,12 +52,12 @@ const Todo = ({
 				if (activeIndex < todoList.length) {
 					let _list = todoList.map((todo) => todo);
 					_list.splice(activeIndex - 1, 0, _list.splice(activeIndex, 1)[0]);
-					setTodoList(_list);
+					// setTodoList(_list);
 				} else {
 					let _index = activeIndex - todoList.length;
 					let _list = archiveList.map((todo) => todo);
 					_list.splice(_index - 1, 0, _list.splice(_index, 1)[0]);
-					setArchiveList(_list);
+					// setArchiveList(_list);
 				}
 				goto.prev();
 			}
@@ -73,12 +70,12 @@ const Todo = ({
 				if (activeIndex < todoList.length) {
 					let _list = todoList.map((todo) => todo);
 					_list.splice(activeIndex + 1, 0, _list.splice(activeIndex, 1)[0]);
-					setTodoList(_list);
+					// setTodoList(_list);
 				} else {
 					let _index = activeIndex - todoList.length;
 					let _list = archiveList.map((todo) => todo);
 					_list.splice(_index + 1, 0, _list.splice(_index, 1)[0]);
-					setArchiveList(_list);
+					// setArchiveList(_list);
 				}
 				goto.next();
 			}
@@ -101,22 +98,24 @@ const Todo = ({
 		},
 
 		archive () {
-			dispatch(addArchive(todoList[activeIndex]));
-			setArchiveList([todoList[activeIndex], ...archiveList]);
-			handleTodo.delete(activeIndex);
+			dispatch(addArchive(todo));
+			// dispatch(deleteTodo(todoList[activeIndex]));
+			// setArchiveList([todoList[activeIndex], ...archiveList]);
+			handleTodo.delete(activeIndex, todo);
 		},
 
 		unArchive () {
-			let _index = activeIndex - todoList.length;
-			let _td = archiveList[_index];
-			dispatch(addTodo(archiveList[_index]));
-			dispatch(deleteArchive(archiveList[_index]));
-			setArchiveList(archiveList.filter((todo, index) => {
-				if (index !== _index) {
-					return todo; 
-				}
-			}));
-			setTodoList([...todoList, _td]);
+			const _index = activeIndex - todoList.length;
+			const _td = archiveList[_index];
+			// console.log(_td);
+			dispatch(addTodo(_td));
+			dispatch(deleteArchive(_td));
+			// setArchiveList(archiveList.filter((todo, index) => {
+			// 	if (index !== _index) {
+			// 		return todo; 
+			// 	}
+			// }));
+			// setTodoList([...todoList, _td]);
 		},
 
 		// Mark task for delete
@@ -128,8 +127,10 @@ const Todo = ({
 		},
 
 		// Remove from data, and list. Set next active position
-		delete (_index) {
+		delete (_index, _todo) {
 			setAnimOutIndex(null);
+			console.log(todo.text);
+			dispatch(deleteTodo(todo));
 			if (_index < todoList.length) {
 				let _list = todoList.filter((todo, index) => {
 					if (index !== _index) {
@@ -137,18 +138,17 @@ const Todo = ({
 					}
 				});
 				handleTodo.postDeleteIndex(_list.length + archiveList.length);
-				dispatch(deleteTodo(todoList[_index]));
-				setTodoList(_list);
+				// setTodoList(_list);
 			} else {
 				_index -= todoList.length;
-				let _list = archiveList.filter((todo, index) => {
-					if (index !== _index) {
-						return todo; 
-					}
-				});
-				handleTodo.postDeleteIndex(_list.length + todoList.length);
+				// let _list = archiveList.filter((todo, index) => {
+				// 	if (index !== _index) {
+				// 		return todo; 
+				// 	}
+				// });
+				// handleTodo.postDeleteIndex(_list.length + todoList.length);
 				dispatch(deleteArchive(archiveList[_index]));
-				setArchiveList(_list);
+				// setArchiveList(_list);
 			}
 		},
 
@@ -160,9 +160,8 @@ const Todo = ({
 				// No todos. Go to entry
 				if (!newLength) {
 					newIndex = -1; 
-				}
-				// At end, up 1
-				else if (activeIndex === newLength) {
+				} else if (activeIndex === newLength) {
+					// At end, up 1
 					newIndex = activeIndex - 1; 
 				}
 				goto.index(newIndex);
@@ -251,9 +250,8 @@ const Todo = ({
 				// Move focus
 				if (!e.ctrlKey) {
 					goto.next();
-				}
-				// Move todo
-				else if (e.shiftKey && e.ctrlKey) {
+				} else if (e.shiftKey && e.ctrlKey) {
+					// Move todo
 					move.down();
 				}
 			} else if (e.key === "ArrowUp") {
@@ -261,9 +259,8 @@ const Todo = ({
 				// Move focus
 				if (!e.ctrlKey) {
 					goto.prev();
-				}
-				// Move todo
-				else if (e.shiftKey && e.ctrlKey) {
+				} else if (e.shiftKey && e.ctrlKey) {
+					// Move todo
 					move.up();
 				}
 			} else if (e.key === "Tab") {
@@ -287,7 +284,7 @@ const Todo = ({
 				let _list = todoList.map((todo) => todo);
 				_list.splice(_td.index, 0, _td.todo);
 				goto.index(_td.index);
-				setTodoList(_list);
+				// setTodoList(_list);
 			}
 
 		},
@@ -317,14 +314,8 @@ const Todo = ({
 			let inputTags = tagInputRef.current.value.replace(/\s/g, "").split(",");
 			inputTags = inputTags.filter((a) => a.length && a !== ",");
 			let _td = { ...todoList[index], tags: inputTags };
-			console.log(_td);
-			setTodoList(todoList.map((todo, index) => {
-				if (index === activeIndexPrevious) {
-					todo.tags = inputTags;
-				}
-				return todo;
-			}));
 			dispatch(setTodoTags(_td));
+			// TODO: Cleanup, in the reducer
 			let _tglist = Object.assign({}, tagList);
 			inputTags.forEach((t) => {
 				if (!(t in _tglist)) {
@@ -334,15 +325,7 @@ const Todo = ({
 					_tglist[t] = _t;
 				}
 			});
-			// let ts = [...inputTags];
-			// while (ts.length) {
-			// 	let tg = ts.shift();
-			// 	if (!(tg in _tglist)) {
-			// 		let color = randomColor(0.25, 0.99).hexString();
-			// 		_tglist[tg] = { id: uuid(), color };
-			// 	}
-			// }
-			setTagList(_tglist);
+			dispatch(setTags(_tglist));
 			handleTagInput.deactive(e);
 		},
 
@@ -375,9 +358,7 @@ const Todo = ({
 				index={index}
 				todoList={todoList}
 				goto={goto}
-				setTodoList={setTodoList}
 				archiveList={archiveList}
-				setArchiveList={setArchiveList}
 				editIndex={editIndex}
 				setEditIndex={setEditIndex}
 				activeIndexPrevious={activeIndexPrevious}

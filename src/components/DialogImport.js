@@ -1,21 +1,20 @@
 import { useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
+import { mergeArchiveList } from "../feature/archivesSlice.js";
+import { mergeSettings } from "../feature/settingsSlice.js";
+import { mergeTagList } from "../feature/tagsSlice.js";
+import { mergeTodoList } from "../feature/todosSlice.js";
 
 import entryCommands from "../util/entry-commands.js";
 
 const DialogImport = ({
 	goto,
-	todoList,
-	setTodoList,
-	tagList,
-	setTagList,
-	archiveList,
-	setArchiveList,
 	setStatusMsg,
 	dialogImportShow,
 	setDialogImportShow,
-	settings,
-	setSettings,
 }) => {
+
+	const dispatch = useDispatch();
 
 	const importInput = useRef(null);
 	const importDialog = useRef(null);
@@ -49,23 +48,12 @@ const DialogImport = ({
 				try {
 					val = JSON.parse(val);
 					setDialogImportShow(false);
-					let _ids = [];
 					setStatusMsg("Imported");
 					entryCommands.statusClearDelay(setStatusMsg, 2000);
-					/*
-					 * Combine w/ existing. Reject duplicates
-					 * NOTE: move to 'combiner' function
-					 */
-					setTodoList([...todoList, ...val.todos].filter((todo) => {
-						if (_ids.indexOf(todo.id) < 0) {
-							_ids.push(todo.id);
-							return todo;
-						}
-					}));
-					// NOTE: Merge archive, settings, tags
-					setArchiveList([...archiveList, ...val.archive]);
-					setTagList({ ...tagList, ...val.tags });
-					setSettings({ ...settings, ...val.settings });
+					dispatch(mergeTodoList(val.todos));
+					dispatch(mergeArchiveList(val.archives));
+					dispatch(mergeTagList(val.tags));
+					dispatch(mergeSettings(val.settings));
 				} catch(err) {
 					importDialogStatusText.current.innerHTML = err;
 				}

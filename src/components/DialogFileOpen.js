@@ -1,13 +1,13 @@
 import { useEffect, useRef } from "react";
+import { setTodos } from "../feature/todosSlice";
+import { setArchives } from "../feature/archivesSlice";
+import { setTags } from "../feature/tagsSlice";
+import { setSettings } from "../feature/settingsSlice";
 
 export default function DialogFileOpen ({
 	setStatusMsg,
 	fileOpenSelect,
 	setFileOpenSelect,
-	setTodoList,
-	setTagList,
-	setSettings,
-	setArchiveList
 }) {
 
 	const input = useRef(null);
@@ -24,11 +24,11 @@ export default function DialogFileOpen ({
 		if (!file) return;
 		let reader = new FileReader();
 		reader.addEventListener("load", (e) => {
-			let { todos, tags, archive, settings } = JSON.parse(reader.result);
+			let { todos, tags, archives, settings } = JSON.parse(reader.result);
+			setTodos(todos);
+			setArchives(archives);
+			setTags(tags);
 			setSettings(settings);
-			setTodoList(todos);
-			setTagList(tags);
-			setArchiveList(archive);
 			setStatusMsg("Loaded from file");
 		});
 		reader.addEventListener("error", (e) => {

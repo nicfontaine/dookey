@@ -1,8 +1,11 @@
+import { useSelector } from "react-redux";
+
 const EntryCommandOptions = ({
 	commandOptionsDisplay,
-	settings,
-	tagList,
 }) => {
+
+	const settings = useSelector((state) => state.settings.value);
+	const tags = useSelector((state) => state.tags.value);
 
 	return(
 		<>
@@ -15,12 +18,12 @@ const EntryCommandOptions = ({
 					<div className="entry-command-tags-container">
 						<span className="icon mg-r-4">🏷️</span>
 						<div className="tags-row flx-spc-2 flx-children-spc-1">
-							{Object.keys(tagList).length ? Object.keys(tagList).map((tagName) => {
+							{Object.keys(tags).length ? Object.keys(tags).map((tagName) => {
 								return (
 									<div
-										key={tagList[tagName].id}
+										key={tags[tagName].id}
 										className="tag"
-										style={{ backgroundColor: tagList[tagName].color }}
+										style={{ backgroundColor: tags[tagName].color }}
 									>{tagName}</div>
 								);
 							}) : <span className="text-italic">(Tags here)</span>}

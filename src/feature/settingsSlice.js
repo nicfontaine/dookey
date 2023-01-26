@@ -9,20 +9,39 @@ export const settingsSlice = createSlice({
 	initialState,
 	reducers: {
 		setFontSize: (state, action) => {
-			state.value.title = action.payload;
+			state.value.fontSize = Number(action.payload);
 		},
 		setCenter: (state, action) => {
 			state.value.center = action.payload;
 		},
 		setTitle: (state, action) => {
-			state.value.fontSize = action.payload;
+			state.value.title = action.payload;
 		},
 		setBackups: (state, action) => {
 			state.value.backups = action.payload;
 		},
+		setBackupsAbsolute: (state, action) => {
+			state.value.backupsAbsolute = action.payload;
+		},
+		mergeSettings: (state, action) => {
+			state.value = { ...state.value, ...action.payload };
+		},
+		setSettings: (state, action) => {
+			state.value = [...action.payload];
+		},
+		resetSettings: () => initialState,
 	},
 });
 
-export const { setFontSize, setCenter, setTitle, setBackups } = settingsSlice.actions;
+export const {
+	setFontSize,
+	setCenter,
+	setTitle,
+	setBackups,
+	setBackupsAbsolute,
+	mergeSettings,
+	setSettings,
+	resetSettings,
+} = settingsSlice.actions;
 
 export default settingsSlice.reducer;

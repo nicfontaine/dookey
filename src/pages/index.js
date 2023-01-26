@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
 
 import Head from "next/head";
 import ReactMarkdown from "react-markdown";
@@ -10,7 +11,7 @@ import EntryForm from "../components/EntryForm";
 import Todo from "../components/Todo";
 import StatusBar from "../components/StatusBar";
 import DialogImport from "../components/DialogImport";
-import CommandOptions from "../components/EntryCommandOptions";
+import EntryCommandOptions from "../components/EntryCommandOptions";
 import DialogFileOpen from "../components/DialogFileOpen";
 import introTemplate from "../util/intro-template";
 import entryCommands from "../util/entry-commands";
@@ -20,10 +21,10 @@ var activeIndex = -1;
 
 const TodoPage = () => {
 
-	const [todoList, setTodoList] = useState([]);
-	const [archiveList, setArchiveList] = useState([]);
-	const [tagList, setTagList] = useState({});
-	const [settings, setSettings] = useState(settingsDefault);
+	const todoList = useSelector((state) => state.todos.value);
+	const archiveList = useSelector((state) => state.archives.value);
+	const settings = useSelector((state) => state.settings.value);
+	
 	const [activeIndexPrevious, setActiveIndexPrevious] = useState(-1);
 
 	const [focusElement, setFocusElement] = useState();
@@ -96,37 +97,37 @@ const TodoPage = () => {
 	// Load
 	useEffect(() => {
 		// LS - Todos, Tags, Font-size
-		let _todos = JSON.parse(localStorage.getItem("todos"));
-		if (_todos) setTodoList(_todos);
-		let _archive = JSON.parse(localStorage.getItem("archive"));
-		if (_archive) setArchiveList(_archive);
-		let _tags = JSON.parse(localStorage.getItem("tags"));
-		if (_tags) setTagList(_tags);
-		let _settings = JSON.parse(localStorage.getItem("settings"));
-		if (!_settings) _settings = introTemplate.settings;
-		setSettings(_settings);
-		// Initialize with boilerplate how-to
-		if ((!_todos && !_tags) || (!_todos.length && !Object.keys(_tags).length)) {
-			setTodoList(introTemplate.todos);
-			setTagList(introTemplate.tags);
-		}
+		// let _todos = JSON.parse(localStorage.getItem("todos"));
+		// if (_todos) setTodoList(_todos);
+		// let _archive = JSON.parse(localStorage.getItem("archive"));
+		// if (_archive) setArchiveList(_archive);
+		// let _tags = JSON.parse(localStorage.getItem("tags"));
+		// if (_tags) setTagList(_tags);
+		// let _settings = JSON.parse(localStorage.getItem("settings"));
+		// if (!_settings) _settings = introTemplate.settings;
+		// setSettings(_settings);
+		// // Initialize with boilerplate how-to
+		// if ((!_todos && !_tags) || (!_todos.length && !Object.keys(_tags).length)) {
+		// 	setTodoList(introTemplate.todos);
+		// 	setTagList(introTemplate.tags);
+		// }
 		/*
 		 * Set absolute backup path, from relative
 		 * Get absolute backups path
 		 */
-		(async () => {
-			const response = await fetch("/api/set-backups-location", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ backups: _settings.backups }),
-			});
-			const res = await response.json();
-			if (res.err) {
-				setStatusMsg(JSON.stringify(res.err));
-				return;
-			}
-			setSettings({ ..._settings, backupsAbsolute: res.backupsAbsolute });
-		})();
+		// (async () => {
+		// 	const response = await fetch("/api/set-backups-location", {
+		// 		method: "POST",
+		// 		headers: { "Content-Type": "application/json" },
+		// 		body: JSON.stringify({ backups: _settings.backups }),
+		// 	});
+		// 	const res = await response.json();
+		// 	if (res.err) {
+		// 		setStatusMsg(JSON.stringify(res.err));
+		// 		return;
+		// 	}
+		// 	setSettings({ ..._settings, backupsAbsolute: res.backupsAbsolute });
+		// })();
 		document.body.tabIndex = -1;
 		// NOTE: This is causing a ref error at line 54
 		document.body.addEventListener("focus", goto.exit);
@@ -141,15 +142,15 @@ const TodoPage = () => {
 
 	// Update Todo list (storage)
 	useEffect(() => {
-		localStorage.setItem("todos", JSON.stringify(todoList));
+		// localStorage.setItem("todos", JSON.stringify(todoList));
 		focusChange(activeIndex);
 	}, [todoList]);
-	useEffect(() => {
-		localStorage.setItem("archive", JSON.stringify(archiveList));
-	}, [archiveList]);
-	useEffect(() => {
-		localStorage.setItem("tags", JSON.stringify(tagList));
-	}, [tagList]);
+	// useEffect(() => {
+	// 	localStorage.setItem("archive", JSON.stringify(archiveList));
+	// }, [archiveList]);
+	// useEffect(() => {
+	// 	localStorage.setItem("tags", JSON.stringify(tagList));
+	// }, [tagList]);
 
 	// Focus element
 	useEffect(() => {
@@ -162,9 +163,9 @@ const TodoPage = () => {
 		entryCommands.center(settings.center);
 		localStorage.setItem("settings", JSON.stringify(settings));
 		if (!settings.title.length) {
-			mainHeadingRef.current.classList.add("scrolled")
+			mainHeadingRef.current.classList.add("scrolled");
 		} else {
-			mainHeadingRef.current.classList.remove("scrolled")
+			mainHeadingRef.current.classList.remove("scrolled");
 		}
 	}, [settings]);
 
@@ -216,32 +217,20 @@ const TodoPage = () => {
 						<div ref={entryFormRef}>
 							<EntryForm
 								todoListRef={todoListRef}
-								setTodoList={setTodoList}
-								setTagList={setTagList}
-								todoList={todoList}
-								tagList={tagList}
 								activeIndex={activeIndex}
 								setStatusMsg={setStatusMsg}
 								commandOptionsDisplay={commandOptionsDisplay}
 								setDialogImportShow={setDialogImportShow}
 								setCommandOptionsDisplay={setCommandOptionsDisplay}
 								setFileOpenSelect={setFileOpenSelect}
-								setFocusElement={setFocusElement}
 								goto={goto}
-								settings={settings}
-								setSettings={setSettings}
-								settingsDefault={settingsDefault}
-								archiveList={archiveList}
-								setArchiveList={setArchiveList}
 							/>
 						</div>
 
 					</div>
 
-					<CommandOptions
+					<EntryCommandOptions
 						commandOptionsDisplay={commandOptionsDisplay}
-						settings={settings}
-						tagList={tagList}
 					/>
 
 					<div
@@ -258,12 +247,6 @@ const TodoPage = () => {
 									activeIndex={activeIndex}
 									activeIndexPrevious={activeIndexPrevious}
 									setActiveIndexPrevious={setActiveIndexPrevious}
-									todoList={todoList}
-									setTodoList={setTodoList}
-									archiveList={archiveList}
-									setArchiveList={setArchiveList}
-									tagList={tagList}
-									setTagList={setTagList}
 									goto={goto}
 								/>;
 							}) : undefined }
@@ -286,12 +269,6 @@ const TodoPage = () => {
 										activeIndex={activeIndex}
 										activeIndexPrevious={activeIndexPrevious}
 										setActiveIndexPrevious={setActiveIndexPrevious}
-										todoList={todoList}
-										setTodoList={setTodoList}
-										archiveList={archiveList}
-										setArchiveList={setArchiveList}
-										tagList={tagList}
-										setTagList={setTagList}
 										goto={goto}
 										archived={true}
 									/>;
@@ -305,28 +282,16 @@ const TodoPage = () => {
 
 				<DialogImport
 					goto={goto}
-					todoList={todoList}
-					setTodoList={setTodoList}
-					tagList={tagList}
-					setTagList={setTagList}
-					archiveList={archiveList}
-					setArchiveList={setArchiveList}
 					setStatusMsg={setStatusMsg}
 					dialogImportShow={dialogImportShow}
 					setDialogImportShow={setDialogImportShow}
 					setFocusElement={setFocusElement}
-					settings={settings}
-					setSettings={setSettings}
 				/>
 
 				<DialogFileOpen
 					setStatusMsg={setStatusMsg}
 					fileOpenSelect={fileOpenSelect}
 					setFileOpenSelect={setFileOpenSelect}
-					setTodoList={setTodoList}
-					setTagList={setTagList}
-					setArchiveList={setArchiveList}
-					setSettings={setSettings}
 				/>
 
 				<StatusBar msg={statusMsg} />
