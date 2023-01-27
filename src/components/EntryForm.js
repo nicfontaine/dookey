@@ -153,77 +153,74 @@ const EntryForm = ({
 				setEntryInput("");
 			} else if (val.indexOf("/") === 0) {
 
-				// NOTE: Cleanup and move
 				val = val.replace(/  +/g, ' ').substring(val.indexOf("/") + 1, val.length);
 				let args = val.split(" ");
 				let command = args.shift();
-
-				if (command in entryCommands) {
-					const setMsg = dispatch(setStatusMessage);
-					if (command === "msg") {
-						dispatch(setStatusMessage([args, 5000]));
-					} else if (command === "clock") {
-						setClockActive(true);
-					} else if (command === "nuke") {
-						batch(() => {
-							dispatch(resetSettings());
-							dispatch(resetTags());
-							dispatch(resetTodos());
-							dispatch(resetArchives());
-							dispatch(setStatusMessage(["Todo list cleared", 5000]));
-						});
-					} else if (command === "export") {
-						const _status = await exportData(todoList, archiveList, tagList, settings);
-						dispatch(setStatusMessage([_status, 5000]));
-					} else if (command === "import") {
-						setDialogImportShow(true);
-					} else if (command === "save") {
-						const _res = await saveData(todoList, archiveList, tagList, settings);
-						dispatch(setBackupsAbsolute(_res.backups));
-						dispatch(setStatusMessage([_res.status, 5000]));
-					} else if (command === "open") {
-						setFileOpenSelect(true);
-					} else if (command === "kill") {
-						// entryCommands.kill(setMsg);
-					} else if (command === "help") {
-						window.open(process.env.APP_HELP);
-					} else if (command === "title") {
-						let title = args.join(" ");
-						dispatch(setTitle(title));
-					} else if (command === "full") {
-						dispatch(setCenter(null));
-					} else if (command === "center") {
-						if (args[0] !== undefined) {
-							let size = args[0].trim();
-							dispatch(setCenter(size));
-						}
-					} else if (command === "size") {
-						if (args[0] === undefined) return;
+				
+				// NOTE: Cleanup and move
+				if (command === "msg") {
+					dispatch(setStatusMessage([args, 5000]));
+				} else if (command === "clock") {
+					setClockActive(true);
+				} else if (command === "nuke") {
+					batch(() => {
+						dispatch(resetSettings());
+						dispatch(resetTags());
+						dispatch(resetTodos());
+						dispatch(resetArchives());
+						dispatch(setStatusMessage(["Todo list cleared", 5000]));
+					});
+				} else if (command === "export") {
+					const _status = await exportData(todoList, archiveList, tagList, settings);
+					dispatch(setStatusMessage([_status, 5000]));
+				} else if (command === "import") {
+					setDialogImportShow(true);
+				} else if (command === "save") {
+					const _res = await saveData(todoList, archiveList, tagList, settings);
+					dispatch(setBackupsAbsolute(_res.backups));
+					dispatch(setStatusMessage([_res.status, 5000]));
+				} else if (command === "open") {
+					setFileOpenSelect(true);
+				} else if (command === "kill") {
+					// entryCommands.kill(setMsg);
+				} else if (command === "help") {
+					window.open(process.env.APP_HELP);
+				} else if (command === "title") {
+					let title = args.join(" ");
+					dispatch(setTitle(title));
+				} else if (command === "full") {
+					dispatch(setCenter(null));
+				} else if (command === "center") {
+					if (args[0] !== undefined) {
 						let size = args[0].trim();
-						if (size) {
-							dispatch(setFontSize(size));
+						dispatch(setCenter(size));
+					}
+				} else if (command === "size") {
+					if (args[0] === undefined) return;
+					let size = args[0].trim();
+					if (size) {
+						dispatch(setFontSize(size));
+					}
+				} else if (command === "backups") {
+					if (!args) {
+						setEntryInput(`${entryInput} ${settings.backupsAbsolute}`);
+					}
+					let location = args[0].trim();
+					if (location) {
+						dispatch(setBackups(location));
+						const response = await fetch("/api/set-backups-location", {
+							method: "POST",
+							headers: { "Content-Type": "application/json" },
+							body: JSON.stringify({ backups: location }),
+						});
+						const res = await response.json();
+						if (res.err) {
+							dispatch(setStatusMessage([JSON.stringify(res.err), 5000]));
+							return;
 						}
-					} else if (command === "backups") {
-						if (!args) {
-							setEntryInput(`${entryInput} ${settings.backupsAbsolute}`);
-						}
-						let location = args[0].trim();
-						if (location) {
-							dispatch(setBackups(location));
-							const response = await fetch("/api/set-backups-location", {
-								method: "POST",
-								headers: { "Content-Type": "application/json" },
-								body: JSON.stringify({ backups: location }),
-							});
-							const res = await response.json();
-							if (res.err) {
-								dispatch(setStatusMessage([JSON.stringify(res.err), 5000]));
-								return;
-							}
-							setBackupsAbsolute(res.backupsAbsolute);
-							console.log(res.backupsAbsolute);
-							dispatch(setStatusMessage([`Location: ${res.backupsAbsolute}`, 8000]));
-						}
+						setBackupsAbsolute(res.backupsAbsolute);
+						console.log(res.backupsAbsolute);
+						dispatch(setStatusMessage([`Location: ${res.backupsAbsolute}`, 8000]));
 					}
 				}
 
