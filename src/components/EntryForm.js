@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { v4 as uuid } from 'uuid';
 import TextArea from "textarea-autosize-reactjs";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, batch } from "react-redux";
 import { setCenter, setTitle, setFontSize, setBackups, setBackupsAbsolute } from "/src/feature/settingsSlice";
 import { addTodo, unshiftTodo } from "/src/feature/todosSlice";
 import { FlameIcon } from "@primer/octicons-react";
@@ -11,14 +11,15 @@ import { resetSettings } from "../feature/settingsSlice";
 import { resetTodos } from "../feature/todosSlice";
 import { resetArchives } from "../feature/archivesSlice";
 import { resetTags } from "../feature/tagsSlice";
+import { setStatusMessage } from "../feature/statusMessageSlice";
+import exportData from "../util/export-data";
+import saveData from "../util/save-data";
 
 import entryCommands from "../util/entry-commands.js";
 
 const EntryForm = ({
 	entryInputRef,
 	todoListRef,
-	activeIndex,
-	setStatusMsg,
 	commandOptionsDisplay,
 	setDialogImportShow,
 	setCommandOptionsDisplay,
@@ -32,6 +33,7 @@ const EntryForm = ({
 	const archiveList = useSelector((state) => state.archives.value);
 	const tagList = useSelector((state) => state.tags.value);
 	const settings = useSelector((state) => state.settings.value);
+	const itemFocus = useSelector((state) => state.itemFocus.value);
 
 	const [entryInput, setEntryInput] = useState("");
 	const formRef = useRef(null);
@@ -47,11 +49,7 @@ const EntryForm = ({
 
 	// Entry Input
 	useEffect(() => {
-		if (entryInput[0] === "/") {
-			setCommandOptionsDisplay(true);
-		} else {
-			setCommandOptionsDisplay(false);
-		}
+		setCommandOptionsDisplay(entryInput[0] === "/");
 	}, [entryInput]);
 
 	const handleEntryInput = {
@@ -60,7 +58,7 @@ const EntryForm = ({
 			if (clockActive) return;
 			e.preventDefault();
 			// Ignore if a todo is focused
-			if (activeIndex < 0) {
+			if (itemFocus.index < 0) {
 				let val = e.target.value;
 				setEntryInput(val);
 				if (todoListRef.current.scrollTop > 0) todoListRef.current.scrollTop = 0;
@@ -74,8 +72,6 @@ const EntryForm = ({
 			}
 		},
 
-		focus (e) {},
-
 		// In case focus leaves, but active doesn't change. Like to <body>
 		blur (e) {
 			// Changing windows/tabs doesn't really blur the input
@@ -87,6 +83,10 @@ const EntryForm = ({
 
 		submit (e) {
 			e.preventDefault();
+		},
+
+		keyUp (e) {
+			setEmojiKeyUpEvent(e);
 		},
 
 		keyDown (e) {
@@ -136,76 +136,72 @@ const EntryForm = ({
 			}
 		},
 
-		keyUp (e) {
-			setEmojiKeyUpEvent(e);
-		},
-
-		// Clear content
-		clear () {
-			setEntryInput("");
-		},
-
 		// User entry
-		confirm () {
+		async confirm () {
+
 			let val = entryInput.trim();
 			if (!val.length) {
-				handleEntryInput.clear();
+				setEntryInput("");
 				return;
-			}
-			// Commands
-			if (val.indexOf("/") === 0) {
+			} else if (val.indexOf("/") !== 0) {
+				const _td = {
+					text: val,
+					id: uuid(),
+					tags: [],
+				};
+				dispatch(unshiftTodo(_td));
+				setEntryInput("");
+			} else if (val.indexOf("/") === 0) {
+
 				// NOTE: Cleanup and move
 				val = val.replace(/  +/g, ' ').substring(val.indexOf("/") + 1, val.length);
-				// let command = val.substring(0, val.indexOf(" ")) || val;
-				// let args = val.substring(val.indexOf(" ") + 1, val.length).split(" ");
 				let args = val.split(" ");
 				let command = args.shift();
-				// console.log(command, args);
 
 				if (command in entryCommands) {
+					const setMsg = dispatch(setStatusMessage);
 					if (command === "msg") {
-						entryCommands.msg(setStatusMsg, "test");
+						dispatch(setStatusMessage([args, 5000]));
 					} else if (command === "clock") {
-						entryCommands.clock(clockActive, setClockActive);
+						setClockActive(true);
 					} else if (command === "nuke") {
-						dispatch(resetSettings());
-						dispatch(resetTags());
-						dispatch(resetTodos());
-						dispatch(resetArchives());
-						entryCommands.nuke(setStatusMsg);
+						batch(() => {
+							dispatch(resetSettings());
+							dispatch(resetTags());
+							dispatch(resetTodos());
+							dispatch(resetArchives());
+							dispatch(setStatusMessage(["Todo list cleared", 5000]));
+						});
 					} else if (command === "export") {
-						entryCommands.export(todoList, tagList, settings, setStatusMsg, archiveList);
+						const _status = await exportData(todoList, archiveList, tagList, settings);
+						dispatch(setStatusMessage([_status, 5000]));
 					} else if (command === "import") {
 						setDialogImportShow(true);
 					} else if (command === "save") {
-						entryCommands.save(todoList, archiveList, tagList, settings, dispatch(setBackupsAbsolute), setStatusMsg);
+						const _res = await saveData(todoList, archiveList, tagList, settings);
+						dispatch(setBackupsAbsolute(_res.backups));
+						dispatch(setStatusMessage([_res.status, 5000]));
 					} else if (command === "open") {
-						entryCommands.open(setFileOpenSelect);
+						setFileOpenSelect(true);
 					} else if (command === "kill") {
-						entryCommands.kill(setStatusMsg);
+						// entryCommands.kill(setMsg);
 					} else if (command === "help") {
 						window.open(process.env.APP_HELP);
 					} else if (command === "title") {
 						let title = args.join(" ");
-						console.log(args);
-						// setSettings({ ...settings, title: title });
 						dispatch(setTitle(title));
 					} else if (command === "full") {
-						// setSettings({ ...settings, center: null });
 						dispatch(setCenter(null));
 					} else if (command === "center") {
 						if (args[0] !== undefined) {
 							let size = args[0].trim();
-							// setSettings({ ...settings, center: size });
 							dispatch(setCenter(size));
 						}
 					} else if (command === "size") {
 						if (args[0] === undefined) return;
 						let size = args[0].trim();
 						if (size) {
-							// setSettings({ ...settings, fontSize: size });
 							dispatch(setFontSize(size));
-							// entryCommands.size(setMainFontSize, Number(size))
 						}
 					} else if (command === "backups") {
 						if (!args) {
@@ -213,24 +209,27 @@ const EntryForm = ({
 						}
 						let location = args[0].trim();
 						if (location) {
-							// setSettings({ ...settings, backups: location });
 							dispatch(setBackups(location));
-							entryCommands.backups(location, dispatch(setBackupsAbsolute), setStatusMsg);
+							const response = await fetch("/api/set-backups-location", {
+								method: "POST",
+								headers: { "Content-Type": "application/json" },
+								body: JSON.stringify({ backups: location }),
+							});
+							const res = await response.json();
+							if (res.err) {
+								dispatch(setStatusMessage([JSON.stringify(res.err), 5000]));
+								return;
+							}
+							setBackupsAbsolute(res.backupsAbsolute);
+							console.log(res.backupsAbsolute);
+							dispatch(setStatusMessage([`Location: ${res.backupsAbsolute}`, 8000]));
 						}
 					}
 				}
 
-				handleEntryInput.clear();
+				setEntryInput("");
 				return;
 			}
-			const _td = {
-				text: val,
-				id: uuid(),
-				tags: [],
-			};
-			// setTodoList([_td, ...todoList]);
-			dispatch(unshiftTodo(_td));
-			handleEntryInput.clear();
 		},
 
 	};
@@ -240,7 +239,7 @@ const EntryForm = ({
 			<div className={`entry-container ${commandOptionsDisplay ? "commands-display" : ""}`}>
 				<div className="entry-container-inner">
 					<form
-						className={`entry-form ${activeIndex === -1 ? "active" : ""}`}
+						className={`entry-form ${itemFocus.index === -1 ? "active" : ""}`}
 						onSubmit={handleEntryInput.submit}
 						ref={formRef}
 					>
@@ -252,12 +251,11 @@ const EntryForm = ({
 							type="text"
 							value={entryInput}
 							id={"entry-input"}
-							className={`entry-input ${activeIndex === -1 ? "active" : ""}`}
+							className={`entry-input ${itemFocus.index === -1 ? "active" : ""}`}
 							onChange={handleEntryInput.change}
 							onKeyDown={handleEntryInput.keyDown}
 							onKeyUp={handleEntryInput.keyUp}
 							onClick={handleEntryInput.active}
-							onFocus={handleEntryInput.focus}
 							onBlur={handleEntryInput.blur}
 							tabIndex="0"
 							rows="1"

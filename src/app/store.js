@@ -8,13 +8,15 @@ import archivesReducer from "/src/feature/archivesSlice";
 import tagsReducer from "/src/feature/tagsSlice";
 import settingsReducer from "/src/feature/settingsSlice";
 import itemFocusReducer from "../feature/itemFocusSlice";
+import statusMessageReducer from "../feature/statusMessageSlice";
 
 const reducers = combineReducers({
+	itemFocus: itemFocusReducer,
 	todos: todosReducer,
 	archives: archivesReducer,
 	tags: tagsReducer,
 	settings: settingsReducer,
-	itemFocus: itemFocusReducer,
+	statusMessage: statusMessageReducer,
 });
 
 const persistConfig = {

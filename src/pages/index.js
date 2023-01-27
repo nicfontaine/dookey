@@ -1,25 +1,22 @@
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import Head from "next/head";
 import ReactMarkdown from "react-markdown";
 import remarkGemoji from "remark-gemoji";
-
 import { ArchiveIcon } from "@primer/octicons-react";
-
 import EntryForm from "../components/EntryForm";
 import Todo from "../components/Todo";
 import StatusBar from "../components/StatusBar";
 import DialogImport from "../components/DialogImport";
 import EntryCommandOptions from "../components/EntryCommandOptions";
 import DialogFileOpen from "../components/DialogFileOpen";
-import entryCommands from "../util/entry-commands";
 import introTemplate from "../util/intro-template";
-import settingsDefault from "../util/settings-default";
-import { setFocusIndexPrevious } from "../feature/itemFocusSlice";
-import GoTo from "../util/goto.js";
-
-var activeIndex = -1;
+import setBackups from "../util/set-backups";
+import { setFocusIndex } from "../feature/itemFocusSlice";
+import { setTodos } from "../feature/todosSlice";
+import { setTags } from "../feature/tagsSlice";
+import { setSettings } from "../feature/settingsSlice";
+import { setStatusMessage } from "../feature/statusMessageSlice";
 
 const TodoPage = () => {
 
@@ -27,13 +24,11 @@ const TodoPage = () => {
 
 	const todoList = useSelector((state) => state.todos.value);
 	const archiveList = useSelector((state) => state.archives.value);
+	const tagList = useSelector((state) => state.tags.value);
 	const settings = useSelector((state) => state.settings.value);
 	const itemFocus = useSelector((state) => state.itemFocus.value);
 	
 	const [focusElement, setFocusElement] = useState();
-	GoTo.setFocusElement = setFocusElement;
-
-	const [statusMsg, setStatusMsg] = useState("");
 	const [dialogImportShow, setDialogImportShow] = useState(false);
 	const [commandOptionsDisplay, setCommandOptionsDisplay] = useState(false);
 	const [fileOpenSelect, setFileOpenSelect] = useState(false);
@@ -43,56 +38,55 @@ const TodoPage = () => {
 	const entryInputRef = useRef(null);
 	const todoListRef = useRef(null);
 
-	// setFocusElement(), activeIndex =
-	const focusChange = {
-		
-		element (e) {
-			activeIndex = null;
-			setFocusElement(e);
-		},
-		
-		index (i) {
-			activeIndex = i;
-			if (activeIndex < 1) todoListRef.current.scrollTop = 0;
-			if (activeIndex === -1) {
-				setFocusElement(entryInputRef.current);
-			} else if (activeIndex > -1) {
-				// TODO: Cleanup
-				let todos = mainRef.current.getElementsByClassName("todo-focus");
-				setFocusElement(todos[activeIndex]);
-			} else if (!i) {
-				setFocusElement(null);
-			}
-		},
+	// TODO: Need?
+	// useEffect(() => {
+	// 	goto.index(itemFocus.index);
+	// }, [todoList]);
 
-	};
+	// Focus element state change
+	useEffect(() => {
+		if (focusElement) focusElement.focus();
+	}, [focusElement]);
 
-	// Index focus change. mainRef, activeIndex, focusElement
-	// focusChange(), setFocusIndexPrevious() , setFocusElement()
+	// Focus index state change - determine element
+	useEffect(() => {
+		if (itemFocus.index < 1) todoListRef.current.scrollTop = 0;
+		if (itemFocus.index === -1) {
+			setFocusElement(entryInputRef.current);
+		} else if (itemFocus.index > -1) {
+			// TODO: Cleanup, store in list or something
+			let todos = mainRef.current.getElementsByClassName("todo-focus");
+			setFocusElement(todos[itemFocus.index]);
+		} else if (!itemFocus.index) {
+			setFocusElement(null);
+		}
+	}, [itemFocus.index]);
+
+	// Index focus change. mainRef, itemFocus.index, focusElement
+	// setFocusIndexPrevious() , setFocusElement()
 	const goto = {
 		index (i) {
-			dispatch(setFocusIndexPrevious(activeIndex));
-			focusChange.index(i);
+			dispatch(setFocusIndex(i));
 		},
 		element (e) {
-			focusChange.element(e);
+			setFocusElement(e);
 		},
 		next () {
 			let todos = mainRef.current.getElementsByClassName("todo-focus");
-			if (activeIndex === todos.length - 1) {
+			if (itemFocus.index === todos.length - 1) {
 				goto.entry(); 
 			} else {
-				goto.index(activeIndex + 1); 
+				goto.index(itemFocus.index + 1); 
 			}
 		},
 		prev () {
 			let todos = mainRef.current.getElementsByClassName("todo-focus");
-			if (activeIndex === -1) {
+			if (itemFocus.index === -1) {
 				goto.index(todos.length - 1); 
-			} else if (activeIndex === 0) {
+			} else if (itemFocus.index === 0) {
 				goto.entry(); 
 			} else {
-				goto.index(activeIndex - 1);
+				goto.index(itemFocus.index - 1);
 			}
 		},
 		entry () {
@@ -103,30 +97,24 @@ const TodoPage = () => {
 		},
 	};
 
+	const backups = async function () {
+		const res = await setBackups(settings);
+		if (res.err) {
+			dispatch(setStatusMessage(JSON.stringify(res.err)));
+			return;
+		}
+		dispatch(setSettings(res));
+	};
+
 	// Load
 	useEffect(() => {
-		// TODO: Check settings, insert introTemplate settings, todos, tags
-		// let _settings = JSON.parse(localStorage.getItem("settings"));
-		// if (!_settings) _settings = introTemplate.settings;
-		// // Initialize with boilerplate how-to
-		// if ((!_todos && !_tags) || (!_todos.length && !Object.keys(_tags).length)) {
-		// 	setTodoList(introTemplate.todos);
-		// 	setTagList(introTemplate.tags);
-		// }
-		// Set absolute backup path, from relative, Get absolute backups path
-		// (async () => {
-		// 	const response = await fetch("/api/set-backups-location", {
-		// 		method: "POST",
-		// 		headers: { "Content-Type": "application/json" },
-		// 		body: JSON.stringify({ backups: _settings.backups }),
-		// 	});
-		// 	const res = await response.json();
-		// 	if (res.err) {
-		// 		setStatusMsg(JSON.stringify(res.err));
-		// 		return;
-		// 	}
-		// 	setSettings({ ..._settings, backupsAbsolute: res.backupsAbsolute });
-		// })();
+		// Initialize, if starting fresh
+		if (!todoList.length && !tagList.length) {
+			dispatch(setTodos(introTemplate.todos));
+			dispatch(setTags(introTemplate.tags));
+			dispatch(setSettings(introTemplate.settings));
+		}
+		if (settings) backups();
 		document.body.tabIndex = -1;
 		// NOTE: This is causing a ref error at line 54
 		document.body.addEventListener("focus", goto.exit);
@@ -139,20 +127,15 @@ const TodoPage = () => {
 		});
 	}, []);
 
-	useEffect(() => {
-		goto.index(activeIndex);
-	}, [todoList]);
-
-	// Focus element
-	useEffect(() => {
-		if (focusElement) focusElement.focus();
-	}, [focusElement]);
-
-	// Settings changes
+	// Settings changes for page styling
 	useEffect(() => {
 		mainRef.current.closest("html").style.fontSize = settings.fontSize + "px";
-		entryCommands.center(settings.center);
-		localStorage.setItem("settings", JSON.stringify(settings));
+		if (settings.center && Number(settings.center) > 0) {
+			document.querySelector(":root").style.setProperty("--main-center-width", `${settings.center}px`);
+			document.body.classList.add("center");
+		} else {
+			document.body.classList.remove("center");
+		}
 		if (!settings.title.length) {
 			mainHeadingRef.current.classList.add("scrolled");
 		} else {
@@ -196,8 +179,6 @@ const TodoPage = () => {
 							<EntryForm
 								entryInputRef={entryInputRef}
 								todoListRef={todoListRef}
-								activeIndex={activeIndex}
-								setStatusMsg={setStatusMsg}
 								commandOptionsDisplay={commandOptionsDisplay}
 								setDialogImportShow={setDialogImportShow}
 								setCommandOptionsDisplay={setCommandOptionsDisplay}
@@ -223,7 +204,6 @@ const TodoPage = () => {
 									todo={todo}
 									index={index}
 									archived={false}
-									activeIndex={activeIndex}
 									goto={goto}
 								/>;
 							}) : undefined }
@@ -244,7 +224,6 @@ const TodoPage = () => {
 										todo={todo}
 										index={index + todoList.length}
 										archived={true}
-										activeIndex={activeIndex}
 										goto={goto}
 									/>;
 								})
@@ -257,19 +236,17 @@ const TodoPage = () => {
 
 				<DialogImport
 					goto={goto}
-					setStatusMsg={setStatusMsg}
 					dialogImportShow={dialogImportShow}
 					setDialogImportShow={setDialogImportShow}
 					setFocusElement={setFocusElement}
 				/>
 
 				<DialogFileOpen
-					setStatusMsg={setStatusMsg}
 					fileOpenSelect={fileOpenSelect}
 					setFileOpenSelect={setFileOpenSelect}
 				/>
 
-				<StatusBar msg={statusMsg} />
+				<StatusBar />
 
 			</div>
 

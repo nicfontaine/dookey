@@ -12,6 +12,7 @@ export const itemFocusSlice = createSlice({
 	initialState,
 	reducers: {
 		setFocusIndex: (state, action) => {
+			state.value.indexPrevious = state.value.index;
 			state.value.index = action.payload;
 		},
 		setFocusIndexPrevious: (state, action) => {

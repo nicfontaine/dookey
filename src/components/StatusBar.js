@@ -1,24 +1,31 @@
 import { useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import autosize from "autosize";
+import { clearStatusMessage } from "../feature/statusMessageSlice";
 
-const StatusBar = ({ msg }) => {
+const StatusBar = () => {
 
 	const statusBarRef = useRef(null);
+	const { message, delay } = useSelector((state) => state.statusMessage.value);
+	const dispatch = useDispatch();
 
 	useEffect(() => {
-		if (msg.length) {
+		if (message.length) {
 			statusBarRef.current.classList.add("update");
+			setTimeout(() => {
+				dispatch(clearStatusMessage());
+			}, delay | 5000);
 		}
 		statusBarRef.current.addEventListener("animationend", () => {
 			statusBarRef.current.classList.remove("update");
 		});
-	}, [msg]);
+	}, [message]);
 
 	return(
 		<>
 			<div className="status-bar" ref={statusBarRef}>
 				<div className="status-bar-inner">
-					{msg}
+					{message}
 				</div>
 			</div>
 

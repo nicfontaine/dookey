@@ -1,15 +1,15 @@
 import { useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, batch } from "react-redux";
 import { mergeArchiveList } from "../feature/archivesSlice.js";
 import { mergeSettings } from "../feature/settingsSlice.js";
 import { mergeTagList } from "../feature/tagsSlice.js";
 import { mergeTodoList } from "../feature/todosSlice.js";
+import { setStatusMessage } from "../feature/statusMessageSlice";
 
 import entryCommands from "../util/entry-commands.js";
 
 const DialogImport = ({
 	goto,
-	setStatusMsg,
 	dialogImportShow,
 	setDialogImportShow,
 }) => {
@@ -48,12 +48,13 @@ const DialogImport = ({
 				try {
 					val = JSON.parse(val);
 					setDialogImportShow(false);
-					setStatusMsg("Imported");
-					entryCommands.statusClearDelay(setStatusMsg, 2000);
-					dispatch(mergeTodoList(val.todos));
-					dispatch(mergeArchiveList(val.archives));
-					dispatch(mergeTagList(val.tags));
-					dispatch(mergeSettings(val.settings));
+					batch(() => {
+						dispatch(mergeTodoList(val.todos));
+						dispatch(mergeArchiveList(val.archives));
+						dispatch(mergeTagList(val.tags));
+						dispatch(mergeSettings(val.settings));
+						dispatch(setStatusMessage(["Imported", 50000]));
+					});
 				} catch(err) {
 					importDialogStatusText.current.innerHTML = err;
 				}

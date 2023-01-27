@@ -1,15 +1,17 @@
 import { useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
 import { setTodos } from "../feature/todosSlice";
 import { setArchives } from "../feature/archivesSlice";
 import { setTags } from "../feature/tagsSlice";
 import { setSettings } from "../feature/settingsSlice";
+import { setStatusMessage } from "../feature/statusMessageSlice";
 
 export default function DialogFileOpen ({
-	setStatusMsg,
 	fileOpenSelect,
 	setFileOpenSelect,
 }) {
 
+	const dispatch = useDispatch();
 	const input = useRef(null);
 
 	useEffect(() => {
@@ -29,10 +31,10 @@ export default function DialogFileOpen ({
 			setArchives(archives);
 			setTags(tags);
 			setSettings(settings);
-			setStatusMsg("Loaded from file");
+			dispatch(setStatusMessage("Loaded from file"));
 		});
 		reader.addEventListener("error", (e) => {
-			setStatusMsg("Failed to read file");
+			dispatch(setStatusMessage("Failed to read file"));
 		});
 		reader.readAsText(file);
 	};

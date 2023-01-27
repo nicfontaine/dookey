@@ -71,8 +71,8 @@
 
 ## Bugs
 - Can't write 2 emojis without a space between
-- Unarchive issue with redux, writing a duplicate or maybe modifying another
-- Can't unarchive first in archive list. Ends up with [undefined]
+e or maybe modifying another
+- Focusing down list no longer scrolling
 - Status bar msg won't update, if another msg is still active (before it gets reset)
 - Autosize on edit textarea not working
 - Entry input getting sized smaller on refresh, since it has no value

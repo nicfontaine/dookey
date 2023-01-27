@@ -12,6 +12,7 @@ import { addTag, setTags } from "/src/feature/tagsSlice";
 import * as randomColor from "random-color";
 import { v4 as uuid } from 'uuid';
 import { CheckCircleFillIcon } from "@primer/octicons-react";
+import GoTo from "../util/goto";
 
 import TodoInput from "./TodoInput";
 import { insertTodoAt } from "../feature/todosSlice";
@@ -22,7 +23,6 @@ const Todo = ({
 	todo,
 	index,
 	archived,
-	activeIndex,
 	goto,
 }) => {
 
@@ -46,10 +46,10 @@ const Todo = ({
 	const move = {
 		
 		up () {
-			if (activeIndex === todoList.length) {
+			if (itemFocus.index === todoList.length) {
 				handleTodo.unArchive();
-			} else if (activeIndex > 0) {
-				if (activeIndex < todoList.length) {
+			} else if (itemFocus.index > 0) {
+				if (itemFocus.index < todoList.length) {
 					dispatch(moveTodoUp(index));
 				} else {
 					dispatch(moveArchiveUp(index));
@@ -59,10 +59,10 @@ const Todo = ({
 		},
 
 		down () {
-			if (activeIndex === todoList.length - 1) {
+			if (itemFocus.index === todoList.length - 1) {
 				handleTodo.archive();
-			} else if (activeIndex < archiveList.length + todoList.length - 1) {
-				if (activeIndex < todoList.length) {
+			} else if (itemFocus.index < archiveList.length + todoList.length - 1) {
+				if (itemFocus.index < todoList.length) {
 					dispatch(moveTodoDown(index));
 				} else {
 					dispatch(moveArchiveDown(index));
@@ -78,12 +78,12 @@ const Todo = ({
 		// Set active todo to edit mode
 		edit (e) {
 			setEditIndex(index);
-			dispatch(setFocusIndexPrevious(activeIndex));
+			dispatch(setFocusIndexPrevious(itemFocus.index));
 			goto.exit();
 		},
 
 		archiveStart (e) {
-			setAnimOutIndex(activeIndex);
+			setAnimOutIndex(itemFocus.index);
 			setTimeout(() => handleTodo.archive(), 150);
 		},
 
@@ -93,7 +93,7 @@ const Todo = ({
 		},
 
 		unArchive () {
-			const _index = activeIndex - todoList.length;
+			const _index = itemFocus.index - todoList.length;
 			const _td = archiveList[_index];
 			dispatch(addTodo(_td));
 			dispatch(deleteArchive(_td));
@@ -102,9 +102,9 @@ const Todo = ({
 		// Mark task for delete
 		deleteStart (e) {
 			e.target.style.height = e.target.getBoundingClientRect().height + "px";
-			setAnimOutIndex(activeIndex);
-			deleteStore.push({ todo: todoList[activeIndex], index });
-			setTimeout(() => handleTodo.delete(activeIndex), 150);
+			setAnimOutIndex(itemFocus.index);
+			deleteStore.push({ todo: todoList[itemFocus.index], index });
+			setTimeout(() => handleTodo.delete(itemFocus.index), 150);
 		},
 
 		deleteTodo (_todo) {
@@ -115,7 +115,6 @@ const Todo = ({
 		delete (_index, _todo) {
 			setAnimOutIndex(null);
 			// TODO: handleTodo.postDeleteIndex()
-			console.log(archived);
 			if (archived) {
 				dispatch(deleteArchive(todo));
 			} else {
@@ -143,17 +142,17 @@ const Todo = ({
 			}
 		},
 
-		// Update activeIndex after deletion, based on number of other tasks
+		// Update itemFocus.index after deletion, based on number of other tasks
 		postDeleteIndex (newLength) {
-			// Check if activeIndex Needs to change
-			let newIndex = activeIndex;
-			if (activeIndex > -1) {
+			// Check if itemFocus.index Needs to change
+			let newIndex = itemFocus.index;
+			if (itemFocus.index > -1) {
 				// No todos. Go to entry
 				if (!newLength) {
 					newIndex = -1; 
-				} else if (activeIndex === newLength) {
+				} else if (itemFocus.index === newLength) {
 					// At end, up 1
-					newIndex = activeIndex - 1; 
+					newIndex = itemFocus.index - 1; 
 				}
 				goto.index(newIndex);
 				// Else, stay on same line
@@ -164,7 +163,7 @@ const Todo = ({
 		click (e, index) {
 			// Already selected - edit mode
 			goto.index(index);
-			if (!dragged && activeIndex === index) {
+			if (!dragged && itemFocus.index === index) {
 				// setEditIndex(index)
 			} else {
 				setEditIndex(null);
@@ -203,7 +202,7 @@ const Todo = ({
 				// Date
 			} else if (e.key === "a") {
 				e.preventDefault();
-				if (activeIndex >= todoList.length) {
+				if (itemFocus.index >= todoList.length) {
 					handleTodo.unArchive();
 				} else {
 					handleTodo.archiveStart(e);
@@ -254,11 +253,10 @@ const Todo = ({
 	const handleTagInput = {
 
 		active () {
-			dispatch(setFocusIndexPrevious(activeIndex));
-			setActiveIndexPrevious(activeIndex);
+			dispatch(setFocusIndexPrevious(itemFocus.index));
+			setTagInput(todoList[itemFocus.index].tags);
 			goto.exit();
 			setEditTag(true);
-			setTagInput(todoList[activeIndex].tags);
 		},
 
 		deactive (e) {
@@ -325,7 +323,7 @@ const Todo = ({
 	} else {
 
 		let isAnimOut = index === animOutIndex;
-		let isActive = index === activeIndex;
+		let isActive = index === itemFocus.index;
 
 		return(
 			<button

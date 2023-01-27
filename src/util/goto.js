@@ -3,14 +3,15 @@ export default class GoTo {
 	static activeIndex = -1;
 
 	// State update, set from index.js
-	setFocusElement () {}
+	static focusElement;
+	static setFocusElement () {}
 
-	static #focusElement (e) {
+	static #goFocusElement (e) {
 		this.activeIndex = null;
 		this.setFocusElement(e);
 	}
 
-	static #focusIndex (i) {
+	static #goFocusIndex (i) {
 		this.activeIndex = i;
 		if (this.activeIndex < 1) todoListRef.current.scrollTop = 0;
 		if (this.activeIndex === -1) {
@@ -26,11 +27,11 @@ export default class GoTo {
 	
 	static index (i) {
 		dispatch(setFocusIndexPrevious(this.activeIndex));
-		this["#focusIndex"](i);
+		this["#goFocusIndex"](i);
 	}
 
 	static element (e) {
-		this["#focusElement"](e);
+		this["#goFocusElement"](e);
 	}
 
 	static next () {

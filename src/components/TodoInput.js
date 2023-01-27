@@ -4,6 +4,7 @@ import EmojiPopup from "./EmojiPopup";
 import { useSelector, useDispatch } from "react-redux";
 import { setTodoText } from "../feature/todosSlice";
 import { setArchiveText } from "../feature/archivesSlice";
+import textSurround from "../util/text-surround";
 
 const TodoInput = ({
 	todo,
@@ -32,13 +33,6 @@ const TodoInput = ({
 	 * 	todoInputRef.current.selectionEnd = todoCaretStart
 	 * }, [todoInputText])
 	 */
-
-	const textSurround = function (target, _l, _r) {
-		let val = target.value;
-		let start = target.selectionStart;
-		let end = target.selectionEnd;
-		return `${val.slice(0, start)}${_l}${val.slice(start, end)}${_r}${val.slice(end)}`;
-	};
 
 	// Todo edit input
 	const handleTodoInput = {
@@ -125,7 +119,7 @@ const TodoInput = ({
 			} else if (e.key === "i" && e.ctrlKey) {
 				e.preventDefault();
 				setTodoCaretStart(e.target.selectionStart);
-				setTodoInputText(textSurround(e.target, "_", "**"));
+				setTodoInputText(textSurround(e.target, "_", "_"));
 			} else if (e.key === "g" && e.ctrlKey) {
 				e.preventDefault();
 				let _l = "<details><summary>Subtasks...</summary>\n<div>";

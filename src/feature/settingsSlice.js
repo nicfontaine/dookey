@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState = {
-	value: { fontSize: 17, center: 850, title: "🗒️ Todo List" },
+	value: { fontSize: 17, center: 850, title: "🗒️ Todo List", backups: "./backups/" },
 };
 
 export const settingsSlice = createSlice({
@@ -27,7 +27,7 @@ export const settingsSlice = createSlice({
 			state.value = { ...state.value, ...action.payload };
 		},
 		setSettings: (state, action) => {
-			state.value = [...action.payload];
+			state.value = { ...action.payload };
 		},
 		resetSettings: () => initialState,
 	},
