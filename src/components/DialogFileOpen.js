@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { batch, useDispatch } from "react-redux";
 import { setTodos } from "../feature/todosSlice";
 import { setArchives } from "../feature/archivesSlice";
 import { setTags } from "../feature/tagsSlice";
@@ -27,14 +27,16 @@ export default function DialogFileOpen ({
 		let reader = new FileReader();
 		reader.addEventListener("load", (e) => {
 			let { todos, tags, archives, settings } = JSON.parse(reader.result);
-			setTodos(todos);
-			setArchives(archives);
-			setTags(tags);
-			setSettings(settings);
-			dispatch(setStatusMessage("Loaded from file"));
+			batch(() => {
+				dispatch(setTodos(todos));
+				dispatch(setArchives(archives));
+				dispatch(setTags(tags));
+				dispatch(setSettings(settings));
+				dispatch(setStatusMessage(["Loaded from file", 5000]));
+			});
 		});
 		reader.addEventListener("error", (e) => {
-			dispatch(setStatusMessage("Failed to read file"));
+			dispatch(setStatusMessage(["Failed to read file", 5000]));
 		});
 		reader.readAsText(file);
 	};
