@@ -21,7 +21,6 @@ import { setStatusMessage } from "../feature/statusMessageSlice";
 const TodoPage = () => {
 
 	const dispatch = useDispatch();
-
 	const todoList = useSelector((state) => state.todos.value);
 	const archiveList = useSelector((state) => state.archives.value);
 	const tagList = useSelector((state) => state.tags.value);
@@ -62,14 +61,10 @@ const TodoPage = () => {
 		}
 	}, [itemFocus.index]);
 
-	// Index focus change. mainRef, itemFocus.index, focusElement
-	// setFocusIndexPrevious() , setFocusElement()
+	// Index focus change. mainRef, itemFocus.index, setFocusIndex
 	const goto = {
 		index (i) {
 			dispatch(setFocusIndex(i));
-		},
-		element (e) {
-			setFocusElement(e);
 		},
 		next () {
 			let todos = mainRef.current.getElementsByClassName("todo-focus");
@@ -90,6 +85,7 @@ const TodoPage = () => {
 			}
 		},
 		entry () {
+			console.log(itemFocus.index);
 			goto.index(-1);
 		},
 		exit () {
@@ -217,17 +213,15 @@ const TodoPage = () => {
 							: null }
 
 						<div className="todo-list-inner">
-							{ archiveList.length ?
-								archiveList.map((todo, index) => {
-									return <Todo
-										key={todo.id}
-										todo={todo}
-										index={index + todoList.length}
-										archived={true}
-										goto={goto}
-									/>;
-								})
-								: null }
+							{ archiveList.length ? archiveList.map((todo, index) => {
+								return <Todo
+									key={todo.id}
+									todo={todo}
+									index={index + todoList.length}
+									archived={true}
+									goto={goto}
+								/>;
+							}) : null }
 						</div>
 
 					</div>

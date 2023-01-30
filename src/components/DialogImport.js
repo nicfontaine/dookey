@@ -6,26 +6,20 @@ import { mergeTagList } from "../feature/tagsSlice.js";
 import { mergeTodoList } from "../feature/todosSlice.js";
 import { setStatusMessage } from "../feature/statusMessageSlice";
 
-import entryCommands from "../util/entry-commands.js";
-
 const DialogImport = ({
 	goto,
 	dialogImportShow,
 	setDialogImportShow,
+	setFocusElement,
 }) => {
 
 	const dispatch = useDispatch();
-
 	const importInput = useRef(null);
 	const importDialog = useRef(null);
 	const importDialogStatusText = useRef(null);
 
 	useEffect(() => {
-		if (dialogImportShow) {
-			handleImport.show();
-		} else {
-			handleImport.hide();
-		}
+		dialogImportShow ? handleImport.show() : handleImport.hide();
 	}, [dialogImportShow]);
 
 	// Todo list import dialog
@@ -37,10 +31,10 @@ const DialogImport = ({
 		},
 
 		show: () => {
-			goto.element(importInput.current);
-			entryCommands.import(importDialog, importInput, importDialogStatusText);
+			// goto.exit();
+			setFocusElement(importInput.current);
 		},
-		
+
 		submit: (e) => {
 			e.preventDefault();
 			let val = importInput.current.value;
@@ -55,7 +49,7 @@ const DialogImport = ({
 						dispatch(mergeSettings(val.settings));
 						dispatch(setStatusMessage(["Imported", 50000]));
 					});
-				} catch(err) {
+				} catch (err) {
 					importDialogStatusText.current.innerHTML = err;
 				}
 			}
@@ -71,12 +65,12 @@ const DialogImport = ({
 				e.preventDefault();
 			}
 		},
-
 	};
 
-	return(
+	return (
 		<>
-			<div id="dialog-import"
+			<div
+				id="dialog-import"
 				className={`dialog ${dialogImportShow && "active"}`}
 				ref={importDialog}
 			>
@@ -93,13 +87,12 @@ const DialogImport = ({
 				</div>
 			</div>
 			<style jsx>{`
-			.dialog {
-				z-index: 20;
-			}
-		`}</style>
+				.dialog {
+					z-index: 20;
+				}
+			`}</style>
 		</>
 	);
-
 };
 
 export default DialogImport;
