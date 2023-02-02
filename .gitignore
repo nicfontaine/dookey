@@ -28,3 +28,5 @@ yarn-error.log*
 # Todo backup
 backups/*.txt
 backups/*.json
+
+.env

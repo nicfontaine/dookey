@@ -22,10 +22,12 @@
 | Edit todo | `E` or `Enter` |
 | Add newline | `Enter` |
 | Archive/unarchive todo | `A` |
-| Undo Edit | `Esc` |
+| Undo out of Edit | `Esc` |
 | Save Edit | `Ctrl + Enter` |
-| Delete todo | `D` or `Delete` |
+| Delete todo | `Delete` |
 | Undo delete | `Ctrl + Z` |
+| Edit tags | `T` |
+| Edit date | `D` |
 | Move todo up | `Ctrl + Shift + Up` |
 | Move todo down | `Ctrl + Shift + Down` |
 | Scroll list up | `Ctrl + Up` |
@@ -62,6 +64,7 @@
 - `/open` Load from backup file
 - `/nuke` Delete all notes
 - `/help` Goto `readme.md` for more info
+- `/clock` Display a clock overlay
 
 ## Settings
 - `/title <text>` Set a custom header name
@@ -70,13 +73,11 @@
 - `/full` Full-width layout (default)
 
 ## Bugs
+- Undo delete archive not working
 - Can't write 2 emojis without a space between
-e or maybe modifying another
-- Focusing down list no longer scrolling
-- Status bar msg won't update, if another msg is still active (before it gets reset)
 - Autosize on edit textarea not working
 - Entry input getting sized smaller on refresh, since it has no value
-- Lose todo focus on edit archived todo
+- Focusing down list should scroll tall items totally into view
 
 ## Tauri Bugs
 - Open from backup file not working
@@ -91,4 +92,4 @@ e or maybe modifying another
 - Set caret position after todo-input textSurround()
 - Match searched character matches in EmojiPopup list (like slack)
 - Add some sort of effect or transition after a command is entered/cleared
-- Emoji replace :abc: after space, if it matches
+- Emoji replace `:abc:` after space, if it matches

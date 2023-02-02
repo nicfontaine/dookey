@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import { batch, useDispatch } from "react-redux";
-import { setTodos } from "../feature/todosSlice";
-import { setArchives } from "../feature/archivesSlice";
+import { setTodos, setArchives } from "../feature/todosSlice";
 import { setTags } from "../feature/tagsSlice";
 import { setSettings } from "../feature/settingsSlice";
 import { setStatusMessage } from "../feature/statusMessageSlice";

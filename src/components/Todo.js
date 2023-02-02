@@ -1,21 +1,17 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import csn from "classnames";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import remarkGemoji from "remark-gemoji";
 import { useDispatch, useSelector } from "react-redux";
-import { addTodo, setTodoTags, deleteTodo, moveTodoUp, moveTodoDown } from "/src/feature/todosSlice";
-import { unshiftArchive, deleteArchive, moveArchiveUp, moveArchiveDown } from "/src/feature/archivesSlice";
+import { archiveTodo, deleteTodo, moveTodoUp, moveTodoDown, unArchive, deleteArchive, moveArchiveUp, moveArchiveDown } from "/src/feature/todosSlice";
 import { setFocusIndexPrevious } from "../feature/itemFocusSlice";
-import { addTag, setTags } from "/src/feature/tagsSlice";
-import * as randomColor from "random-color";
-import { v4 as uuid } from 'uuid';
+import { focusTodoOrArchive, insertTodoAt } from "../feature/todosSlice";
 import { CheckCircleFillIcon } from "@primer/octicons-react";
-import GoTo from "../util/goto";
 
 import TodoInput from "./TodoInput";
-import { insertTodoAt } from "../feature/todosSlice";
+import TagInput from "./TagInput";
 
 var deleteStore = [];
 
@@ -27,53 +23,58 @@ const Todo = ({
 }) => {
 
 	const dispatch = useDispatch();
-	const todoList = useSelector((state) => state.todos.value);
-	const archiveList = useSelector((state) => state.archives.value);
+	const todoList = useSelector((state) => state.todos.value.todos);
+	const archiveList = useSelector((state) => state.todos.value.archives);
 	const tagList = useSelector((state) => state.tags.value);
 	const itemFocus = useSelector((state) => state.itemFocus.value);
 
 	const [editIndex, setEditIndex] = useState(null);
 	const [animOutIndex, setAnimOutIndex] = useState(null);
-	
-	const [tagInput, setTagInput] = useState("");
 	const [editTag, setEditTag] = useState(null);
 
-	const tagInputRef = useRef(null);
+	const todoRef = useRef(null);
 
 	var dragged = false;
 	var mX, mY;
 
-	const move = {
-		
-		up () {
-			if (itemFocus.index === todoList.length) {
-				handleTodo.unArchive();
-			} else if (itemFocus.index > 0) {
-				if (itemFocus.index < todoList.length) {
-					dispatch(moveTodoUp(index));
-				} else {
-					dispatch(moveArchiveUp(index));
-				}
-				goto.prev();
-			}
-		},
+	useEffect(() => {
+		if (todo.focus) {
+			todoRef.current.focus();
+		}
+	}, [todo]);
 
-		down () {
-			if (itemFocus.index === todoList.length - 1) {
-				handleTodo.archive();
-			} else if (itemFocus.index < archiveList.length + todoList.length - 1) {
-				if (itemFocus.index < todoList.length) {
-					dispatch(moveTodoDown(index));
-				} else {
-					dispatch(moveArchiveDown(index));
-				}
-				goto.next();
+	const moveUp = function () {
+		if (itemFocus.index === todoList.length) {
+			handleTodo.unArchive();
+		} else if (itemFocus.index > 0) {
+			if (itemFocus.index < todoList.length) {
+				dispatch(moveTodoUp(index));
+			} else {
+				dispatch(moveArchiveUp(index));
 			}
-		},
+			goto.prev();
+		}
+	};
 
+	const moveDown = function () {
+		if (itemFocus.index === todoList.length - 1) {
+			handleTodo.archive();
+		} else if (itemFocus.index < archiveList.length + todoList.length - 1) {
+			if (itemFocus.index < todoList.length) {
+				dispatch(moveTodoDown(index));
+			} else {
+				dispatch(moveArchiveDown(index));
+			}
+			goto.next();
+		}
 	};
 
 	const handleTodo = {
+
+		blur (e) {
+			// console.log("blur todo");
+			// e.target.blur();
+		},
 
 		// Set active todo to edit mode
 		edit (e) {
@@ -88,15 +89,15 @@ const Todo = ({
 		},
 
 		archive () {
-			dispatch(unshiftArchive(todo));
-			handleTodo.deleteTodo(todo);
+			dispatch(archiveTodo(todo));
+			handleTodo.postDeleteIndex();
 		},
 
 		unArchive () {
 			const _index = itemFocus.index - todoList.length;
 			const _td = archiveList[_index];
-			dispatch(addTodo(_td));
-			dispatch(deleteArchive(_td));
+			dispatch(unArchive(_td));
+			handleTodo.postDeleteIndex();
 		},
 
 		// Mark task for delete
@@ -109,59 +110,36 @@ const Todo = ({
 
 		deleteTodo (_todo) {
 			dispatch(deleteTodo(_todo));
+			handleTodo.postDeleteIndex();
 		},
 
 		// Remove from data, and list. Set next active position
-		delete (_index, _todo) {
+		delete (i) {
 			setAnimOutIndex(null);
-			// TODO: handleTodo.postDeleteIndex()
 			if (archived) {
 				dispatch(deleteArchive(todo));
 			} else {
 				dispatch(deleteTodo(todo));
 			}
-			if (_index < todoList.length) {
-				// dispatch(deleteTodo(todo));
-				// let _list = todoList.filter((todo, index) => {
-				// 	if (index !== _index) {
-				// 		return todo; 
-				// 	}
-				// });
-				// handleTodo.postDeleteIndex(_list.length + archiveList.length);
-				// setTodoList(_list);
-			} else {
-				// _index -= todoList.length;
-				// let _list = archiveList.filter((todo, index) => {
-				// 	if (index !== _index) {
-				// 		return todo; 
-				// 	}
-				// });
-				// handleTodo.postDeleteIndex(_list.length + todoList.length);
-				// dispatch(deleteArchive(archiveList[_index]));
-				// setArchiveList(_list);
-			}
+			handleTodo.postDeleteIndex();
 		},
 
-		// Update itemFocus.index after deletion, based on number of other tasks
-		postDeleteIndex (newLength) {
-			// Check if itemFocus.index Needs to change
+		// Update itemFocus.index after deletion based on `newLength`
+		postDeleteIndex () {
+			const newLength = todoList.length + archiveList.length - 1;
 			let newIndex = itemFocus.index;
 			if (itemFocus.index > -1) {
-				// No todos. Go to entry
 				if (!newLength) {
 					newIndex = -1; 
 				} else if (itemFocus.index === newLength) {
-					// At end, up 1
 					newIndex = itemFocus.index - 1; 
 				}
 				goto.index(newIndex);
-				// Else, stay on same line
 			}
 		},
 
 		// Click to activate todo
-		click (e, index) {
-			// Already selected - edit mode
+		click () {
 			goto.index(index);
 			if (!dragged && itemFocus.index === index) {
 				// setEditIndex(index)
@@ -197,7 +175,7 @@ const Todo = ({
 				handleTodo.edit(e);
 			} else if (e.key === "t") {
 				e.preventDefault();
-				handleTagInput.active();
+				setEditTag(true);
 			} else if (e.key === "d") {
 				// Date
 			} else if (e.key === "a") {
@@ -221,20 +199,22 @@ const Todo = ({
 				if (!e.ctrlKey) {
 					goto.next();
 				} else if (e.shiftKey && e.ctrlKey) {
-					move.down();
+					moveDown();
 				}
 			} else if (e.key === "ArrowUp") {
 				e.preventDefault();
 				if (!e.ctrlKey) {
 					goto.prev();
 				} else if (e.shiftKey && e.ctrlKey) {
-					move.up();
+					moveUp();
 				}
 			} else if (e.key === "Tab") {
+				console.log("tab");
 				e.preventDefault();
 				e.shiftKey ? goto.prev() : goto.next();
 			} else if (e.key === "Home") {
 				e.preventDefault();
+				// dispatch(focusTodoOrArchive(0));
 				goto.index(0);
 			} else if (e.key === "End") {
 				e.preventDefault();
@@ -243,68 +223,12 @@ const Todo = ({
 				if (!deleteStore.length) return;
 				let _td = deleteStore.pop();
 				dispatch(insertTodoAt(_td));
-				goto.index(_td.index);
+				/*
+				 * dispatch(focusTodo(_td.index));
+				 * goto.index(_td.index);
+				 */
 			}
 
-		},
-
-	};
-
-	const handleTagInput = {
-
-		active () {
-			dispatch(setFocusIndexPrevious(itemFocus.index));
-			setTagInput(todoList[itemFocus.index].tags);
-			goto.exit();
-			setEditTag(true);
-		},
-
-		deactive (e) {
-			e.target.blur();
-			goto.index(itemFocus.indexPrevious);
-			// NOTE: Covering the todo active css transition with a delay is ugly
-			setTimeout(() => {
-				setEditTag(false);
-			}, 100);
-		},
-
-		submit (e) {
-			e.preventDefault();
-			let inputTags = tagInputRef.current.value.replace(/\s/g, "").split(",");
-			inputTags = inputTags.filter((a) => a.length && a !== ",");
-			let _td = { ...todoList[index], tags: inputTags };
-			dispatch(setTodoTags(_td));
-			// TODO: Cleanup, in the reducer
-			let _tglist = Object.assign({}, tagList);
-			inputTags.forEach((t) => {
-				if (!(t in _tglist)) {
-					let color = randomColor(0.25, 0.99).hexString();
-					let _t = { id: uuid(), color };
-					dispatch(addTag({ [t]: _t }));
-					_tglist[t] = _t;
-				}
-			});
-			dispatch(setTags(_tglist));
-			handleTagInput.deactive(e);
-		},
-
-		keydown (e) {
-			if (e.key === "Tab") e.preventDefault();
-			if (e.key === "Escape") {
-				handleTagInput.deactive(e);
-			}
-			if (e.key === " ") {
-				e.preventDefault();
-				let v = tagInputRef.current.value;
-				if (v[v.length - 1] !== ",") {
-					setTagInput(v + ",");
-				}
-			}
-		},
-
-		change (e) {
-			e.preventDefault();
-			setTagInput(e.target.value);
 		},
 
 	};
@@ -322,21 +246,21 @@ const Todo = ({
 
 	} else {
 
-		let isAnimOut = index === animOutIndex;
-		let isActive = index === itemFocus.index;
-
-		return(
+		return (
+			
 			<button
-				className={csn("todo todo-focus",
-					{ active:isActive },
-					{ animOut:isAnimOut },
+				ref={todoRef}
+				className={csn("todo todo-focus focus-group-todo",
+					{ active:todo.focus || false },
+					{ animOut:index === animOutIndex },
 					{ archive:archived || false },
 				)}
-				onClick={(e) => handleTodo.click(e, index)}
+				onBlur={handleTodo.blur}
+				onClick={handleTodo.click}
 				onMouseDown={handleTodo.mouseDown}
 				onMouseUp={handleTodo.mouseUp}
 				onKeyDown={handleTodo.keyDown}
-				autoFocus={todo.active}
+				autoFocus={todo.focus}
 				tabIndex="0"
 			>
 				
@@ -367,20 +291,12 @@ const Todo = ({
 					: null }
 
 				{ editTag ?
-					<div className="todo-tag-edit">
-						<span className="icon">&#9873;</span>
-						<div className="heading">Tags</div>
-						<form onSubmit={handleTagInput.submit}>
-							<input
-								ref={tagInputRef}
-								value={tagInput || ""}
-								onChange={handleTagInput.change}
-								onKeyDown={handleTagInput.keydown}
-								placeholder="comma-separated tags"
-								autoFocus
-							></input>
-						</form>
-					</div>
+					<TagInput
+						index={index}
+						goto={goto}
+						editTag={editTag}
+						setEditTag={setEditTag}
+					></TagInput>
 					: null }
 
 			</button>

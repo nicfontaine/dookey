@@ -1,16 +1,14 @@
 import { useEffect, useRef } from "react";
 import { useDispatch, batch } from "react-redux";
-import { mergeArchiveList } from "../feature/archivesSlice.js";
+import { mergeTodoList, mergeArchiveList } from "../feature/todosSlice.js";
 import { mergeSettings } from "../feature/settingsSlice.js";
 import { mergeTagList } from "../feature/tagsSlice.js";
-import { mergeTodoList } from "../feature/todosSlice.js";
 import { setStatusMessage } from "../feature/statusMessageSlice";
 
 const DialogImport = ({
 	goto,
 	dialogImportShow,
 	setDialogImportShow,
-	setFocusElement,
 }) => {
 
 	const dispatch = useDispatch();
@@ -31,8 +29,8 @@ const DialogImport = ({
 		},
 
 		show: () => {
-			// goto.exit();
-			setFocusElement(importInput.current);
+			goto.exit();
+			importInput.current.focus();
 		},
 
 		submit: (e) => {

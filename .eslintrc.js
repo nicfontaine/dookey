@@ -1,44 +1,51 @@
-{
+module.exports = {
 	"env": {
 		"browser": true,
-		"node": true
+		"es2021": true,
+		"amd": true,
+		"node": true,
 	},
 	"extends": [
 		"eslint:recommended",
-		"plugin:react/recommended"
+		"plugin:react/recommended",
 	],
 	"overrides": [
 	],
 	"parserOptions": {
 		"ecmaVersion": "latest",
-		"sourceType": "module"
+		"sourceType": "module",
 	},
 	"plugins": [
-		"react"
+		"react",
 	],
 	"rules": {
-		"strict": ["error", "global"],
+		indent: [2, "tab"],
+		"no-tabs": 0,
+		quotes: "off",
+		"react/prop-types": 0,
+		allowEmptyReject: 0,
+		strict: ["error", "global"],
 		"func-style": ["error", "expression"],
-		"react/prop-types": "off",
 		"react/react-in-jsx-scope": "off",
 		"arrow-parens": ["error", "always"],
 		"no-unused-vars": "off",
+		// "multiline-comment-style": ["error", "starred-block"],
 		"spaced-comment": ["error", "always"],
-		"semi": ["error", "always"],
+		semi: ["error", "always"],
 		"semi-spacing": "error",
 		"no-extra-semi": "error",
 		"no-unexpected-multiline": "error",
+		"react/no-unknown-property": ['error', { ignore: ['jsx'] }],
 		"comma-dangle": ["error", "always-multiline"],
-		"indent": ["error", "tab"],
-    "space-infix-ops": "error",
-    "brace-style": "error",
-    "space-before-blocks": "error",
+		"space-infix-ops": "error",
+		"brace-style": "error",
+		"space-before-blocks": "error",
 		"space-before-function-paren": ["error",
 			{
-				"anonymous": "always",
-				"named": "always",
-				"asyncArrow": "always"
-			}
+				anonymous: "always",
+				named: "always",
+				asyncArrow: "always",
+			},
 		],
 		"newline-per-chained-call": "error",
 		"space-in-parens": ["error", "never"],
@@ -46,23 +53,15 @@
 		"object-curly-spacing": ["error", "always"],
 		"comma-spacing": ["error",
 			{
-				"before": false,
-				"after": true
-			}
+				before: false,
+				after: true,
+			},
 		],
 		"no-multiple-empty-lines": ["error",
 			{
-				"max": 1,
-				"maxEOF": 1
-				}
+				max: 1,
+				maxEOF: 1,
+			},
 		],
-		"react/no-unknown-property": [
-      2,
-      {
-        "ignore": [
-          "jsx"
-        ]
-      }
-    ]
-	}
-}
+	},
+};

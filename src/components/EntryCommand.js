@@ -1,8 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector, batch } from "react-redux";
 import { resetSettings } from "../feature/settingsSlice";
-import { resetTodos } from "../feature/todosSlice";
-import { resetArchives } from "../feature/archivesSlice";
+import { resetTodos, resetArchives } from "../feature/todosSlice";
 import { resetTags } from "../feature/tagsSlice";
 import {
 	setCenter,
@@ -28,8 +27,8 @@ const EntryCommand = function ({
 	if (!cmd) return null;
 
 	const dispatch = useDispatch();
-	const todoList = useSelector((state) => state.todos.value);
-	const archiveList = useSelector((state) => state.archives.value);
+	const todoList = useSelector((state) => state.todos.value.todos);
+	const archiveList = useSelector((state) => state.todos.value.archives);
 	const tagList = useSelector((state) => state.tags.value);
 	const settings = useSelector((state) => state.settings.value);
 
@@ -94,7 +93,7 @@ const EntryCommand = function ({
 		} else if (command === "kill") {
 			// TODO:
 		} else if (command === "help") {
-			window.open(process.env.APP_HELP);
+			window.open(process.env.NEXT_PUBLIC_APP_HELP);
 		} else if (command === "title") {
 			let title = args.join(" ");
 			dispatch(setTitle(title));

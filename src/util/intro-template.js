@@ -57,6 +57,7 @@ const introTemplate = {
 		fontSize: "17",
 		center: "800",
 		backups: "./backups/",
+		version: process.env.APP_VERSION,
 	},
 };
 

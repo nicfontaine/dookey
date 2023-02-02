@@ -1,9 +1,9 @@
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import autosize from "autosize";
 import { clearStatusMessage } from "../feature/statusMessageSlice";
 
 const StatusBar = () => {
+
 	const statusBarRef = useRef(null);
 	const { message, delay } = useSelector((state) => state.statusMessage.value);
 	const dispatch = useDispatch();
@@ -19,9 +19,11 @@ const StatusBar = () => {
 		statusBarRef.current.addEventListener("animationend", () => {
 			statusBarRef.current.classList.remove("update");
 		});
-		// return () => {
-		// 	abortController.abort();
-		// };
+		/*
+		 * return () => {
+		 * 	abortController.abort();
+		 * };
+		 */
 	}, [message]);
 
 	return (

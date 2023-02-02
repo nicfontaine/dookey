@@ -31,9 +31,15 @@ const EntryForm = ({
 	const [clockActive, setClockActive] = useState(false);
 
 	useEffect(() => {
-		entryInputRef.current.focus();
+		// entryInputRef.current.focus();
 		entryInputRef.current.value = "";
 	}, []);
+
+	useEffect(() => {
+		if (itemFocus.index === -1) {
+			entryInputRef.current.focus();
+		}
+	}, [itemFocus.index]);
 
 	// Entry Input
 	useEffect(() => {
@@ -69,6 +75,8 @@ const EntryForm = ({
 				entryInputRef.current.classList.remove("active");
 			}
 		},
+
+		focus (e) {},
 
 		// User entry
 		confirm () {
@@ -173,6 +181,7 @@ const EntryForm = ({
 							onKeyUp={(e) => setEmojiKeyUpEvent(e)}
 							onClick={handleEntryInput.active}
 							onBlur={handleEntryInput.blur}
+							onFocus={handleEntryInput.focus}
 							tabIndex="0"
 							rows="1"
 							autoFocus

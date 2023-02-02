@@ -4,18 +4,16 @@ import { persistReducer, persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, 
 import storage from "redux-persist/lib/storage";
 
 import todosReducer from "/src/feature/todosSlice";
-import archivesReducer from "/src/feature/archivesSlice";
 import tagsReducer from "/src/feature/tagsSlice";
 import settingsReducer from "/src/feature/settingsSlice";
 import itemFocusReducer from "../feature/itemFocusSlice";
 import statusMessageReducer from "../feature/statusMessageSlice";
 
 const reducers = combineReducers({
+	settings: settingsReducer,
 	itemFocus: itemFocusReducer,
 	todos: todosReducer,
-	archives: archivesReducer,
 	tags: tagsReducer,
-	settings: settingsReducer,
 	statusMessage: statusMessageReducer,
 });
 

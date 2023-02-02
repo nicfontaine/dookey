@@ -2,8 +2,7 @@ import { useState, useRef } from "react";
 import TextArea from "textarea-autosize-reactjs";
 import EmojiPopup from "./EmojiPopup";
 import { useSelector, useDispatch } from "react-redux";
-import { setTodoText } from "../feature/todosSlice";
-import { setArchiveText } from "../feature/archivesSlice";
+import { setTodoText, setArchiveText } from "../feature/todosSlice";
 import textSurround from "../util/text-surround";
 
 const TodoInput = ({
@@ -14,8 +13,8 @@ const TodoInput = ({
 }) => {
 
 	const dispatch = useDispatch();
-	const todoList = useSelector((state) => state.todos.value);
-	const archiveList = useSelector((state) => state.archives.value);
+	const todoList = useSelector((state) => state.todos.value.todos);
+	const archiveList = useSelector((state) => state.todos.value.archives);
 	const itemFocus = useSelector((state) => state.itemFocus.value);
 
 	const [todoInputText, setTodoInputText] = useState(todo.text);
@@ -83,8 +82,16 @@ const TodoInput = ({
 			// "ESC"
 			if (e.key === "Escape") {
 				e.preventDefault();
-				let _td = { ...todoList[editIndex], text: todoTextBackup };
-				dispatch(setTodoText(_td));
+				const ip = itemFocus.indexPrevious;
+				goto.index(ip);
+				if (ip < todoList.length) {
+					let _td = { ...todoList[ip], text: todoTextBackup };
+					dispatch(setTodoText(_td));
+				} else {
+					let _td = { ...archiveList[ip - todoList.length], text: todoTextBackup };
+					dispatch(setArchiveText(_td));
+				}
+				// dispatch(setTodoText(_td));
 				goto.index(itemFocus.indexPrevious);
 				setEditIndex(null);
 			} else if (e.key === "ArrowUp" || e.key === "ArrowDown") {

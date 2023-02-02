@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { batch, useDispatch, useSelector } from "react-redux";
 import Head from "next/head";
 import ReactMarkdown from "react-markdown";
 import remarkGemoji from "remark-gemoji";
@@ -13,7 +13,7 @@ import DialogFileOpen from "../components/DialogFileOpen";
 import introTemplate from "../util/intro-template";
 import setBackups from "../util/set-backups";
 import { setFocusIndex } from "../feature/itemFocusSlice";
-import { setTodos } from "../feature/todosSlice";
+import { focusOut, focusTodoOrArchive, setTodos } from "../feature/todosSlice";
 import { setTags } from "../feature/tagsSlice";
 import { setSettings } from "../feature/settingsSlice";
 import { setStatusMessage } from "../feature/statusMessageSlice";
@@ -21,13 +21,12 @@ import { setStatusMessage } from "../feature/statusMessageSlice";
 const TodoPage = () => {
 
 	const dispatch = useDispatch();
-	const todoList = useSelector((state) => state.todos.value);
-	const archiveList = useSelector((state) => state.archives.value);
+	const todoList = useSelector((state) => state.todos.value.todos);
+	const archiveList = useSelector((state) => state.todos.value.archives);
 	const tagList = useSelector((state) => state.tags.value);
 	const settings = useSelector((state) => state.settings.value);
 	const itemFocus = useSelector((state) => state.itemFocus.value);
 	
-	const [focusElement, setFocusElement] = useState();
 	const [dialogImportShow, setDialogImportShow] = useState(false);
 	const [commandOptionsDisplay, setCommandOptionsDisplay] = useState(false);
 	const [fileOpenSelect, setFileOpenSelect] = useState(false);
@@ -37,33 +36,23 @@ const TodoPage = () => {
 	const entryInputRef = useRef(null);
 	const todoListRef = useRef(null);
 
-	// TODO: Need?
-	// useEffect(() => {
-	// 	goto.index(itemFocus.index);
-	// }, [todoList]);
-
-	// Focus element state change
-	useEffect(() => {
-		if (focusElement) focusElement.focus();
-	}, [focusElement]);
-
-	// Focus index state change - determine element
-	useEffect(() => {
-		if (itemFocus.index < 1) todoListRef.current.scrollTop = 0;
-		if (itemFocus.index === -1) {
-			setFocusElement(entryInputRef.current);
-		} else if (itemFocus.index > -1) {
-			// TODO: Cleanup, store in list or something
-			let todos = mainRef.current.getElementsByClassName("todo-focus");
-			setFocusElement(todos[itemFocus.index]);
-		} else if (!itemFocus.index) {
-			setFocusElement(null);
-		}
-	}, [itemFocus.index]);
+	/*
+	 * TODO: Need? It conflicts with handleTodo.postDeleteIndex()
+	 * useEffect(() => {
+	 * 	goto.index(itemFocus.index);
+	 * 	console.log("todoList change");
+	 * }, [todoList]);
+	 */
 
 	// Index focus change. mainRef, itemFocus.index, setFocusIndex
 	const goto = {
 		index (i) {
+			console.log(`goto: ${i}`);
+			if (i !== null && i >= 0) {
+				dispatch(focusTodoOrArchive(i));
+			} else {
+				dispatch(focusOut());
+			}
 			dispatch(setFocusIndex(i));
 		},
 		next () {
@@ -85,7 +74,8 @@ const TodoPage = () => {
 			}
 		},
 		entry () {
-			console.log(itemFocus.index);
+			entryInputRef.current.focus();
+			todoListRef.current.scrollTop = 0;
 			goto.index(-1);
 		},
 		exit () {
@@ -106,17 +96,19 @@ const TodoPage = () => {
 	useEffect(() => {
 		// Initialize, if starting fresh
 		if (!todoList.length && !tagList.length) {
-			dispatch(setTodos(introTemplate.todos));
-			dispatch(setTags(introTemplate.tags));
-			dispatch(setSettings(introTemplate.settings));
+			batch(() => {
+				dispatch(setTodos(introTemplate.todos));
+				dispatch(setTags(introTemplate.tags));
+				dispatch(setSettings(introTemplate.settings));
+			});
 		}
 		if (settings) backups();
 		document.body.tabIndex = -1;
-		// NOTE: This is causing a ref error at line 54
-		document.body.addEventListener("focus", goto.exit);
-		document.body.addEventListener("keyup", (e) => {
+		// document.body.addEventListener("focus", goto.exit);
+		window.addEventListener("keydown", (e) => {
 			if (e.target === document.body) {
 				if (e.key === "/" || (e.key === "l" && e.ctrlKey)) {
+					e.preventDefault();
 					goto.entry();
 				}
 			}
@@ -194,7 +186,7 @@ const TodoPage = () => {
 						ref={todoListRef}
 					>
 						<div className="todo-list-inner">
-							{ todoList.length >= 1 ? todoList.map((todo, index) => {
+							{ todoList && todoList.length >= 1 ? todoList.map((todo, index) => {
 								return <Todo
 									key={todo.id}
 									todo={todo}
@@ -205,7 +197,7 @@ const TodoPage = () => {
 							}) : undefined }
 						</div>
 
-						{ archiveList.length ?
+						{ archiveList && archiveList.length ?
 							<div className="divider-archived">
 								<ArchiveIcon size={16} className="icon"/>
 								<span className="mg-l-3">Archived</span>
@@ -213,7 +205,7 @@ const TodoPage = () => {
 							: null }
 
 						<div className="todo-list-inner">
-							{ archiveList.length ? archiveList.map((todo, index) => {
+							{ archiveList && archiveList.length ? archiveList.map((todo, index) => {
 								return <Todo
 									key={todo.id}
 									todo={todo}
@@ -232,7 +224,6 @@ const TodoPage = () => {
 					goto={goto}
 					dialogImportShow={dialogImportShow}
 					setDialogImportShow={setDialogImportShow}
-					setFocusElement={setFocusElement}
 				/>
 
 				<DialogFileOpen
