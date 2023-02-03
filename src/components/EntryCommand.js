@@ -119,7 +119,6 @@ const EntryCommand = function ({
 				handleBackup();
 			}
 		}
-
 		setEntryInput("");
 		setEntryCommand("");
 	};

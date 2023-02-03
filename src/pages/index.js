@@ -12,8 +12,7 @@ import EntryCommandOptions from "../components/EntryCommandOptions";
 import DialogFileOpen from "../components/DialogFileOpen";
 import introTemplate from "../util/intro-template";
 import setBackups from "../util/set-backups";
-import { setFocusIndex } from "../feature/itemFocusSlice";
-import { focusOut, focusTodoOrArchive, setTodos } from "../feature/todosSlice";
+import { focusItemIndex, focusTodoOrArchive, setTodos } from "../feature/todosSlice";
 import { setTags } from "../feature/tagsSlice";
 import { setSettings } from "../feature/settingsSlice";
 import { setStatusMessage } from "../feature/statusMessageSlice";
@@ -25,7 +24,7 @@ const TodoPage = () => {
 	const archiveList = useSelector((state) => state.todos.value.archives);
 	const tagList = useSelector((state) => state.tags.value);
 	const settings = useSelector((state) => state.settings.value);
-	const itemFocus = useSelector((state) => state.itemFocus.value);
+	const focusIndex = useSelector((state) => state.todos.value.focusIndex);
 	
 	const [dialogImportShow, setDialogImportShow] = useState(false);
 	const [commandOptionsDisplay, setCommandOptionsDisplay] = useState(false);
@@ -36,52 +35,16 @@ const TodoPage = () => {
 	const entryInputRef = useRef(null);
 	const todoListRef = useRef(null);
 
-	/*
-	 * TODO: Need? It conflicts with handleTodo.postDeleteIndex()
-	 * useEffect(() => {
-	 * 	goto.index(itemFocus.index);
-	 * 	console.log("todoList change");
-	 * }, [todoList]);
-	 */
-
-	// Index focus change. mainRef, itemFocus.index, setFocusIndex
-	const goto = {
-		index (i) {
-			console.log(`goto: ${i}`);
-			if (i !== null && i >= 0) {
-				dispatch(focusTodoOrArchive(i));
-			} else {
-				dispatch(focusOut());
-			}
-			dispatch(setFocusIndex(i));
-		},
-		next () {
-			let todos = mainRef.current.getElementsByClassName("todo-focus");
-			if (itemFocus.index === todos.length - 1) {
-				goto.entry(); 
-			} else {
-				goto.index(itemFocus.index + 1); 
-			}
-		},
-		prev () {
-			let todos = mainRef.current.getElementsByClassName("todo-focus");
-			if (itemFocus.index === -1) {
-				goto.index(todos.length - 1); 
-			} else if (itemFocus.index === 0) {
-				goto.entry(); 
-			} else {
-				goto.index(itemFocus.index - 1);
-			}
-		},
-		entry () {
+	useEffect(() => {
+		if (focusIndex === -1) {
 			entryInputRef.current.focus();
 			todoListRef.current.scrollTop = 0;
-			goto.index(-1);
-		},
-		exit () {
-			goto.index(null);
-		},
-	};
+		} else if (focusIndex !== null) {
+			// dispatch(focusTodoOrArchive(focusIndex));
+			const todos = document.getElementsByClassName("focus-group-todo");
+			todos[focusIndex].focus();
+		}
+	}, [focusIndex]);
 
 	const backups = async function () {
 		const res = await setBackups(settings);
@@ -104,12 +67,11 @@ const TodoPage = () => {
 		}
 		if (settings) backups();
 		document.body.tabIndex = -1;
-		// document.body.addEventListener("focus", goto.exit);
 		window.addEventListener("keydown", (e) => {
 			if (e.target === document.body) {
 				if (e.key === "/" || (e.key === "l" && e.ctrlKey)) {
 					e.preventDefault();
-					goto.entry();
+					dispatch(focusItemIndex(-1));
 				}
 			}
 		});
@@ -171,7 +133,6 @@ const TodoPage = () => {
 								setDialogImportShow={setDialogImportShow}
 								setCommandOptionsDisplay={setCommandOptionsDisplay}
 								setFileOpenSelect={setFileOpenSelect}
-								goto={goto}
 							/>
 						</div>
 
@@ -192,7 +153,6 @@ const TodoPage = () => {
 									todo={todo}
 									index={index}
 									archived={false}
-									goto={goto}
 								/>;
 							}) : undefined }
 						</div>
@@ -211,7 +171,6 @@ const TodoPage = () => {
 									todo={todo}
 									index={index + todoList.length}
 									archived={true}
-									goto={goto}
 								/>;
 							}) : null }
 						</div>
@@ -221,7 +180,6 @@ const TodoPage = () => {
 				</div>
 
 				<DialogImport
-					goto={goto}
 					dialogImportShow={dialogImportShow}
 					setDialogImportShow={setDialogImportShow}
 				/>

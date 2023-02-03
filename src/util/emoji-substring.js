@@ -6,14 +6,21 @@
 
 const emojiSubstring = function (text, caret) {
 	
-	let start = caret;    
+	let start = caret; 
+	
 	if (!text.length || text[start] === " ") {
 		return "";
 	}
 	
 	// Increment start to end of word. Stop on: space, \n, \r, or end of value
 	let b = text[start];
-	while (b && b !== " " && b !== String.fromCharCode(10) && b !== String.fromCharCode(13)) {
+
+	while (
+		b
+		&& b !== " "
+		&& b !== String.fromCharCode(10)
+		&& b !== String.fromCharCode(13)
+	) {
 		start++;
 		b = text[start];
 	}
@@ -21,6 +28,7 @@ const emojiSubstring = function (text, caret) {
 	// Decrement to beginning
 	let word = "", str = "";
 	let c = text[start - 1];
+
 	while (c) {
 		if (c === " ") {
 			word = "";
@@ -30,13 +38,21 @@ const emojiSubstring = function (text, caret) {
 		c = text[start];
 		word += c;
 		if (c === ":") {
-			// Handle "https://abc"
-			if (text[start - 1] && text[start - 1] !== " ") {
+			// Reject "https://abc"
+			// Allow " :abc", ":abc::abc:"
+			// Stop at beginning, space, or another : (for back-to-back emojis)
+			// TODO: Allow if previous character is an emoji
+			if (
+				!text[start - 1]
+				|| text[start - 1] === " "
+				|| text[start - 1] === ":"
+			) {
+				str = word;
+				break;
+			} else {
 				str = "";
 				break;
 			}
-			str = word;
-			break;
 		}
 	}
 

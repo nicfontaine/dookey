@@ -940,6 +940,7 @@ summary:before {
   opacity: 0;
   pointer-events: none;
   transition: all 0.75s;
+	/* transition: all 0.25s; */
 }
 .clock-outer.active {
   opacity: 1;

@@ -2,12 +2,11 @@ import { useState, useRef } from "react";
 import TextArea from "textarea-autosize-reactjs";
 import EmojiPopup from "./EmojiPopup";
 import { useSelector, useDispatch } from "react-redux";
-import { setTodoText, setArchiveText } from "../feature/todosSlice";
+import { setTodoText, setArchiveText, focusItemIndex } from "../feature/todosSlice";
 import textSurround from "../util/text-surround";
 
 const TodoInput = ({
 	todo,
-	goto,
 	editIndex,
 	setEditIndex,
 }) => {
@@ -15,7 +14,8 @@ const TodoInput = ({
 	const dispatch = useDispatch();
 	const todoList = useSelector((state) => state.todos.value.todos);
 	const archiveList = useSelector((state) => state.todos.value.archives);
-	const itemFocus = useSelector((state) => state.itemFocus.value);
+	const focusIndex = useSelector((state) => state.todos.value.focusIndex);
+	const focusIndexPrevious = useSelector((state) => state.todos.value.focusIndexPrevious);
 
 	const [todoInputText, setTodoInputText] = useState(todo.text);
 	const [todoCaretStart, setTodoCaretStart] = useState(todo.text.length - 1);
@@ -65,8 +65,8 @@ const TodoInput = ({
 			setEditIndex(null);
 			let val = e.target.value;
 			// NOTE: Not correctly focusing archived todo
-			const ip = itemFocus.indexPrevious;
-			goto.index(ip);
+			const ip = focusIndexPrevious;
+			dispatch(focusItemIndex(ip));
 			if (ip < todoList.length) {
 				let _td = { ...todoList[ip], text: val };
 				dispatch(setTodoText(_td));
@@ -82,8 +82,8 @@ const TodoInput = ({
 			// "ESC"
 			if (e.key === "Escape") {
 				e.preventDefault();
-				const ip = itemFocus.indexPrevious;
-				goto.index(ip);
+				const ip = focusIndexPrevious;
+				dispatch(focusItemIndex(ip));
 				if (ip < todoList.length) {
 					let _td = { ...todoList[ip], text: todoTextBackup };
 					dispatch(setTodoText(_td));
@@ -92,7 +92,8 @@ const TodoInput = ({
 					dispatch(setArchiveText(_td));
 				}
 				// dispatch(setTodoText(_td));
-				goto.index(itemFocus.indexPrevious);
+				// TODO: need this?
+				// goto.index(focusIndexPrevious);
 				setEditIndex(null);
 			} else if (e.key === "ArrowUp" || e.key === "ArrowDown") {
 				if (emojiPopupActive) {

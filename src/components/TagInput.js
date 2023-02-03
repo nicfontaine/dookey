@@ -3,16 +3,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { addTag, setTags } from "/src/feature/tagsSlice";
 import * as randomColor from "random-color";
 import { v4 as uuid } from 'uuid';
-import { setTodoTags, focusTodoOrArchive } from "../feature/todosSlice";
-import { setFocusIndexPrevious } from "../feature/itemFocusSlice";
+import { setTodoTags, focusTodoOrArchive, focusItemIndex } from "../feature/todosSlice";
+import { focusOut } from "../feature/todosSlice.js";
 
-const TagInput = function ({ index, goto, editTag, setEditTag }) {
+const TagInput = function ({ index, editTag, setEditTag }) {
 
 	const dispatch = useDispatch();
 	const [tagInput, setTagInput] = useState("");
 	const tagInputRef = useRef(null);
 
-	const itemFocus = useSelector((state) => state.itemFocus.value);
+	const focusIndex = useSelector((state) => state.todos.value.focusIndex);
+	const focusIndexPrevious = useSelector((state) => state.todos.value.focusIndexPrevious);
 	const todoList = useSelector((state) => state.todos.value.todos);
 	const tagList = useSelector((state) => state.tags.value);
 
@@ -25,14 +26,14 @@ const TagInput = function ({ index, goto, editTag, setEditTag }) {
 	const handleTagInput = {
 
 		active () {
-			dispatch(setFocusIndexPrevious(itemFocus.index));
-			setTagInput(todoList[itemFocus.index].tags);
-			goto.exit();
+			setTagInput(todoList[focusIndex].tags);
+			dispatch(focusOut());
+			dispatch(focusItemIndex(null));
 		},
 
 		deactive (e) {
-			focusTodoOrArchive(itemFocus.indexPrevious);
-			goto.index(itemFocus.indexPrevious);
+			focusTodoOrArchive(focusIndexPrevious);
+			dispatch(focusItemIndex(focusIndexPrevious));
 			setEditTag(false);
 		},
 

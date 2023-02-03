@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { v4 as uuid } from "uuid";
 import TextArea from "textarea-autosize-reactjs";
 import { useDispatch, useSelector } from "react-redux";
-import { unshiftTodo } from "/src/feature/todosSlice";
+import { unshiftTodo, focusItemIndex, focusItemNext, focusItemPrev } from "/src/feature/todosSlice";
 import { FlameIcon } from "@primer/octicons-react";
 import EmojiPopup from "./EmojiPopup";
 import Clock from "/src/components/Clock";
@@ -15,12 +15,13 @@ const EntryForm = ({
 	setCommandOptionsDisplay,
 	setDialogImportShow,
 	setFileOpenSelect,
-	goto,
 }) => {
 
 	const dispatch = useDispatch();
 	const settings = useSelector((state) => state.settings.value);
-	const itemFocus = useSelector((state) => state.itemFocus.value);
+	const focusIndex = useSelector((state) => state.todos.value.focusIndex);
+	const todoList = useSelector((state) => state.todos.value.todos);
+	const archiveList = useSelector((state) => state.todos.value.archives);
 
 	const formRef = useRef(null);
 	const [entryInput, setEntryInput] = useState("");
@@ -36,10 +37,10 @@ const EntryForm = ({
 	}, []);
 
 	useEffect(() => {
-		if (itemFocus.index === -1) {
+		if (focusIndex === -1) {
 			entryInputRef.current.focus();
 		}
-	}, [itemFocus.index]);
+	}, [focusIndex]);
 
 	// Entry Input
 	useEffect(() => {
@@ -52,7 +53,7 @@ const EntryForm = ({
 			if (clockActive) return;
 			e.preventDefault();
 			// Ignore if a todo is focused
-			if (itemFocus.index < 0) {
+			if (focusIndex < 0) {
 				let val = e.target.value;
 				setEntryInput(val);
 				if (todoListRef.current.scrollTop > 0)
@@ -61,7 +62,7 @@ const EntryForm = ({
 		},
 
 		active () {
-			goto.entry();
+			dispatch(focusItemIndex(-1));
 			if (todoListRef.current) {
 				todoListRef.current.scrollTop = 0;
 			}
@@ -132,19 +133,19 @@ const EntryForm = ({
 			if (e.key === "ArrowDown") {
 				if (!entryInputRef.current.value.length && !e.ctrlKey) {
 					e.preventDefault();
-					goto.next(e);
+					dispatch(focusItemNext(archiveList.length + todoList.length));
 				}
 			} else if (e.key === "ArrowUp") {
 				if (!entryInputRef.current.value.length && !e.ctrlKey) {
 					e.preventDefault();
-					goto.prev(e);
+					dispatch(focusItemPrev(archiveList.length + todoList.length));
 				}
 			} else if (e.key === "Tab") {
 				e.preventDefault();
 				if (e.shiftKey) {
-					goto.prev();
+					dispatch(focusItemPrev(archiveList.length + todoList.length));
 				} else {
-					goto.next();
+					dispatch(focusItemNext(archiveList.length + todoList.length));
 				}
 			} else if (e.key === "Escape" && commandOptionsDisplay) {
 				setEntryInput("");
@@ -161,7 +162,7 @@ const EntryForm = ({
 			>
 				<div className="entry-container-inner">
 					<form
-						className={`entry-form ${itemFocus.index === -1 ? "active" : ""}`}
+						className={`entry-form ${focusIndex === -1 ? "active" : ""}`}
 						onSubmit={(e) => e.preventDefault()}
 						ref={formRef}
 					>
@@ -174,7 +175,7 @@ const EntryForm = ({
 							value={entryInput}
 							id={"entry-input"}
 							className={`entry-input ${
-								itemFocus.index === -1 ? "active" : ""
+								focusIndex === -1 ? "active" : ""
 							}`}
 							onChange={handleEntryInput.change}
 							onKeyDown={handleEntryInput.keyDown}

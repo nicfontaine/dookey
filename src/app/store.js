@@ -6,12 +6,10 @@ import storage from "redux-persist/lib/storage";
 import todosReducer from "/src/feature/todosSlice";
 import tagsReducer from "/src/feature/tagsSlice";
 import settingsReducer from "/src/feature/settingsSlice";
-import itemFocusReducer from "../feature/itemFocusSlice";
 import statusMessageReducer from "../feature/statusMessageSlice";
 
 const reducers = combineReducers({
 	settings: settingsReducer,
-	itemFocus: itemFocusReducer,
 	todos: todosReducer,
 	tags: tagsReducer,
 	statusMessage: statusMessageReducer,

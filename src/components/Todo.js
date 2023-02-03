@@ -6,9 +6,9 @@ import rehypeRaw from "rehype-raw";
 import remarkGemoji from "remark-gemoji";
 import { useDispatch, useSelector } from "react-redux";
 import { archiveTodo, deleteTodo, moveTodoUp, moveTodoDown, unArchive, deleteArchive, moveArchiveUp, moveArchiveDown } from "/src/feature/todosSlice";
-import { setFocusIndexPrevious } from "../feature/itemFocusSlice";
-import { focusTodoOrArchive, insertTodoAt } from "../feature/todosSlice";
+import { focusItemIndex, focusItemNext, focusItemPrev, focusItemEntry, focusTodoOrArchive, insertTodoAt } from "../feature/todosSlice";
 import { CheckCircleFillIcon } from "@primer/octicons-react";
+import { focusOut } from "../feature/todosSlice.js";
 
 import TodoInput from "./TodoInput";
 import TagInput from "./TagInput";
@@ -19,14 +19,13 @@ const Todo = ({
 	todo,
 	index,
 	archived,
-	goto,
 }) => {
 
 	const dispatch = useDispatch();
 	const todoList = useSelector((state) => state.todos.value.todos);
 	const archiveList = useSelector((state) => state.todos.value.archives);
 	const tagList = useSelector((state) => state.tags.value);
-	const itemFocus = useSelector((state) => state.itemFocus.value);
+	const focusIndex = useSelector((state) => state.todos.value.focusIndex);
 
 	const [editIndex, setEditIndex] = useState(null);
 	const [animOutIndex, setAnimOutIndex] = useState(null);
@@ -37,35 +36,35 @@ const Todo = ({
 	var dragged = false;
 	var mX, mY;
 
-	useEffect(() => {
-		if (todo.focus) {
-			todoRef.current.focus();
-		}
-	}, [todo]);
+	// useEffect(() => {
+	// 	if (todo.focus) {
+	// 		todoRef.current.focus();
+	// 	}
+	// }, [todo]);
 
 	const moveUp = function () {
-		if (itemFocus.index === todoList.length) {
+		if (focusIndex === todoList.length) {
 			handleTodo.unArchive();
-		} else if (itemFocus.index > 0) {
-			if (itemFocus.index < todoList.length) {
+		} else if (focusIndex > 0) {
+			if (focusIndex < todoList.length) {
 				dispatch(moveTodoUp(index));
 			} else {
 				dispatch(moveArchiveUp(index));
 			}
-			goto.prev();
+			dispatch(focusItemPrev(archiveList.length + todoList.length));
 		}
 	};
 
 	const moveDown = function () {
-		if (itemFocus.index === todoList.length - 1) {
+		if (focusIndex === todoList.length - 1) {
 			handleTodo.archive();
-		} else if (itemFocus.index < archiveList.length + todoList.length - 1) {
-			if (itemFocus.index < todoList.length) {
+		} else if (focusIndex < archiveList.length + todoList.length - 1) {
+			if (focusIndex < todoList.length) {
 				dispatch(moveTodoDown(index));
 			} else {
 				dispatch(moveArchiveDown(index));
 			}
-			goto.next();
+			dispatch(focusItemNext(archiveList.length + todoList.length));
 		}
 	};
 
@@ -79,12 +78,12 @@ const Todo = ({
 		// Set active todo to edit mode
 		edit (e) {
 			setEditIndex(index);
-			dispatch(setFocusIndexPrevious(itemFocus.index));
-			goto.exit();
+			dispatch(focusItemIndex(null));
+			dispatch(focusOut());
 		},
 
 		archiveStart (e) {
-			setAnimOutIndex(itemFocus.index);
+			setAnimOutIndex(focusIndex);
 			setTimeout(() => handleTodo.archive(), 150);
 		},
 
@@ -94,7 +93,7 @@ const Todo = ({
 		},
 
 		unArchive () {
-			const _index = itemFocus.index - todoList.length;
+			const _index = focusIndex - todoList.length;
 			const _td = archiveList[_index];
 			dispatch(unArchive(_td));
 			handleTodo.postDeleteIndex();
@@ -103,9 +102,9 @@ const Todo = ({
 		// Mark task for delete
 		deleteStart (e) {
 			e.target.style.height = e.target.getBoundingClientRect().height + "px";
-			setAnimOutIndex(itemFocus.index);
-			deleteStore.push({ todo: todoList[itemFocus.index], index });
-			setTimeout(() => handleTodo.delete(itemFocus.index), 150);
+			setAnimOutIndex(focusIndex);
+			deleteStore.push({ todo: todoList[focusIndex], index });
+			setTimeout(() => handleTodo.delete(focusIndex), 150);
 		},
 
 		deleteTodo (_todo) {
@@ -124,24 +123,24 @@ const Todo = ({
 			handleTodo.postDeleteIndex();
 		},
 
-		// Update itemFocus.index after deletion based on `newLength`
+		// Update focusIndex after deletion based on `newLength`
 		postDeleteIndex () {
 			const newLength = todoList.length + archiveList.length - 1;
-			let newIndex = itemFocus.index;
-			if (itemFocus.index > -1) {
+			let newIndex = focusIndex;
+			if (focusIndex > -1) {
 				if (!newLength) {
 					newIndex = -1; 
-				} else if (itemFocus.index === newLength) {
-					newIndex = itemFocus.index - 1; 
+				} else if (focusIndex === newLength) {
+					newIndex = focusIndex - 1; 
 				}
-				goto.index(newIndex);
+				dispatch(focusItemIndex(newIndex));
 			}
 		},
 
 		// Click to activate todo
 		click () {
-			goto.index(index);
-			if (!dragged && itemFocus.index === index) {
+			dispatch(focusItemIndex(index));
+			if (!dragged && focusIndex === index) {
 				// setEditIndex(index)
 			} else {
 				setEditIndex(null);
@@ -160,7 +159,7 @@ const Todo = ({
 		},
 
 		keyDown (e) {
-			// NOTE: Move all of this to a module
+			// TODO: Cleanup
 			if (!e.target.classList.contains("todo")) {
 				return;
 			}
@@ -177,17 +176,17 @@ const Todo = ({
 				e.preventDefault();
 				setEditTag(true);
 			} else if (e.key === "d") {
-				// Date
+				// TODO: Date
 			} else if (e.key === "a") {
 				e.preventDefault();
-				if (itemFocus.index >= todoList.length) {
+				if (focusIndex >= todoList.length) {
 					handleTodo.unArchive();
 				} else {
 					handleTodo.archiveStart(e);
 				}
 			} else if (e.key === "/" || (e.key === "l" && e.ctrlKey)) {
 				e.preventDefault();
-				goto.index(-1);
+				dispatch(focusItemEntry());
 			} else if (e.key === "o" || e.key === " ") {
 				let details = e.target.getElementsByTagName("details");
 				for (const d of details) {
@@ -197,36 +196,33 @@ const Todo = ({
 			} else if (e.key === "ArrowDown") {
 				e.preventDefault();
 				if (!e.ctrlKey) {
-					goto.next();
+					dispatch(focusItemNext(archiveList.length + todoList.length));
 				} else if (e.shiftKey && e.ctrlKey) {
 					moveDown();
 				}
 			} else if (e.key === "ArrowUp") {
 				e.preventDefault();
 				if (!e.ctrlKey) {
-					goto.prev();
+					dispatch(focusItemPrev(archiveList.length + todoList.length));
 				} else if (e.shiftKey && e.ctrlKey) {
 					moveUp();
 				}
 			} else if (e.key === "Tab") {
 				console.log("tab");
 				e.preventDefault();
-				e.shiftKey ? goto.prev() : goto.next();
+				let len = archiveList.length + todoList.length;
+				e.shiftKey ? dispatch(focusItemPrev(len)) : dispatch(focusItemNext(len));
 			} else if (e.key === "Home") {
 				e.preventDefault();
-				// dispatch(focusTodoOrArchive(0));
-				goto.index(0);
+				dispatch(focusItemIndex(0));
 			} else if (e.key === "End") {
 				e.preventDefault();
-				goto.index(todoList.length + archiveList.length - 1);
+				dispatch(focusItemIndex(todoList.length + archiveList.length - 1));
 			} else if (e.key === "z" && e.ctrlKey) {
+				// TODO: Handle archives & todos
 				if (!deleteStore.length) return;
 				let _td = deleteStore.pop();
 				dispatch(insertTodoAt(_td));
-				/*
-				 * dispatch(focusTodo(_td.index));
-				 * goto.index(_td.index);
-				 */
 			}
 
 		},
@@ -238,7 +234,6 @@ const Todo = ({
 		return (
 			<TodoInput 
 				todo={todo}
-				goto={goto}
 				editIndex={editIndex}
 				setEditIndex={setEditIndex}
 			/>
@@ -293,7 +288,6 @@ const Todo = ({
 				{ editTag ?
 					<TagInput
 						index={index}
-						goto={goto}
 						editTag={editTag}
 						setEditTag={setEditTag}
 					></TagInput>

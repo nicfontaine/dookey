@@ -4,9 +4,9 @@ import { mergeTodoList, mergeArchiveList } from "../feature/todosSlice.js";
 import { mergeSettings } from "../feature/settingsSlice.js";
 import { mergeTagList } from "../feature/tagsSlice.js";
 import { setStatusMessage } from "../feature/statusMessageSlice";
+import { focusItemIndex, focusOut } from "../feature/todosSlice.js";
 
 const DialogImport = ({
-	goto,
 	dialogImportShow,
 	setDialogImportShow,
 }) => {
@@ -25,11 +25,12 @@ const DialogImport = ({
 
 		hide: () => {
 			importInput.current.value = "";
-			goto.entry();
+			dispatch(focusItemIndex(-1));
 		},
 
 		show: () => {
-			goto.exit();
+			dispatch(focusOut());
+			dispatch(focusItemIndex(null));
 			importInput.current.focus();
 		},
 

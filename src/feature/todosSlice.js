@@ -2,6 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
 	value: {
+		focusIndex: -1,
+		focusIndexPrevious: -1,
 		todos: [],
 		archives: [],
 	},
@@ -12,6 +14,45 @@ export const todosSlice = createSlice({
 	name: "todos",
 	initialState,
 	reducers: {
+
+		// Focus
+		focusItemIndex: (state, action) => {
+			state.value.focusIndexPrevious = state.value.focusIndex;
+			state.value.focusIndex = action.payload;
+		},
+		
+		focusItemEntry: (state, action) => {
+			state.value.focusIndexPrevious = state.value.focusIndex;
+			state.value.focusIndex = -1;
+		},
+		
+		focusItemNull: (state, action) => {
+			state.value.focusIndexPrevious = state.value.focusIndex;
+			state.value.focusIndex = null;
+		},
+
+		focusItemNext: (state, action) => {
+			const len = action.payload;
+			if (state.value.focusIndex === len - 1) {
+				todosSlice.caseReducers.focusItemEntry(state, action);
+			} else {
+				state.value.focusIndexPrevious = state.value.focusIndex;
+				state.value.focusIndex = state.value.focusIndex + 1;
+			}
+		},
+
+		focusItemPrev: (state, action) => {
+			const len = action.payload;
+			if (state.value.focusIndex === 0) {
+				todosSlice.caseReducers.focusItemEntry(state, action);
+			} else if (state.value.focusIndex < 0) {
+				state.value.focusIndexPrevious = state.value.focusIndex;
+				state.value.focusIndex = len - 1;
+			} else {
+				state.value.focusIndexPrevious = state.value.focusIndex;
+				state.value.focusIndex = state.value.focusIndex - 1;
+			}
+		},
 
 		// Todos
 		unshiftTodo: (state, action) => {
@@ -24,6 +65,7 @@ export const todosSlice = createSlice({
 
 		focusTodo: (state, action) => {
 			todosSlice.caseReducers.focusOut(state, action);
+			todosSlice.caseReducers.focusItemNull(state, action);
 			state.value.todos[action.payload].focus = true;
 		},
 
@@ -173,6 +215,10 @@ export const todosSlice = createSlice({
 });
 
 export const {
+	focusItemIndex,
+	focusItemNext,
+	focusItemPrev,
+	focusItemEntry,
 	addTodo,
 	unshiftTodo,
 	insertTodoAt,
