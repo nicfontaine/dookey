@@ -20,6 +20,9 @@ export const tagsSlice = createSlice({
 		setTags: (state, action) => {
 			state.value = { ...action.payload };
 		},
+		cleanupTags: () => {
+			
+		},
 		resetTags: () => initialState,
 	},
 });

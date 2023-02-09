@@ -744,8 +744,10 @@ summary:before {
   border-radius: 4px;
   /* margin-right: 0.3rem; */
   font-size: 0.88rem;
+	font-size: 0.77rem;
   font-weight: bold;
-  font-family: "DM Mono"
+  font-family: "DM Mono";
+	opacity: 0.85;
 }
 .todo .tag {
   margin-bottom: 0.3rem;
