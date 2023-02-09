@@ -42,6 +42,12 @@ const Todo = ({
 	// 	}
 	// }, [todo]);
 
+	useEffect(() => {
+		if (index === focusIndex) {
+			todoRef.current.focus();
+		}
+	}, [focusIndex]);
+
 	const moveUp = function () {
 		if (focusIndex === todoList.length) {
 			handleTodo.unArchive();
@@ -208,7 +214,6 @@ const Todo = ({
 					moveUp();
 				}
 			} else if (e.key === "Tab") {
-				console.log("tab");
 				e.preventDefault();
 				let len = archiveList.length + todoList.length;
 				e.shiftKey ? dispatch(focusItemPrev(len)) : dispatch(focusItemNext(len));

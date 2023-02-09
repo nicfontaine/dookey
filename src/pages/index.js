@@ -41,8 +41,8 @@ const TodoPage = () => {
 			todoListRef.current.scrollTop = 0;
 		} else if (focusIndex !== null) {
 			// dispatch(focusTodoOrArchive(focusIndex));
-			const todos = document.getElementsByClassName("focus-group-todo");
-			todos[focusIndex].focus();
+			// const todos = document.getElementsByClassName("focus-group-todo");
+			// todos[focusIndex].focus();
 		}
 	}, [focusIndex]);
 
@@ -82,14 +82,6 @@ const TodoPage = () => {
 		mainRef.current.closest("html").style.fontSize = settings.fontSize + "px";
 		if (settings.center && Number(settings.center) > 0) {
 			document.querySelector(":root").style.setProperty("--main-center-width", `${settings.center}px`);
-			document.body.classList.add("center");
-		} else {
-			document.body.classList.remove("center");
-		}
-		if (!settings.title.length) {
-			mainHeadingRef.current.classList.add("scrolled");
-		} else {
-			mainHeadingRef.current.classList.remove("scrolled");
 		}
 	}, [settings]);
 
@@ -113,7 +105,11 @@ const TodoPage = () => {
 				<title>{process.env.APP_NAME}</title>
 			</Head>
 
-			<div ref={mainRef} className="main-container" onKeyDown={handleMain.keyDown}>
+			<div
+				ref={mainRef}
+				className={`main-container ${settings.center ? "center" : ""}`}
+				onKeyDown={handleMain.keyDown}
+			>
 
 				<div className="main">
 
@@ -121,7 +117,10 @@ const TodoPage = () => {
 
 						<div className="top-background-image"></div>
 
-						<div className="main-heading" ref={mainHeadingRef}>
+						<div
+							className={`main-heading ${!settings.title ? "no-title" : ""}`}
+							ref={mainHeadingRef}
+						>
 							<ReactMarkdown remarkPlugins={[remarkGemoji]}>{settings.title}</ReactMarkdown>
 						</div>
 

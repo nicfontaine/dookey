@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 
 const EntryCommandOptions = ({
@@ -7,11 +8,16 @@ const EntryCommandOptions = ({
 	const settings = useSelector((state) => state.settings.value);
 	const tags = useSelector((state) => state.tags.value);
 
+	const entryCommandOptionsRef = useRef(null);
+
 	return(
 		<>
 			<div
+				ref={entryCommandOptionsRef}
 				className={`entry-command-options
-				${commandOptionsDisplay ? "show" : ""}`}
+					${commandOptionsDisplay ? "show" : ""}
+					${settings.title ? "" : "no-title"}
+				`}
 			>
 				<div className="entry-command-options-inner pd-t-7">
 
@@ -81,12 +87,15 @@ const EntryCommandOptions = ({
 					padding-top: 10.5rem;
 					background: rgba(0,0,0,0.65);
 					z-index: 10;
-					transition: opacity 0.15s;
+					transition: opacity 0.15s, padding 0.3s ease-in;
 					pointer-events: none;
 				}
 				.entry-command-options.show {
 					opacity: 1;
 					pointer-events: auto;
+				}
+				.entry-command-options.no-title {
+					padding-top: 6rem;
 				}
 				.entry-command-options .desc {
 					letter-spacing: 0.5px;

@@ -69,7 +69,7 @@ body {
   text-overflow: ellipsis;
   overflow-x: hidden;
 }
-.main-heading.scrolled {
+.main-heading.no-title {
   padding-top: 1rem;
   padding-bottom: 0;
 }
@@ -267,6 +267,7 @@ input, textarea {
   padding-left: 1rem;
   padding-top: 1rem;
   padding-bottom: 1.5rem;
+	flex: 1;
   /* margin-top: 1rem; */
   /* border-top: 1px solid rgba(255,255,255,0.05); */
   /* background: #222; */
@@ -629,6 +630,7 @@ summary:before {
 .todo-edit-active {
   display: flex;
   position: relative;
+	z-index: 30;
 }
 .todo-input {
   flex: 1;
@@ -979,20 +981,20 @@ summary:before {
   color: rgba(255,255,255,0.3);
 }
 
-body.center .entry-container-inner,
-body.center .todo-list,
-body.center .status-bar-inner,
-body.center .entry-command-options-inner {
+.main-container.center .entry-container-inner,
+.main-container.center .todo-list,
+.main-container.center .status-bar-inner,
+.main-container.center .entry-command-options-inner {
   width: 100%;
   max-width: var(--main-center-width);
   margin-right: auto;
   margin-left: auto;
   transition: 0.2s width ease-in, 0.2s max-width ease-in, 0.2s margin ease-in;
 }
-body.center .entry-container-inner {
+.main-container.center .entry-container-inner {
   /* width: calc(100% - 2rem); */
   max-width: calc(var(--main-center-width) - 2rem);
 }
-body.center .status-bar-inner {
+.main-container.center .status-bar-inner {
   padding-left: 2.2rem;
 }
