@@ -6,7 +6,7 @@ export default class Time {
 	static createState = (clock, setClock) => {
 		this["#clock"] = clock;
 		this["#setClock"] = setClock;
-	}
+	};
     
 	static start () {
 		this.#tick();

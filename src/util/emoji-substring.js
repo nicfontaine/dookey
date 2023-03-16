@@ -13,16 +13,13 @@ const emojiSubstring = function (text, caret) {
 	}
 	
 	// Increment start to end of word. Stop on: space, \n, \r, or end of value
-	let b = text[start];
-
 	while (
-		b
-		&& b !== " "
-		&& b !== String.fromCharCode(10)
-		&& b !== String.fromCharCode(13)
+		text[start]
+		&& text[start] !== " "
+		&& text[start] !== String.fromCharCode(10)
+		&& text[start] !== String.fromCharCode(13)
 	) {
 		start++;
-		b = text[start];
 	}
 
 	// Decrement to beginning
