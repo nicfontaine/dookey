@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addTag, setTags } from "/src/feature/tagsSlice";
+import { addTag, setTags } from "../feature/tagsSlice";
 import * as randomColor from "random-color";
 import { v4 as uuid } from 'uuid';
 import { setTodoTags, focusTodoOrArchive, focusItemIndex } from "../feature/todosSlice";

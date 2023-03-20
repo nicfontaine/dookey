@@ -2,10 +2,10 @@ import { useState, useEffect, useRef } from "react";
 import { v4 as uuid } from "uuid";
 import TextArea from "textarea-autosize-reactjs";
 import { useDispatch, useSelector } from "react-redux";
-import { unshiftTodo, focusItemIndex, focusItemNext, focusItemPrev } from "/src/feature/todosSlice";
+import { unshiftTodo, focusItemIndex, focusItemNext, focusItemPrev } from "../feature/todosSlice";
 import { FlameIcon } from "@primer/octicons-react";
 import EmojiPopup from "./EmojiPopup";
-import Clock from "/src/components/Clock";
+import Clock from "../components/Clock";
 import EntryCommand from "./EntryCommand";
 
 const EntryForm = ({

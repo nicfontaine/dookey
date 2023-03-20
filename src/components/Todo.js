@@ -5,7 +5,7 @@ import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import remarkGemoji from "remark-gemoji";
 import { useDispatch, useSelector } from "react-redux";
-import { archiveTodo, deleteTodo, moveTodoUp, moveTodoDown, unArchive, deleteArchive, moveArchiveUp, moveArchiveDown } from "/src/feature/todosSlice";
+import { archiveTodo, deleteTodo, moveTodoUp, moveTodoDown, unArchive, deleteArchive, moveArchiveUp, moveArchiveDown } from "../feature/todosSlice";
 import { focusItemIndex, focusItemNext, focusItemPrev, focusItemEntry, focusTodoOrArchive, insertTodoAt } from "../feature/todosSlice";
 import { CheckCircleFillIcon } from "@primer/octicons-react";
 import { focusOut } from "../feature/todosSlice.js";

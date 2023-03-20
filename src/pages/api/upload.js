@@ -6,7 +6,7 @@ export default async function handler (request, response) {
 	
 	if (method === "POST") {
 		try {
-			let file = await fs.readFile(filePath);
+			let file = await fs.readFile(request.filePath);
 			return response.status(200).json({ data: file });
 		} catch(err) {
 			return response.status(500).json({ err: err });

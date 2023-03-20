@@ -9,7 +9,7 @@ import {
 	setFontSize,
 	setBackups,
 	setBackupsAbsolute,
-} from "/src/feature/settingsSlice";
+} from "../feature/settingsSlice";
 import { setStatusMessage } from "../feature/statusMessageSlice";
 import exportData from "../util/export-data";
 import saveData from "../util/save-data";
