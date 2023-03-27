@@ -7,6 +7,7 @@ import { FlameIcon } from "@primer/octicons-react";
 import EmojiPopup from "./EmojiPopup";
 import Clock from "../components/Clock";
 import EntryCommand from "./EntryCommand";
+import TextareaAutosize from "@mui/base/TextareaAutosize";
 
 const EntryForm = ({
 	entryInputRef,
@@ -170,7 +171,7 @@ const EntryForm = ({
 							<FlameIcon size={18} />
 						</div>
 
-						<TextArea
+						<TextareaAutosize
 							type="text"
 							value={entryInput}
 							id={"entry-input"}
@@ -190,7 +191,7 @@ const EntryForm = ({
 							ref={entryInputRef}
 						>
 							{entryInput}
-						</TextArea>
+						</TextareaAutosize>
 
 						<EmojiPopup
 							active={emojiPopupActive}

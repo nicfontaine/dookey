@@ -11,11 +11,11 @@ import DialogImport from "../components/DialogImport";
 import EntryCommandOptions from "../components/EntryCommandOptions";
 import DialogFileOpen from "../components/DialogFileOpen";
 import introTemplate from "../util/intro-template";
-import setBackups from "../util/set-backups";
 import { focusItemIndex, focusTodoOrArchive, setTodos } from "../feature/todosSlice";
 import { setTags } from "../feature/tagsSlice";
 import { setSettings } from "../feature/settingsSlice";
 import { setStatusMessage } from "../feature/statusMessageSlice";
+import resolveBackupPath from "../util/resolve-backup-path";
 
 const TodoPage = () => {
 
@@ -47,12 +47,8 @@ const TodoPage = () => {
 	}, [focusIndex]);
 
 	const backups = async function () {
-		const res = await setBackups(settings);
-		if (res.err) {
-			dispatch(setStatusMessage(JSON.stringify(res.err)));
-			return;
-		}
-		dispatch(setSettings(res));
+		const backupsAbsolute = await resolveBackupPath(settings);
+		dispatch(setSettings({ ...settings, backupsAbsolute }));
 	};
 
 	// Load

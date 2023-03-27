@@ -13,6 +13,7 @@ import {
 import { setStatusMessage } from "../feature/statusMessageSlice";
 import exportData from "../util/export-data";
 import saveData from "../util/save-data";
+import resolveBackupPath from "../util/resolve-backup-path";
 
 const EntryCommand = function ({
 	cmd,
@@ -44,25 +45,16 @@ const EntryCommand = function ({
 	const handleSave = async function () {
 		const _res = await saveData(todoList, archiveList, tagList, settings);
 		batch(() => {
-			dispatch(setBackupsAbsolute(_res.backups));
+			dispatch(setBackupsAbsolute(_res.backupsAbsolute));
 			dispatch(setStatusMessage([_res.status, 5000]));
 		});
 	};
-
-	const handleBackup = async function () {
+	const handleBackupLocation = async function (location) {
 		dispatch(setBackups(location));
-		const response = await fetch("/api/set-backups-location", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ backups: location }),
-		});
-		const res = await response.json();
-		if (res.err) {
-			dispatch(setStatusMessage([JSON.stringify(res.err), 5000]));
-			return;
-		}
-		setBackupsAbsolute(res.backupsAbsolute);
-		dispatch(setStatusMessage([`Location: ${res.backupsAbsolute}`, 8000]));
+		const backupsAbsolute = await resolveBackupPath(settings);
+		console.log(backupsAbsolute);
+		dispatch(setBackupsAbsolute(backupsAbsolute));
+		dispatch(setStatusMessage([`Location: ${backupsAbsolute}`, 8000]));
 	};
 
 	const checkCommand = function () {
@@ -116,7 +108,7 @@ const EntryCommand = function ({
 			}
 			let location = args[0].trim();
 			if (location) {
-				handleBackup();
+				handleBackupLocation(location);
 			}
 		}
 		setEntryInput("");

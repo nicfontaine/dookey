@@ -5,14 +5,11 @@ export default async function handler (request, response) {
 	const { backups } = request.body;
 	if (method === "POST") {
 		try {
-			let backupsAbsolute = getBackupsPath(backups);
+			let backupsAbsolute = path.resolve(backups);
+			console.log(backupsAbsolute);
 			return response.status(200).json({ backupsAbsolute });
 		} catch(err) {
 			return response.status(500).json({ err: err });
 		}
 	}
 }
-
-export const getBackupsPath = (relative) => {
-	return path.resolve(relative);
-};

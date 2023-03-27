@@ -4,7 +4,7 @@
     "version": "0.1.0"
   },
   "build": {
-    "distDir": "../build",
+    "distDir": "../src",
     "devPath": "http://localhost:3000",
     "beforeDevCommand": "npm run start",
     "beforeBuildCommand": "npm run build"
@@ -48,7 +48,17 @@
       "active": false
     },
     "allowlist": {
-      "all": true
+      "clipboard": {
+        "writeText": true,
+        "readText": true
+      },
+			"fs": {
+				"readFile": true,
+				"writeFile": true
+			},
+			"path": {
+				"all": true
+			}
     },
     "windows": [
       {
