@@ -36,17 +36,12 @@ const Todo = ({
 	var dragged = false;
 	var mX, mY;
 
-	// useEffect(() => {
-	// 	if (todo.focus) {
-	// 		todoRef.current.focus();
-	// 	}
-	// }, [todo]);
-
+	// Focus todo when list or focusIndex changes
 	useEffect(() => {
 		if (index === focusIndex) {
 			todoRef.current.focus();
 		}
-	}, [focusIndex]);
+	}, [focusIndex, todoList]);
 
 	const moveUp = function () {
 		if (focusIndex === todoList.length) {
@@ -94,15 +89,17 @@ const Todo = ({
 		},
 
 		archive () {
+			let next = focusIndex;
+			if (next === todoList.length - 1) next -= 1;
+			dispatch(focusItemIndex(next));
 			dispatch(archiveTodo(todo));
-			handleTodo.postDeleteIndex();
 		},
 
 		unArchive () {
 			const _index = focusIndex - todoList.length;
 			const _td = archiveList[_index];
 			dispatch(unArchive(_td));
-			handleTodo.postDeleteIndex();
+			dispatch(focusItemIndex(focusIndex));
 		},
 
 		// Mark task for delete
@@ -110,36 +107,20 @@ const Todo = ({
 			e.target.style.height = e.target.getBoundingClientRect().height + "px";
 			setAnimOutIndex(focusIndex);
 			deleteStore.push({ todo: todoList[focusIndex], index });
-			setTimeout(() => handleTodo.delete(focusIndex), 150);
-		},
-
-		deleteTodo (_todo) {
-			dispatch(deleteTodo(_todo));
-			handleTodo.postDeleteIndex();
+			setTimeout(() => handleTodo.delete(), 150);
 		},
 
 		// Remove from data, and list. Set next active position
-		delete (i) {
+		delete () {
 			setAnimOutIndex(null);
 			if (archived) {
 				dispatch(deleteArchive(todo));
+				dispatch(focusItemIndex(focusIndex - 1));
 			} else {
+				let next = focusIndex;
+				if (next === todoList.length - 1) next -= 1;
 				dispatch(deleteTodo(todo));
-			}
-			handleTodo.postDeleteIndex();
-		},
-
-		// Update focusIndex after deletion based on `newLength`
-		postDeleteIndex () {
-			const newLength = todoList.length + archiveList.length - 1;
-			let newIndex = focusIndex;
-			if (focusIndex > -1) {
-				if (!newLength) {
-					newIndex = -1; 
-				} else if (focusIndex === newLength) {
-					newIndex = focusIndex - 1; 
-				}
-				dispatch(focusItemIndex(newIndex));
+				dispatch(focusItemIndex(next));
 			}
 		},
 
@@ -251,16 +232,17 @@ const Todo = ({
 			<button
 				ref={todoRef}
 				className={csn("todo todo-focus focus-group-todo",
-					{ active:todo.focus || false },
+					// { active:todo.focus || false },
 					{ animOut:index === animOutIndex },
-					{ archive:archived || false },
+					{ archive: archived || false },
+					// { active: focusIndex === index },
 				)}
 				onBlur={handleTodo.blur}
 				onClick={handleTodo.click}
 				onMouseDown={handleTodo.mouseDown}
 				onMouseUp={handleTodo.mouseUp}
 				onKeyDown={handleTodo.keyDown}
-				autoFocus={todo.focus}
+				autoFocus={focusIndex === index}
 				tabIndex="0"
 			>
 				

@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import { v4 as uuid } from "uuid";
-import TextArea from "textarea-autosize-reactjs";
 import { useDispatch, useSelector } from "react-redux";
 import { unshiftTodo, focusItemIndex, focusItemNext, focusItemPrev } from "../feature/todosSlice";
 import { FlameIcon } from "@primer/octicons-react";

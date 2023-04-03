@@ -1,9 +1,9 @@
 import { useState, useRef } from "react";
-import TextArea from "textarea-autosize-reactjs";
 import EmojiPopup from "./EmojiPopup";
 import { useSelector, useDispatch } from "react-redux";
 import { setTodoText, setArchiveText, focusItemIndex } from "../feature/todosSlice";
 import textSurround from "../util/text-surround";
+import TextareaAutosize from "@mui/base/TextareaAutosize";
 
 const TodoInput = ({
 	todo,
@@ -146,7 +146,7 @@ const TodoInput = ({
 		<>
 			<div className="todo-edit-active">
 			
-				<TextArea className="todo-input todo-focus" type="text"
+				<TextareaAutosize className="todo-input todo-focus" type="text"
 					value={todoInputText || ""}
 					onChange={handleTodoInput.change}
 					onKeyDown={handleTodoInput.keyDown}
@@ -157,7 +157,7 @@ const TodoInput = ({
 					tabIndex="0"
 					rows="1"
 					ref={todoInputRef}
-				></TextArea>
+				></TextareaAutosize>
 
 				<EmojiPopup
 					active={emojiPopupActive}
