@@ -4,9 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { unshiftTodo, focusItemIndex, focusItemNext, focusItemPrev } from "../feature/todosSlice";
 import { FlameIcon } from "@primer/octicons-react";
 import EmojiPopup from "./EmojiPopup";
-import Clock from "../components/Clock";
+import Clock from "./Clock";
 import EntryCommand from "./EntryCommand";
 import TextareaAutosize from "@mui/base/TextareaAutosize";
+// import EmojiPopup from "react-emoji-popup-lister";
 
 const EntryForm = ({
 	entryInputRef,

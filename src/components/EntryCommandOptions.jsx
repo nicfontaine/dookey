@@ -37,24 +37,32 @@ const EntryCommandOptions = ({
 					</div>
 
 					<h2 className="section-heading"><span className="mg-r-1">🏭</span> Functions</h2>
-					<div className="group d-flx flx-row">
-						<div>
-							<div className="row"><span className="code">/export</span></div>
-							<div className="row"><span className="code">/import</span></div>
-							<div className="row"><span className="code">/save</span></div>
-							<div className="row"><span className="code">/open</span></div>
-							<div className="row"><span className="code">/nuke</span></div>
-							<div className="row"><span className="code">/help</span></div>
-							<div className="row"><span className="code">/clock</span></div>
+					<div className="d-flx flx-children-1 flx-spc-2 flx-children-spc-2">
+						<div className="group d-flx flx-row">
+							<div>
+								<div className="row"><span className="code">/export</span></div>
+								<div className="row"><span className="code">/import</span></div>
+								<div className="row"><span className="code">/save</span></div>
+								<div className="row"><span className="code">/open</span></div>
+							</div>
+							<div className="desc">
+								<div className="row">Copy data to clipboard</div>
+								<div className="row">Paste &amp; merge data</div>
+								<div className="row">Save to local backup file</div>
+								<div className="row">Load from backup file</div>
+							</div>
 						</div>
-						<div className="desc">
-							<div className="row">Copy data to clipboard</div>
-							<div className="row">Paste in data (merges with existing)</div>
-							<div className="row">Save to local backup file</div>
-							<div className="row">Load from backup file</div>
-							<div className="row">Delete all notes</div>
-							<div className="row">Goto README for more info</div>
-							<div className="row">Display a clock overlay</div>
+						<div className="group d-flx flx-row">
+							<div>
+								<div className="row"><span className="code">/nuke</span></div>
+								<div className="row"><span className="code">/help</span></div>
+								<div className="row"><span className="code">/clock</span></div>
+							</div>
+							<div className="desc">
+								<div className="row">Delete all notes</div>
+								<div className="row">More info in README</div>
+								<div className="row">Display a clock overlay</div>
+							</div>
 						</div>
 					</div>
 					<h2 className="section-heading"><span className="mg-r-1">⚙️</span> Settings</h2>
@@ -99,7 +107,6 @@ const EntryCommandOptions = ({
 				}
 				.entry-command-options .desc {
 					letter-spacing: 0.5px;
-					padding-left: 1.1rem;
 				}
 				.entry-command-options .code {
 					font-family: "DM Mono";

@@ -3,7 +3,7 @@ import { useDispatch, batch } from "react-redux";
 import { mergeTodoList, mergeArchiveList } from "../feature/todosSlice.js";
 import { mergeSettings } from "../feature/settingsSlice.js";
 import { mergeTagList } from "../feature/tagsSlice.js";
-import { setStatusMessage } from "../feature/statusMessageSlice";
+import { setStatusMessage } from "../feature/statusMessageSlice.js";
 import { focusItemIndex, focusOut } from "../feature/todosSlice.js";
 
 const DialogImport = ({
