@@ -1,61 +1,80 @@
-/*
- * Find ":string" from text, using selectionStart position
- * Knowledgeable of newlines, text before colon (like urls)...
- * ...and typing in the middle of the current input value
- */
+// Space, \n, \r
+const stopChars = [" ", String.fromCharCode(10), String.fromCharCode(13)];
 
-const emojiSubstring = function (text, caret) {
-	
-	let start = caret; 
-	
-	if (!text.length || text[start] === " ") {
+const emojiSubstring = function (text, caret, strict = true) {
+
+	// Early reject check
+	if (!text.length
+		|| text[caret] === " "
+		|| text.indexOf(":") < 0
+		|| caret < 0
+	) {
 		return "";
 	}
+
+	// Store partial strings, and indices
+	let rtxt = "";
+	let ltxt = "";
+	let li = caret;
+	let ri = caret;
 	
-	// Increment start to end of word. Stop on: space, \n, \r, or end of value
-	while (
-		text[start]
-		&& text[start] !== " "
-		&& text[start] !== String.fromCharCode(10)
-		&& text[start] !== String.fromCharCode(13)
-	) {
-		start++;
-	}
-
-	// Decrement to beginning
-	let word = "", str = "";
-	let c = text[start - 1];
-
-	while (c) {
-		if (c === " ") {
-			word = "";
+	// Increment from caret to end of word. Stop on: space, \n, \r, or end of value
+	while (text[ri] && stopChars.indexOf(text[ri]) < 0) {
+		rtxt += text[ri];
+		if (text[ri] === ":" && text[ri + 1] === ":") {
 			break;
 		}
-		start--;
-		c = text[start];
-		word += c;
-		if (c === ":") {
-			// Reject "https://abc"
-			// Allow " :abc", ":abc::abc:"
-			// Stop at beginning, space, or another : (for back-to-back emojis)
-			// TODO: Allow if previous character is an emoji
-			if (
-				!text[start - 1]
-				|| text[start - 1] === " "
-				|| text[start - 1] === ":"
-			) {
-				str = word;
-				break;
-			} else {
-				str = "";
-				break;
-			}
-		}
+		ri++;
 	}
 
-	str = str.split("").reverse()
+	// Return if caret is on ":"
+	if (rtxt.charAt(0) === ":" && rtxt.length > 1) {
+		// If strict, check for characters after, and cases before ":"
+		if (!strict) {
+			return rtxt;
+		} else if (!text[caret - 1]
+			|| stopChars.indexOf(text[caret - 1]) >= 0
+			|| text[caret - 1] === ":"
+		) {
+			return rtxt;
+		}
+	}
+	
+	// Decrement from caret to beginning
+	while (text[li]) {
+
+		// At space before, or beginning
+		if (text[li] === " " || !text[li - 1]) {
+			return "";
+		}
+
+		li--;
+		if (text[li]) {
+			ltxt += text[li];
+		}
+
+		// Stop at beginning, space, \n, \r, or another ":"
+		// Allows " :abc", ":abc::abc:"
+		// If strict, reject "https://abc"
+		if (text[li] === ":") {
+			if (
+				!text[li - 1]
+				|| stopChars.indexOf(text[li - 1]) > -1
+				|| text[li - 1] === ":"
+				|| !strict
+			) {
+				break;
+			} else {
+				return "";
+			}
+		}
+
+	}
+
+	ltxt = ltxt.split("").reverse()
 		.join("");
-	return str.split(":")[1] || "";
+	const substring = `${ltxt}${rtxt}`;
+	return substring || "";
 
 };
 

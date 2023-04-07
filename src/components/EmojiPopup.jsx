@@ -98,7 +98,8 @@ const EmojiPopup = ({ active, setActive, inputText, setInputText, keyUpEvent, ke
 		} else if (key === "Backspace" && inputText[start] === ":") {
 			_active = false;
 		}
-		const str = emojiSubstring(inputText, start);
+		let str = emojiSubstring(inputText, start);
+		str = str.replaceAll(":", "");
 		_active =  str.length ? true : false;
 		setEmojiSearchString(str);
 		setActive(_active);

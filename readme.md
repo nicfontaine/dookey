@@ -29,7 +29,6 @@
 | Delete todo | `Delete` |
 | Undo delete | `Ctrl + Z` |
 | Edit tags | `T` |
-| Edit date | `D` |
 | Move todo up | `Ctrl + Shift + Up` |
 | Move todo down | `Ctrl + Shift + Down` |
 | Scroll list up | `Ctrl + Up` |
@@ -73,12 +72,11 @@
 - `/size <number>` Set font-size to number (current will display)
 - `/center <number>` Center layout to any pixel width (current will display)
 - `/full` Full-width layout (default)
+- `/backups <path>` Set local backups location 
 
 ## Bugs
 - Undo delete archive not working
 - Can't write 2 emojis without a space between
-- Autosize on edit textarea not working
-- Entry input getting sized smaller on refresh, since it has no value
 - Focusing down list should scroll tall items totally into view
 
 ## Tauri Bugs
