@@ -1,6 +1,6 @@
 🙃 React To**Do** app designed around **key**board shortcuts
 
-<img src="https://github.com/nicfontaine/dookey/blob/main/public/screenshot-01.png" width="400">
+<img src="https://github.com/nicfontaine/dookey/blob/main/public/img/screenshot-01.png" width="400">
 
 ## Shortcuts
 
