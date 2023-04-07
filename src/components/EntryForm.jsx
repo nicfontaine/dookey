@@ -116,6 +116,15 @@ const EntryForm = ({
 				}
 			}
 
+			if (commandOptionsDisplay) {
+				if (e.key === "Tab") {
+					e.preventDefault();
+					return;
+				} else if (e.key === "Escape") {
+					setEntryInput("");
+				}
+			}
+
 			if (!e.shiftKey && e.key === "Enter") {
 				e.preventDefault();
 				handleEntryInput.confirm();
@@ -148,8 +157,6 @@ const EntryForm = ({
 				} else {
 					dispatch(focusItemNext(archiveList.length + todoList.length));
 				}
-			} else if (e.key === "Escape" && commandOptionsDisplay) {
-				setEntryInput("");
 			}
 		},
 	};
