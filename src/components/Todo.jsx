@@ -19,6 +19,7 @@ const Todo = ({
 	todo,
 	index,
 	archived,
+	itemIndexWidth,
 }) => {
 
 	const dispatch = useDispatch();
@@ -246,8 +247,8 @@ const Todo = ({
 				tabIndex="0"
 			>
 				
-				{ !archived ?
-					<span className="todo-index">{index + 1}</span> :
+				{!archived ?
+					<span className="todo-index" style={{ flex: `0 0 ${itemIndexWidth}px` }}>{index + 1}</span> :
 					<span className="todo-index">
 						<CheckCircleFillIcon size={17}/>
 					</span>

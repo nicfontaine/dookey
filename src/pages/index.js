@@ -25,6 +25,7 @@ const TodoPage = () => {
 	const tagList = useSelector((state) => state.tags.value);
 	const settings = useSelector((state) => state.settings.value);
 	const focusIndex = useSelector((state) => state.todos.value.focusIndex);
+	const itemIndexWidth = Number((todoList.length + archiveList.length).toString().length) * 10;
 	
 	const [dialogImportShow, setDialogImportShow] = useState(false);
 	const [commandOptionsDisplay, setCommandOptionsDisplay] = useState(false);
@@ -152,6 +153,7 @@ const TodoPage = () => {
 									todo={todo}
 									index={index}
 									archived={false}
+									itemIndexWidth={itemIndexWidth}
 								/>;
 							}) : undefined }
 						</div>
@@ -170,6 +172,7 @@ const TodoPage = () => {
 									todo={todo}
 									index={index + todoList.length}
 									archived={true}
+									itemIndexWidth={itemIndexWidth}
 								/>;
 							}) : null }
 						</div>
@@ -191,6 +194,12 @@ const TodoPage = () => {
 				<StatusBar />
 
 			</div>
+
+			<style jsx>{`
+				.todo-index {
+					width: 
+				}
+			`}</style>
 
 		</>
 
