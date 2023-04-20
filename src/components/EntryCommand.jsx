@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector, batch } from "react-redux";
-import { resetSettings } from "../feature/settingsSlice";
+import { resetSettings, setImage } from "../feature/settingsSlice";
 import { resetTodos, resetArchives } from "../feature/todosSlice";
 import { resetTags } from "../feature/tagsSlice";
 import {
@@ -109,6 +109,11 @@ const EntryCommand = function ({
 			let location = args[0].trim();
 			if (location) {
 				handleBackupLocation(location);
+			}
+		} else if (command === "image") {
+			let path = args[0].trim();
+			if (path) {
+				dispatch(setImage(path));
 			}
 		}
 		setEntryInput("");

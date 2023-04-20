@@ -7,6 +7,7 @@ const initialState = {
 		fontSize: 17,
 		center: 850,
 		backups: "./backups/",
+		image: "/img/giphy-skyline-05.gif",
 	},
 };
 
@@ -36,6 +37,10 @@ export const settingsSlice = createSlice({
 			state.value.backupsAbsolute = action.payload;
 		},
 
+		setImage: (state, action) => {
+			state.value.image = action.payload;
+		},
+
 		mergeSettings: (state, action) => {
 			state.value = { ...state.value, ...action.payload };
 		},
@@ -55,6 +60,7 @@ export const {
 	setTitle,
 	setBackups,
 	setBackupsAbsolute,
+	setImage,
 	mergeSettings,
 	setSettings,
 	resetSettings,

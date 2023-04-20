@@ -77,7 +77,7 @@ body {
   position: relative;
   border-bottom: 1px solid rgba(255,255,255,0.09);
 }
-.top-background-image {
+#top-background-image {
   background: url(/img/giphy-skyline-05.gif);
   background-position: center;
   background-size: cover;

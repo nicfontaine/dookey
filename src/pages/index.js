@@ -80,6 +80,12 @@ const TodoPage = () => {
 		if (settings.center && Number(settings.center) > 0) {
 			document.querySelector(":root").style.setProperty("--main-center-width", `${settings.center}px`);
 		}
+		if (settings.image) {
+			const img = document.getElementById("top-background-image");
+			img.style.background = `url(${settings.image})`;
+			img.style.backgroundPosition = "center";
+			img.style.backgroundSize = "cover";
+		}
 	}, [settings]);
 
 	// Scroll main list up/down with shortcuts
@@ -116,7 +122,7 @@ const TodoPage = () => {
 
 					<div className="top-container">
 
-						<div className="top-background-image"></div>
+						<div id="top-background-image"></div>
 
 						<div
 							className={`main-heading ${!settings.title ? "no-title" : ""}`}

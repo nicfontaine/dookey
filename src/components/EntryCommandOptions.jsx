@@ -68,10 +68,11 @@ const EntryCommandOptions = ({
 					<h2 className="section-heading"><span className="mg-r-1">⚙️</span> Settings</h2>
 					<div className="group d-flx flx-row">
 						<div>
-							<div className="row"><span className="code">/title</span> <span className="code">&lt;text&gt;</span></div>
-							<div className="row"><span className="code">/size</span><span className="code">{settings.fontSize || "<number>"}</span></div>
-							<div className="row"><span className="code">/center</span> <span className="code">{settings.center || "<number>"}</span></div>
+							<div className="row"><span className="code">/title &lt;text&gt;</span></div>
+							<div className="row"><span className="code">/size {settings.fontSize || "<number>"}</span></div>
+							<div className="row"><span className="code">/center {settings.center || "<number>"}</span></div>
 							<div className="row"><span className="code">/full</span></div>
+							<div className="row"><span className="code">/image &lt;url&gt;</span></div>
 							<div className="row"><span className="code">/backups {settings.backups}</span></div>
 						</div>
 						<div className="desc">
@@ -79,6 +80,7 @@ const EntryCommandOptions = ({
 							<div className="row">Set font-size to number</div>
 							<div className="row">Center layout to any pixel-width</div>
 							<div className="row">Full-width layout (default)</div>
+							<div className="row">Top backdrop image</div>
 							<div className="row">Change backup file location</div>
 						</div>
 					</div>
@@ -93,7 +95,7 @@ const EntryCommandOptions = ({
 					padding-top: 4.72rem;
 					padding-top: 8.8rem;
 					padding-top: 10.5rem;
-					background: rgba(0,0,0,0.65);
+					background: rgba(0,0,0,0.75);
 					z-index: 10;
 					transition: opacity 0.15s, padding 0.3s ease-in;
 					pointer-events: none;
@@ -118,9 +120,9 @@ const EntryCommandOptions = ({
 					line-height: 1;
 				}
 				.section-heading {
-					margin-bottom: 1rem;
-					padding-top: 1rem;
-					border-top: 1px solid rgba(255,255,255,0.2);
+					margin-bottom: 0.8rem;
+					// padding-top: 1rem;
+					// border-top: 1px solid rgba(255,255,255,0.2);
 				}
 				.section-heading:first-child {
 					border-top: none;
@@ -137,7 +139,10 @@ const EntryCommandOptions = ({
 					margin-bottom: 0;
 				}
 				.entry-command-options-inner .row {
-					margin-bottom: 1rem;
+					margin-bottom: 0.6rem;
+				}
+				.entry-command-options-inner .row:last-child {
+					margin-bottom: 0;
 				}
 				.entry-command-tags-container .icon {
 					align-self: flex-start;
