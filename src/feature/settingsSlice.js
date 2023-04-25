@@ -6,6 +6,7 @@ const initialState = {
 		title: "🗒️ Todo List",
 		fontSize: 17,
 		center: 850,
+		density: "md",
 		backups: "./backups/",
 		image: "/img/giphy-skyline-05.gif",
 	},
@@ -23,6 +24,10 @@ export const settingsSlice = createSlice({
 
 		setCenter: (state, action) => {
 			state.value.center = action.payload;
+		},
+
+		setDensity: (state, action) => {
+			state.value.density = action.payload;
 		},
 
 		setTitle: (state, action) => {
@@ -57,6 +62,7 @@ export const settingsSlice = createSlice({
 export const {
 	setFontSize,
 	setCenter,
+	setDensity,
 	setTitle,
 	setBackups,
 	setBackupsAbsolute,

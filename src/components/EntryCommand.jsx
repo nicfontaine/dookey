@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector, batch } from "react-redux";
-import { resetSettings, setImage } from "../feature/settingsSlice";
+import { resetSettings, setDensity, setImage } from "../feature/settingsSlice";
 import { resetTodos, resetArchives } from "../feature/todosSlice";
 import { resetTags } from "../feature/tagsSlice";
 import {
@@ -95,6 +95,13 @@ const EntryCommand = function ({
 			if (args[0] !== undefined) {
 				let size = args[0].trim();
 				dispatch(setCenter(size));
+			}
+		} else if (command === "density") {
+			if (args[0] !== undefined) {
+				let density = args[0].trim();
+				if (["sm", "md", "lg"].indexOf(density) > -1) {
+					dispatch(setDensity(density));
+				}
 			}
 		} else if (command === "size") {
 			if (args[0] === undefined) return;

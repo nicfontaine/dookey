@@ -63,13 +63,22 @@ body {
   transition: padding 0.3s ease-in;
   text-shadow: 0 2px 4px rgba(0,0,0,0.25);
 }
+.main-container.density-md .main-heading {
+	padding-top: 2rem;
+}
+.main-container.density-sm .main-heading {
+	/* display: none; */
+	overflow-y: hidden;
+	line-height: 0;
+}
 .main-heading > * {
   margin: 0;
   min-width: 0;
   text-overflow: ellipsis;
   overflow-x: hidden;
 }
-.main-heading.no-title {
+.main-heading.no-title,
+.main-container.density-sm .main-heading {
   padding-top: 1rem;
   padding-bottom: 0;
 }
@@ -336,6 +345,14 @@ input, textarea {
 .todo:last-of-type {
   border-bottom-color: transparent;
 }
+.main-container.density-sm .todo {
+	padding-top: 0.3rem;
+  padding-bottom: calc(0.3rem + 5px);
+}
+.main-container.density-lg .todo {
+	padding-top: 1.2rem;
+  padding-bottom: calc(1.2rem + 5px);
+}
 @keyframes todoCreate {
 	from { opacity: 0.5; }
 	to { opacity: 1; }
@@ -363,6 +380,16 @@ input, textarea {
 .todo:focus:not(:first-child) {
   padding-top: calc(0.8rem + 2px);
   padding-bottom: calc(0.8rem + 3px);
+}
+.main-container.density-sm .todo.active:not(:first-child),
+.main-container.density-sm .todo:focus:not(:first-child) {
+  padding-top: calc(0.3rem + 2px);
+  padding-bottom: calc(0.3rem + 3px);
+}
+.main-container.density-lg .todo.active:not(:first-child),
+.main-container.density-lg .todo:focus:not(:first-child) {
+  padding-top: calc(1.2rem + 2px);
+  padding-bottom: calc(1.2rem + 3px);
 }
 .todo.active:first-child {
   /* transform: none; */
@@ -748,6 +775,34 @@ summary:before {
   font-weight: bold;
   font-family: "DM Mono";
 	opacity: 0.85;
+}
+.main-container.density-sm .todo-tag-list {
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+}
+.main-container.density-sm .tag {
+	overflow: hidden;
+	white-space: nowrap;
+	color: transparent;
+	width: 15px; height: 15px;
+	border-radius: 10px;
+	margin-bottom: 0;
+	margin-right: 0.2rem;
+}
+.main-container.density-sm .tag:last-child {
+	margin: 0;
+}
+.main-container.density-lg .todo-tag-list {
+	flex-direction: row;
+	flex-basis: 100%;
+	margin-top: 0.3rem;
+	/* align-items: flex-end; */
+	justify-content: flex-end;
+}
+.main-container.density-lg .tag {
+	margin-bottom: 0;
+	margin-right: 0.4rem;
 }
 .todo .tag {
   margin-bottom: 0.3rem;

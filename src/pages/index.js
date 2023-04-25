@@ -86,6 +86,12 @@ const TodoPage = () => {
 			img.style.backgroundPosition = "center";
 			img.style.backgroundSize = "cover";
 		}
+		if (settings.density) {
+			for (const d of ["sm", "md", "lg"]) {
+				mainRef.current.classList.remove(`density-${d}`);
+				mainRef.current.classList.add(`density-${settings.density}`);
+			}
+		}
 	}, [settings]);
 
 	// Scroll main list up/down with shortcuts
@@ -114,6 +120,7 @@ const TodoPage = () => {
 
 			<div
 				ref={mainRef}
+				id="main-container"
 				className={`main-container ${settings.center ? "center" : ""}`}
 				onKeyDown={handleMain.keyDown}
 			>

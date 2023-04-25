@@ -71,6 +71,7 @@
 - `/title <text>` Set a custom header name
 - `/size <number>` Set font-size to number (current will display)
 - `/center <number>` Center layout to any pixel width (current will display)
+- `/density <string>` UI density ("sm", "md", "lg")
 - `/full` Full-width layout (default)
 - `/image <url>` Top backdrop image
 - `/backups <path>` Set local backups location 

@@ -71,6 +71,7 @@ const EntryCommandOptions = ({
 							<div className="row"><span className="code">/title &lt;text&gt;</span></div>
 							<div className="row"><span className="code">/size {settings.fontSize || "<number>"}</span></div>
 							<div className="row"><span className="code">/center {settings.center || "<number>"}</span></div>
+							<div className="row"><span className="code">/density {settings.density || "<size>"}</span></div>
 							<div className="row"><span className="code">/full</span></div>
 							<div className="row"><span className="code">/image &lt;url&gt;</span></div>
 							<div className="row"><span className="code">/backups {settings.backups}</span></div>
@@ -79,6 +80,7 @@ const EntryCommandOptions = ({
 							<div className="row">Set a custom header name</div>
 							<div className="row">Set font-size to number</div>
 							<div className="row">Center layout to any pixel-width</div>
+							<div className="row">UI Density: <span className="code">sm, md, lg</span></div>
 							<div className="row">Full-width layout (default)</div>
 							<div className="row">Top backdrop image</div>
 							<div className="row">Change backup file location</div>
