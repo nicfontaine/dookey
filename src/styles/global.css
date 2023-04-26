@@ -270,6 +270,9 @@ input, textarea {
 .entry-emoji-picker.active {
   display: block;
 }
+.main-container.density-sm .entry-command-options {
+	padding-top: 4.5rem;
+}
 .todo-list {
   overflow-y: auto;
   padding-right: 1rem;
@@ -781,7 +784,7 @@ summary:before {
 	align-items: center;
 	justify-content: center;
 }
-.main-container.density-sm .tag {
+.main-container.density-sm .todo-tag-list .tag {
 	overflow: hidden;
 	white-space: nowrap;
 	color: transparent;
@@ -800,7 +803,7 @@ summary:before {
 	/* align-items: flex-end; */
 	justify-content: flex-end;
 }
-.main-container.density-lg .tag {
+.main-container.density-lg .todo-tag-list .tag {
 	margin-bottom: 0;
 	margin-right: 0.4rem;
 }

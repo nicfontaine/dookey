@@ -94,9 +94,9 @@ const EntryCommandOptions = ({
 					opacity: 0;
 					position: fixed;
 					top: 0; right: 0; bottom: 0; left: 0;
-					padding-top: 4.72rem;
-					padding-top: 8.8rem;
-					padding-top: 10.5rem;
+					// padding-top: 4.72rem;
+					// padding-top: 8.8rem;
+					padding-top: 8.5rem;
 					background: rgba(0,0,0,0.75);
 					z-index: 10;
 					transition: opacity 0.15s, padding 0.3s ease-in;
