@@ -52,7 +52,7 @@ const EntryCommand = function ({
 	const handleBackupLocation = async function (location) {
 		dispatch(setBackups(location));
 		const backupsAbsolute = await resolveBackupPath(settings);
-		console.log(backupsAbsolute);
+		// console.log(backupsAbsolute);
 		dispatch(setBackupsAbsolute(backupsAbsolute));
 		dispatch(setStatusMessage([`Location: ${backupsAbsolute}`, 8000]));
 	};
