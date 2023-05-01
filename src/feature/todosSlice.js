@@ -6,6 +6,7 @@ const initialState = {
 		focusIndexPrevious: -1,
 		todos: [],
 		archives: [],
+		todosDeleted: [],
 	},
 };
 
@@ -133,6 +134,13 @@ export const todosSlice = createSlice({
 			state.value.archives.push(action.payload);
 		},
 
+		insertArchiveAt: (state, action) => {
+			const { todo, index } = action.payload;
+			let list = state.value.archives.slice();
+			list.splice(index, 0, todo);
+			state.value.archives = list;
+		},
+
 		unshiftArchive: (state, action) => {
 			state.value.archives.unshift(action.payload);
 		},
@@ -211,6 +219,16 @@ export const todosSlice = createSlice({
 			}
 		},
 
+		addDeleteTodo: (state, action) => {
+			state.value.todosDeleted.push(action.payload);
+		},
+
+		popDeleteTodo: (state, action) => {
+			const list = state.value.todosDeleted.slice();
+			const _td = list.pop();
+			state.value.todosDeleted = list;
+		},
+
 	},
 });
 
@@ -233,6 +251,7 @@ export const {
 	setTodos,
 	resetTodos,
 	addArchive,
+	insertArchiveAt,
 	focusArchive,
 	unshiftArchive,
 	moveArchiveUp,
@@ -245,6 +264,8 @@ export const {
 	setArchives,
 	focusTodoOrArchive,
 	focusOut,
+	addDeleteTodo,
+	popDeleteTodo,
 } = todosSlice.actions;
 
 export default todosSlice.reducer;

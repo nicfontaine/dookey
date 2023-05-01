@@ -8,6 +8,7 @@ const initialState = {
 		center: 850,
 		density: "md",
 		backups: "./backups/",
+		syncFile: "",
 		image: "/img/giphy-skyline-05.gif",
 	},
 };
@@ -42,6 +43,10 @@ export const settingsSlice = createSlice({
 			state.value.backupsAbsolute = action.payload;
 		},
 
+		setSyncFile: (state, action) => {
+			state.value.syncFile = action.payload;
+		},
+
 		setImage: (state, action) => {
 			state.value.image = action.payload;
 		},
@@ -66,6 +71,7 @@ export const {
 	setTitle,
 	setBackups,
 	setBackupsAbsolute,
+	setSyncFile,
 	setImage,
 	mergeSettings,
 	setSettings,

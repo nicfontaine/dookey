@@ -5,15 +5,13 @@ import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import remarkGemoji from "remark-gemoji";
 import { useDispatch, useSelector } from "react-redux";
-import { archiveTodo, deleteTodo, moveTodoUp, moveTodoDown, unArchive, deleteArchive, moveArchiveUp, moveArchiveDown } from "../feature/todosSlice";
+import { archiveTodo, deleteTodo, moveTodoUp, moveTodoDown, unArchive, deleteArchive, moveArchiveUp, moveArchiveDown, addDeleteArchive, addDeleteTodo, insertArchiveAt, popDeleteTodo } from "../feature/todosSlice";
 import { focusItemIndex, focusItemNext, focusItemPrev, focusItemEntry, focusTodoOrArchive, insertTodoAt } from "../feature/todosSlice";
 import { CheckCircleFillIcon } from "@primer/octicons-react";
 import { focusOut } from "../feature/todosSlice.js";
 
 import TodoInput from "./TodoInput";
 import TagInput from "./TagInput";
-
-var deleteStore = [];
 
 const Todo = ({
 	todo,
@@ -27,6 +25,7 @@ const Todo = ({
 	const archiveList = useSelector((state) => state.todos.value.archives);
 	const tagList = useSelector((state) => state.tags.value);
 	const focusIndex = useSelector((state) => state.todos.value.focusIndex);
+	const todosDeleted = useSelector((state) => state.todos.value.todosDeleted);
 
 	const [editIndex, setEditIndex] = useState(null);
 	const [animOutIndex, setAnimOutIndex] = useState(null);
@@ -107,7 +106,6 @@ const Todo = ({
 		deleteStart (e) {
 			e.target.style.height = e.target.getBoundingClientRect().height + "px";
 			setAnimOutIndex(focusIndex);
-			deleteStore.push({ todo: todoList[focusIndex], index });
 			setTimeout(() => handleTodo.delete(), 150);
 		},
 
@@ -115,11 +113,13 @@ const Todo = ({
 		delete () {
 			setAnimOutIndex(null);
 			if (archived) {
+				dispatch(addDeleteTodo({ todo, index, archived: true }));
 				dispatch(deleteArchive(todo));
 				dispatch(focusItemIndex(focusIndex - 1));
 			} else {
 				let next = focusIndex;
 				if (next === todoList.length - 1) next -= 1;
+				dispatch(addDeleteTodo({ todo, index: index - todoList.length }));
 				dispatch(deleteTodo(todo));
 				dispatch(focusItemIndex(next));
 			}
@@ -206,10 +206,14 @@ const Todo = ({
 				e.preventDefault();
 				dispatch(focusItemIndex(todoList.length + archiveList.length - 1));
 			} else if (e.key === "z" && e.ctrlKey) {
-				// TODO: Handle archives & todos
-				if (!deleteStore.length) return;
-				let _td = deleteStore.pop();
-				dispatch(insertTodoAt(_td));
+				if (!todosDeleted.length) return;
+				const _td = todosDeleted[todosDeleted.length - 1];
+				if (_td.archived) {
+					dispatch(insertArchiveAt(_td));
+				} else {
+					dispatch(insertTodoAt(_td));
+				}
+				dispatch(popDeleteTodo());
 			}
 
 		},

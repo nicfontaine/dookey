@@ -16,6 +16,7 @@ const EntryForm = ({
 	setCommandOptionsDisplay,
 	setDialogImportShow,
 	setFileOpenSelect,
+	setFileSyncSelect,
 }) => {
 
 	const dispatch = useDispatch();
@@ -221,6 +222,7 @@ const EntryForm = ({
 				entryInput={entryInput}
 				setDialogImportShow={setDialogImportShow}
 				setFileOpenSelect={setFileOpenSelect}
+				setFileSyncSelect={setFileSyncSelect}
 				setEntryInput={setEntryInput}
 				setEntryCommand={setEntryCommand}
 				setClockActive={setClockActive}

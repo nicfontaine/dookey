@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector, batch } from "react-redux";
-import { resetSettings, setDensity, setImage } from "../feature/settingsSlice";
 import { resetTodos, resetArchives } from "../feature/todosSlice";
 import { resetTags } from "../feature/tagsSlice";
 import {
@@ -9,6 +8,7 @@ import {
 	setFontSize,
 	setBackups,
 	setBackupsAbsolute,
+	resetSettings, setDensity, setImage, setSyncFile,
 } from "../feature/settingsSlice";
 import { setStatusMessage } from "../feature/statusMessageSlice";
 import exportData from "../util/export-data";
@@ -116,6 +116,11 @@ const EntryCommand = function ({
 			let location = args[0].trim();
 			if (location) {
 				handleBackupLocation(location);
+			}
+		} else if (command === "sync") {
+			let file = args[0].trim();
+			if (file) {
+				dispatch(setSyncFile(file));
 			}
 		} else if (command === "image") {
 			let path = args[0].trim();

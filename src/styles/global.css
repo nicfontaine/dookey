@@ -793,7 +793,7 @@ summary:before {
 	margin-bottom: 0;
 	margin-right: 0.2rem;
 }
-.main-container.density-sm .tag:last-child {
+.main-container.density-sm .todo-tag-list .tag:last-child {
 	margin: 0;
 }
 .main-container.density-lg .todo-tag-list {

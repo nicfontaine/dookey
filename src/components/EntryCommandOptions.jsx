@@ -75,6 +75,7 @@ const EntryCommandOptions = ({
 							<div className="row"><span className="code">/full</span></div>
 							<div className="row"><span className="code">/image &lt;url&gt;</span></div>
 							<div className="row"><span className="code">/backups {settings.backups}</span></div>
+							{/* <div className="row"><span className="code">/sync &lt;filepath&gt;</span></div> */}
 						</div>
 						<div className="desc">
 							<div className="row">Set a custom header name</div>
@@ -84,6 +85,7 @@ const EntryCommandOptions = ({
 							<div className="row">Full-width layout (default)</div>
 							<div className="row">Top backdrop image</div>
 							<div className="row">Change backup file location</div>
+							{/* <div className="row">Auto-sync file</div> */}
 						</div>
 					</div>
 				</div>

@@ -16,6 +16,7 @@ import { setTags } from "../feature/tagsSlice";
 import { setSettings } from "../feature/settingsSlice";
 import { setStatusMessage } from "../feature/statusMessageSlice";
 import resolveBackupPath from "../util/resolve-backup-path";
+import DialogFileSync from "../components/DialogFileSync";
 
 const TodoPage = () => {
 
@@ -30,6 +31,7 @@ const TodoPage = () => {
 	const [dialogImportShow, setDialogImportShow] = useState(false);
 	const [commandOptionsDisplay, setCommandOptionsDisplay] = useState(false);
 	const [fileOpenSelect, setFileOpenSelect] = useState(false);
+	const [fileSyncSelect, setFileSyncSelect] = useState(false);
 
 	const mainRef = useRef(null);
 	const mainHeadingRef = useRef(null);
@@ -146,6 +148,7 @@ const TodoPage = () => {
 								setDialogImportShow={setDialogImportShow}
 								setCommandOptionsDisplay={setCommandOptionsDisplay}
 								setFileOpenSelect={setFileOpenSelect}
+								setFileSyncSelect={setFileSyncSelect}
 							/>
 						</div>
 
@@ -202,6 +205,11 @@ const TodoPage = () => {
 				<DialogFileOpen
 					fileOpenSelect={fileOpenSelect}
 					setFileOpenSelect={setFileOpenSelect}
+				/>
+
+				<DialogFileSync
+					fileSyncSelect={fileSyncSelect}
+					setFileSyncSelect={setFileSyncSelect}
 				/>
 
 				<StatusBar />
