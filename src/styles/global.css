@@ -394,7 +394,19 @@ input, textarea {
   padding-top: calc(1.2rem + 2px);
   padding-bottom: calc(1.2rem + 3px);
 }
-.todo.active:first-child {
+.main-container.density-sm .todo:first-child {
+	padding-top: calc(0.3rem + 2px);
+	padding-bottom: calc(0.3rem + 3px);
+  /* transform: none; */
+}
+.main-container.density-md .todo:first-child {
+	padding-top: calc(0.8rem + 2px);
+	padding-bottom: calc(0.8rem + 3px);
+  /* transform: none; */
+}
+.main-container.density-lg .todo:first-child {
+	padding-top: calc(1.2rem + 2px);
+	padding-bottom: calc(1.2rem + 3px);
   /* transform: none; */
 }
 /* .todo:focus:not(:active), .todo.active, .todo-input { */
