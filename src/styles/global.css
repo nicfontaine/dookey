@@ -790,6 +790,7 @@ summary:before {
   font-weight: bold;
   font-family: "DM Mono";
 	opacity: 0.85;
+	box-shadow: 0 1px 5px rgba(0, 0, 0, 0.7);
 }
 .main-container.density-sm .todo-tag-list {
 	flex-direction: row;
