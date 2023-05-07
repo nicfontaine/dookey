@@ -2,10 +2,12 @@ export default class Time {
 
 	static #clock;
 	static #setClock;
+	static #clockHour;
 
-	static createState = (clock, setClock) => {
+	static createState = (clock, setClock, clockHour) => {
 		this["#clock"] = clock;
 		this["#setClock"] = setClock;
+		this["#clockHour"] = clockHour;
 	};
     
 	static start () {
@@ -22,9 +24,17 @@ export default class Time {
 		this.timer ? this.#clear() : this.start();
 	}
 
+	static setClockHour (t) {
+		this["#clockHour"] = t;
+	}
+
 	static #tick () {
 		let d = new Date();
-		let h = this.#zero(d.getHours().toString());
+		let h = d.getHours();
+		if (this["#clockHour"] === 12 && h > 12) {
+			h -= 12;
+		}
+		h = this.#zero(h.toString());
 		let m = this.#zero(d.getMinutes().toString());
 		let s = this.#zero(d.getSeconds().toString());
 		this["#setClock"]([h, m, s]);
@@ -36,7 +46,7 @@ export default class Time {
 	}
 
 	static #zero (t) {
-		return t.length < 2 ? `0${t}` : t;
+		return t.toString().length < 2 ? `0${t}` : t;
 	}
     
 }

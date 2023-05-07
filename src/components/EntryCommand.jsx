@@ -8,7 +8,7 @@ import {
 	setFontSize,
 	setBackups,
 	setBackupsAbsolute,
-	resetSettings, setDensity, setImage, setSyncFile,
+	resetSettings, setDensity, setImage, setSyncFile, setClockHour,
 } from "../feature/settingsSlice";
 import { setStatusMessage } from "../feature/statusMessageSlice";
 import exportData from "../util/export-data";
@@ -37,36 +37,18 @@ const EntryCommand = function ({
 		checkCommand();
 	}, [entryInput]);
 
-	// Asyc helpers
-	const handleExport = async function () {
-		const _status = await exportData(todoList, archiveList, tagList, settings);
-		dispatch(setStatusMessage([_status, 5000]));
-	};
-	const handleSave = async function () {
-		const _res = await saveData(todoList, archiveList, tagList, settings);
-		batch(() => {
-			dispatch(setBackupsAbsolute(_res.backupsAbsolute));
-			dispatch(setStatusMessage([_res.status, 5000]));
-		});
-	};
-	const handleBackupLocation = async function (location) {
-		dispatch(setBackups(location));
-		const backupsAbsolute = await resolveBackupPath(settings);
-		// console.log(backupsAbsolute);
-		dispatch(setBackupsAbsolute(backupsAbsolute));
-		dispatch(setStatusMessage([`Location: ${backupsAbsolute}`, 8000]));
-	};
-
-	const checkCommand = function () {
-		
-		let args = cmd.split(" ");
-		let command = args.shift();
-
-		if (command === "msg") {
+	const commands = {
+		msg (args) {
 			dispatch(setStatusMessage([args, 5000]));
-		} else if (command === "clock") {
+		},
+		clock (args) {
+			const t = args[0];
+			if (t) {
+				dispatch(setClockHour(t));
+			}
 			setClockActive(true);
-		} else if (command === "nuke") {
+		},
+		nuke () {
 			batch(() => {
 				dispatch(resetSettings());
 				dispatch(resetTags());
@@ -74,59 +56,84 @@ const EntryCommand = function ({
 				dispatch(resetArchives());
 				dispatch(setStatusMessage(["Todo list cleared", 5000]));
 			});
-		} else if (command === "export") {
-			handleExport();
-		} else if (command === "import") {
+		},
+		async export () {
+			const _status = await exportData(todoList, archiveList, tagList, settings);
+			dispatch(setStatusMessage([_status, 5000]));
+		},
+		import () {
 			setDialogImportShow(true);
-		} else if (command === "save") {
-			handleSave();
-		} else if (command === "open") {
+		},
+		async save () {
+			const _res = await saveData(todoList, archiveList, tagList, settings);
+			batch(() => {
+				dispatch(setBackupsAbsolute(_res.backupsAbsolute));
+				dispatch(setStatusMessage([_res.status, 5000]));
+			});
+		},
+		open () {
 			setFileOpenSelect(true);
-		} else if (command === "kill") {
-			// TODO:
-		} else if (command === "help") {
+		},
+		help () {
 			window.open(process.env.NEXT_PUBLIC_APP_HELP);
-		} else if (command === "title") {
-			let title = args.join(" ");
-			dispatch(setTitle(title));
-		} else if (command === "full") {
+		},
+		title (args) {
+			dispatch(setTitle(args.join(" ")));
+		},
+		full () {
 			dispatch(setCenter(null));
-		} else if (command === "center") {
-			if (args[0] !== undefined) {
-				let size = args[0].trim();
+		},
+		center (args) {
+			const size = args[0]?.trim();
+			if (size) {
 				dispatch(setCenter(size));
+			} else {
+				commands.full();
 			}
-		} else if (command === "density") {
-			if (args[0] !== undefined) {
-				let density = args[0].trim();
-				if (["sm", "md", "lg"].indexOf(density) > -1) {
-					dispatch(setDensity(density));
-				}
+		},
+		density (args) {
+			const density = args[0]?.trim();
+			if (density && ["sm", "md", "lg"].indexOf(density) > -1) {
+				dispatch(setDensity(density));
 			}
-		} else if (command === "size") {
-			if (args[0] === undefined) return;
-			let size = args[0].trim();
+		},
+		size (args) {
+			const size = args[0]?.trim();
 			if (size) {
 				dispatch(setFontSize(size));
 			}
-		} else if (command === "backups") {
+		},
+		async backups (args) {
 			if (!args) {
 				setEntryInput(`${entryInput} ${settings.backupsAbsolute}`);
 			}
-			let location = args[0].trim();
+			const location = args[0].trim();
 			if (location) {
-				handleBackupLocation(location);
+				dispatch(setBackups(location));
+				const backupsAbsolute = await resolveBackupPath(settings);
+				dispatch(setBackupsAbsolute(backupsAbsolute));
+				dispatch(setStatusMessage([`Location: ${backupsAbsolute}`, 8000]));
 			}
-		} else if (command === "sync") {
-			let file = args[0].trim();
+		},
+		sync (args) {
+			const file = args[0].trim();
 			if (file) {
 				dispatch(setSyncFile(file));
 			}
-		} else if (command === "image") {
-			let path = args[0].trim();
+		},
+		image (args) {
+			const path = args[0].trim();
 			if (path) {
 				dispatch(setImage(path));
 			}
+		},
+	};
+
+	const checkCommand = function () {
+		const args = cmd.split(" ");
+		const command = args.shift();
+		if (command in commands) {
+			commands[command](args);
 		}
 		setEntryInput("");
 		setEntryCommand("");

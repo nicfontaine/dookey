@@ -1,12 +1,21 @@
 import { useState, useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import Time from "../util/time";
 
 const Clock = ({ active, setActive }) => {
 
+	const { clockHour } = useSelector((state) => state.settings.value);
 	const [clockState, setClockState] = useState(["HH", "MM", "SS"]);
-	Time.createState(clockState, setClockState);
 	const clockOuterRef = useRef(null);
+
+	useEffect(() => {
+		Time.createState(clockState, setClockState, clockHour);
+	}, []);
+
+	useEffect(() => {
+		Time.setClockHour(clockHour);
+	}, [clockHour]);
 
 	const keyDown = function (e) {
 		if (e.key === "Escape") {

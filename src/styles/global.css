@@ -768,6 +768,7 @@ summary:before {
   flex-direction: row;
   flex-direction: column;
   align-items: flex-end;
+	padding-top: 0.3rem;
   /* margin-top: 0.35rem; */
   /* justify-content: flex-end; */
   /**** Styling for horizontal row list ****/
@@ -794,8 +795,8 @@ summary:before {
 }
 .main-container.density-sm .todo-tag-list {
 	flex-direction: row;
-	align-items: center;
-	justify-content: center;
+	align-items: flex-start;
+	/* justify-content: center; */
 }
 .main-container.density-sm .todo-tag-list .tag {
 	overflow: hidden;

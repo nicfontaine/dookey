@@ -10,6 +10,7 @@ const initialState = {
 		backups: "./backups/",
 		syncFile: "",
 		image: "/img/giphy-skyline-05.gif",
+		clockHour: 12,
 	},
 };
 
@@ -51,6 +52,10 @@ export const settingsSlice = createSlice({
 			state.value.image = action.payload;
 		},
 
+		setClockHour: (state, action) => {
+			state.value.clockHour = Number(action.payload);
+		},
+
 		mergeSettings: (state, action) => {
 			state.value = { ...state.value, ...action.payload };
 		},
@@ -73,6 +78,7 @@ export const {
 	setBackupsAbsolute,
 	setSyncFile,
 	setImage,
+	setClockHour,
 	mergeSettings,
 	setSettings,
 	resetSettings,

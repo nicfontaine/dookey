@@ -3,7 +3,7 @@ import "../styles/bonkr.css";
 import "../styles/emoji-mart.css";
 
 import React from "react";
-import { store } from "../app/store";
+import { store } from "../store";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
