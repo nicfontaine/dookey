@@ -937,7 +937,7 @@ summary:before {
 .entry-command-tags-container {
   display: flex;
   /* margin-bottom: 1.5rem; */
-  padding-bottom: 1rem;
+  /* padding-bottom: 1rem; */
 }
 .entry-command-tags-container .tags-row {
   display: flex;
