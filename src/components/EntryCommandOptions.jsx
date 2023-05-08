@@ -110,6 +110,12 @@ const EntryCommandOptions = ({
 					transition: opacity 0.15s, padding 0.3s ease-in;
 					pointer-events: none;
 				}
+				.main-container.density-sm .entry-command-options {
+					padding-top: 4.5rem;
+				}
+				.main-container.density-lg .entry-command-options {
+					padding-top: 10rem;
+				}
 				.entry-command-options.show {
 					opacity: 1;
 					pointer-events: auto;

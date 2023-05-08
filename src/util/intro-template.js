@@ -58,6 +58,8 @@ const introTemplate = {
 		center: "800",
 		backups: "./backups/",
 		version: process.env.APP_VERSION,
+		image: "https://i.redd.it/brd8yuu3zis01.gif",
+		density: "md",
 	},
 };
 

@@ -25,7 +25,7 @@ const EntryCommand = function ({
 	setClockActive,
 }) {
 	
-	if (!cmd) return null;
+	// if (!cmd) return null;
 
 	const dispatch = useDispatch();
 	const todoList = useSelector((state) => state.todos.value.todos);
@@ -35,7 +35,7 @@ const EntryCommand = function ({
 
 	useEffect(() => {
 		checkCommand();
-	}, [entryInput]);
+	}, [cmd]);
 
 	const commands = {
 		msg (args) {
@@ -78,7 +78,7 @@ const EntryCommand = function ({
 			window.open(process.env.NEXT_PUBLIC_APP_HELP);
 		},
 		title (args) {
-			dispatch(setTitle(args.join(" ")));
+			dispatch(setTitle(args?.join(" ")));
 		},
 		full () {
 			dispatch(setCenter(null));
@@ -107,7 +107,7 @@ const EntryCommand = function ({
 			if (!args) {
 				setEntryInput(`${entryInput} ${settings.backupsAbsolute}`);
 			}
-			const location = args[0].trim();
+			const location = args[0]?.trim();
 			if (location) {
 				dispatch(setBackups(location));
 				const backupsAbsolute = await resolveBackupPath(settings);
@@ -116,27 +116,26 @@ const EntryCommand = function ({
 			}
 		},
 		sync (args) {
-			const file = args[0].trim();
+			const file = args[0]?.trim();
 			if (file) {
 				dispatch(setSyncFile(file));
 			}
 		},
 		image (args) {
-			const path = args[0].trim();
-			if (path) {
-				dispatch(setImage(path));
-			}
+			const path = args[0]?.trim();
+			dispatch(setImage(path));
 		},
 	};
 
 	const checkCommand = function () {
 		const args = cmd.split(" ");
 		const command = args.shift();
+		if (!cmd) return;
 		if (command in commands) {
 			commands[command](args);
+			setEntryInput("");
+			setEntryCommand("");
 		}
-		setEntryInput("");
-		setEntryCommand("");
 	};
 
 	return null;

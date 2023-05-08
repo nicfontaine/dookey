@@ -3,4 +3,6 @@ export default {
 	center: 850,
 	title: "🗒️ Todo List",
 	backups: "./backups/",
+	image: "https://i.redd.it/brd8yuu3zis01.gif",
+	density: "md",
 };

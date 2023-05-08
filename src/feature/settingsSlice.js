@@ -9,8 +9,9 @@ const initialState = {
 		density: "md",
 		backups: "./backups/",
 		syncFile: "",
-		image: "/img/giphy-skyline-05.gif",
+		// image: "https://media2.giphy.com/media/IeSXccYMz3K4U/giphy.gif",
 		clockHour: 12,
+		image: "",
 	},
 };
 

@@ -11,10 +11,9 @@ import DialogImport from "../components/DialogImport";
 import EntryCommandOptions from "../components/EntryCommandOptions";
 import DialogFileOpen from "../components/DialogFileOpen";
 import introTemplate from "../util/intro-template";
-import { focusItemIndex, focusTodoOrArchive, setTodos } from "../feature/todosSlice";
+import { focusItemIndex, setTodos } from "../feature/todosSlice";
 import { setTags } from "../feature/tagsSlice";
-import { setSettings } from "../feature/settingsSlice";
-import { setStatusMessage } from "../feature/statusMessageSlice";
+import { setBackupsAbsolute, setSettings } from "../feature/settingsSlice";
 import resolveBackupPath from "../util/resolve-backup-path";
 import DialogFileSync from "../components/DialogFileSync";
 
@@ -51,7 +50,7 @@ const TodoPage = () => {
 
 	const backups = async function () {
 		const backupsAbsolute = await resolveBackupPath(settings);
-		dispatch(setSettings({ ...settings, backupsAbsolute }));
+		dispatch(setBackupsAbsolute(backupsAbsolute));
 	};
 
 	// Load
@@ -62,6 +61,7 @@ const TodoPage = () => {
 				dispatch(setTodos(introTemplate.todos));
 				dispatch(setTags(introTemplate.tags));
 				dispatch(setSettings(introTemplate.settings));
+				console.log(introTemplate.settings);
 			});
 		}
 		if (settings) backups();
@@ -76,25 +76,36 @@ const TodoPage = () => {
 		});
 	}, []);
 
+	const topImageUpdate = async function () {
+		const imgfile = await fetch(settings.image);
+		const img = document.getElementById("top-background-image");
+		if (!imgfile.ok) {
+			img.style.background = undefined;
+		} else {
+			img.style.background = `url(${settings.image})`;
+			img.style.backgroundPosition = "center";
+			img.style.backgroundSize = "cover";
+		}
+	};
+
 	// Settings changes for page styling
+	useEffect(() => {
+		topImageUpdate();
+	}, [settings.image]);
 	useEffect(() => {
 		mainRef.current.closest("html").style.fontSize = settings.fontSize + "px";
 		if (settings.center && Number(settings.center) > 0) {
 			document.querySelector(":root").style.setProperty("--main-center-width", `${settings.center}px`);
 		}
-		if (settings.image) {
-			const img = document.getElementById("top-background-image");
-			img.style.background = `url(${settings.image})`;
-			img.style.backgroundPosition = "center";
-			img.style.backgroundSize = "cover";
-		}
+	}, [settings]);
+	useEffect(() => {
 		if (settings.density) {
 			for (const d of ["sm", "md", "lg"]) {
 				mainRef.current.classList.remove(`density-${d}`);
 				mainRef.current.classList.add(`density-${settings.density}`);
 			}
 		}
-	}, [settings]);
+	}, [settings.density]);
 
 	// Scroll main list up/down with shortcuts
 	const handleMain = {

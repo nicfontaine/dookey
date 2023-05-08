@@ -16,6 +16,7 @@
 }*/
 :root {
   --main-bg-color: #1f2029;
+	--header-bg-color: #282a3a;
   --main-bg-color-transparent: rgb(34, 35, 46, 0);
   --main-bar-bg-color: rgba(255,255,255,0.07);
   --main-center-width: 900px;
@@ -84,16 +85,17 @@ body {
 }
 .top-container {
   position: relative;
-  border-bottom: 1px solid rgba(255,255,255,0.09);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+	background: var(--header-bg-color);
 }
 #top-background-image {
-  background: url(/img/giphy-skyline-05.gif);
+  /* background: url(/img/giphy-skyline-05.gif); */
   background-position: center;
   background-size: cover;
   position: absolute;
   top: 0; right: 0; bottom: 0; left: 0;
   opacity: 0.5;
-  box-shadow: inset 0 0 50px rgba(0,0,0,0.3);
+  /* box-shadow: inset 0 0 50px rgba(0,0,0,0.3); */
 }
 .main {
   padding: 1.5rem 0 0 1.5rem;
@@ -213,7 +215,8 @@ input, textarea {
   /* background: rgba(255,255,255,0.14); */
   background: rgba(100,100,100,0.7);
   border: 1px solid rgb(109, 109, 109);
-  background: rgba(20,20,20,0.45);
+  /* background: rgba(20,20,20,0.45); */
+	background: rgba(20,20,20,0.75);
   border: 1px solid transparent;
   z-index: 5;
   color: #fff;
@@ -269,9 +272,6 @@ input, textarea {
 }
 .entry-emoji-picker.active {
   display: block;
-}
-.main-container.density-sm .entry-command-options {
-	padding-top: 4.5rem;
 }
 .todo-list {
   overflow-y: auto;
@@ -862,9 +862,10 @@ summary:before {
 }
 
 .status-bar {
-  background: var(---main-bar-bg-color);
+  /* background: var(--main-bar-bg-color); */
+	background: var(--header-bg-color);
   padding: 0.8em 2rem;
-  background: rgba(255,255,255,0.06);
+  /* background: rgba(255,255,255,0.06); */
   font-family: "DM Mono", monospace;
   font-size: 0.8rem;
   color: #aaa;
