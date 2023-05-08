@@ -7,7 +7,21 @@ import EmojiPopup from "./EmojiPopup";
 import Clock from "./Clock";
 import EntryCommand from "./EntryCommand";
 import TextareaAutosize from "@mui/base/TextareaAutosize";
-// import EmojiPopup from "react-emoji-popup-lister";
+// import EmojiPopupInput from "react-emoji-popup-lister";
+
+const Input = ({ focusIndex }, props) => {
+	<TextareaAutosize
+		{...props}
+		// ref={entryInputRef}
+		className={`entry-input ${
+			focusIndex === -1 ? "active" : ""
+		}`}
+		// tabIndex="0"
+		// autoFocus
+		placeholder="Add a todo"
+	>
+	</TextareaAutosize>;
+};
 
 const EntryForm = ({
 	entryInputRef,
@@ -179,24 +193,34 @@ const EntryForm = ({
 							<FlameIcon size={18} />
 						</div>
 
-						<TextareaAutosize
-							type="text"
+						{/* <EmojiPopupInput
+							input={Input}
 							value={entryInput}
-							id={"entry-input"}
-							className={`entry-input ${
-								focusIndex === -1 ? "active" : ""
-							}`}
+							setValue={setEntryInput}
 							onChange={handleEntryInput.change}
 							onKeyDown={handleEntryInput.keyDown}
 							onKeyUp={(e) => setEmojiKeyUpEvent(e)}
 							onClick={handleEntryInput.active}
 							onBlur={handleEntryInput.blur}
 							onFocus={handleEntryInput.focus}
+						/> */}
+
+						<TextareaAutosize
+							ref={entryInputRef}
+							value={entryInput}
+							className={`entry-input ${
+								focusIndex === -1 ? "active" : ""
+							}`}
 							tabIndex="0"
-							rows="1"
+							// rows="1"
 							autoFocus
 							placeholder="Add a todo"
-							ref={entryInputRef}
+							onChange={handleEntryInput.change}
+							onKeyDown={handleEntryInput.keyDown}
+							onKeyUp={(e) => setEmojiKeyUpEvent(e)}
+							onClick={handleEntryInput.active}
+							onBlur={handleEntryInput.blur}
+							onFocus={handleEntryInput.focus}
 						>
 							{entryInput}
 						</TextareaAutosize>

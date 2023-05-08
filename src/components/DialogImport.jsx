@@ -85,7 +85,7 @@ const DialogImport = ({
 					<div ref={importDialogStatusText}></div>
 				</div>
 			</div>
-			<style jsx>{`
+			<style>{`
 				.dialog {
 					z-index: 20;
 				}

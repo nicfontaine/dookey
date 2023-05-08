@@ -49,7 +49,7 @@ export default function DialogFileOpen ({
 				/>
 			</div>
 
-			<style jsx>{`
+			<style>{`
 				.dialog-file-open {
 					display: none;
 				}

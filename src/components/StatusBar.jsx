@@ -32,7 +32,7 @@ const StatusBar = () => {
 				<div className="status-bar-inner">{message}</div>
 			</div>
 
-			<style jsx>{``}</style>
+			<style>{``}</style>
 		</>
 	);
 };

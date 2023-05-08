@@ -74,7 +74,8 @@ const EntryCommandOptions = ({
 							<div className="row"><span className="code">/density {settings.density || "<size>"}</span></div>
 							<div className="row"><span className="code">/full</span></div>
 							<div className="row"><span className="code">/image &lt;url&gt;</span></div>
-							<div className="row"><span className="code">/backups {settings.backups}</span></div>
+							{/* <div className="row"><span className="code">/backups {settings.backups}</span></div> */}
+							<div className="row"><span className="code">/backups &lt;path&gt;</span></div>
 							{/* <div className="row"><span className="code">/sync &lt;filepath&gt;</span></div> */}
 						</div>
 						<div className="desc">
@@ -91,7 +92,7 @@ const EntryCommandOptions = ({
 				</div>
 			</div>
 
-			<style jsx>{`
+			<style>{`
 				.entry-command-options {
 					opacity: 0;
 					position: fixed;

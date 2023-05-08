@@ -35,7 +35,7 @@ export default function DialogFileSync ({
 				/>
 			</div>
 
-			<style jsx>{`
+			<style>{`
 				.dialog-file-open {
 					display: none;
 				}
