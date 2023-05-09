@@ -348,11 +348,13 @@ input, textarea {
 .todo:last-of-type {
   border-bottom-color: transparent;
 }
-.main-container.density-sm .todo {
+.main-container.density-sm .todo,
+.main-container.density-sm .todo-tag-edit {
 	padding-top: 0.3rem;
   padding-bottom: calc(0.3rem + 5px);
 }
-.main-container.density-lg .todo {
+.main-container.density-lg .todo,
+.main-container.density-lg .todo-tag-edit {
 	padding-top: 1.2rem;
   padding-bottom: calc(1.2rem + 5px);
 }

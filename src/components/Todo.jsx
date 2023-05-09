@@ -36,6 +36,12 @@ const Todo = ({
 	var dragged = false;
 	var mX, mY;
 
+	useEffect(() => {
+		if (focusIndex !== index) {
+			todoRef.current.classList.remove("active");
+		}
+	});
+
 	// Focus todo when list or focusIndex changes
 	useEffect(() => {
 		if (index === focusIndex) {
@@ -71,7 +77,12 @@ const Todo = ({
 
 	const handleTodo = {
 
+		focus (e) {
+			todoRef.current.classList.add("active");
+		},
+
 		blur (e) {
+			// todoRef.current.classList.remove("active");
 			// console.log("blur todo");
 			// e.target.blur();
 		},
@@ -242,6 +253,7 @@ const Todo = ({
 					{ archive: archived || false },
 					// { active: focusIndex === index },
 				)}
+				onFocus={handleTodo.focus}
 				onBlur={handleTodo.blur}
 				onClick={handleTodo.click}
 				onMouseDown={handleTodo.mouseDown}
