@@ -38,7 +38,7 @@ const Todo = ({
 
 	useEffect(() => {
 		if (focusIndex !== index) {
-			todoRef.current.classList.remove("active");
+			todoRef?.current?.classList.remove("active");
 		}
 	});
 
@@ -78,7 +78,7 @@ const Todo = ({
 	const handleTodo = {
 
 		focus (e) {
-			todoRef.current.classList.add("active");
+			todoRef?.current?.classList.add("active");
 		},
 
 		blur (e) {

@@ -111,7 +111,7 @@ const EntryCommandOptions = ({
 					pointer-events: none;
 				}
 				.main-container.density-sm .entry-command-options {
-					padding-top: 4.5rem;
+					padding-top: 5.8rem;
 				}
 				.main-container.density-lg .entry-command-options {
 					padding-top: 10rem;

@@ -77,9 +77,8 @@
 - `/backups <path>` Set local backups location 
 
 ## Bugs
-- Undo delete archive not working
-- Can't write 2 emojis without a space between
 - Focusing down list should scroll tall items totally into view
+- Moving 2nd of 2 archives causes error
 
 ## Tauri Bugs
 - Open from backup file not working

@@ -69,8 +69,9 @@ body {
 }
 .main-container.density-sm .main-heading {
 	/* display: none; */
-	overflow-y: hidden;
-	line-height: 0;
+	/* overflow-y: hidden; */
+	/* line-height: 0; */
+	padding-top: 0.8rem;
 }
 .main-heading > * {
   margin: 0;
@@ -78,8 +79,12 @@ body {
   text-overflow: ellipsis;
   overflow-x: hidden;
 }
-.main-heading.no-title,
+/* .main-heading.no-title,
 .main-container.density-sm .main-heading {
+  padding-top: 1rem;
+  padding-bottom: 0;
+} */
+.main-heading.no-title {
   padding-top: 1rem;
   padding-bottom: 0;
 }
@@ -121,6 +126,10 @@ input, textarea {
   /* background: #2b2b2b; */
   /* background: var(--main-bar-bg-color); */
   transition: all 0.3s ease-out;
+}
+.main-container.density-sm .entry-container {
+	padding-top: 0.5rem;
+	padding-bottom: 0.8rem;
 }
 .entry-container.commands-display .entry-input {
   font-family: "DM Mono";
@@ -314,6 +323,9 @@ input, textarea {
   align-items: center;
   justify-content: center;
 }
+.main-container.density-sm .todo-list .divider-archived {
+	display: none;
+}
 .todo-list .divider-archived .icon {
   color: rgb(255 255 255 / 38%);
   color: #63c06d;
@@ -347,6 +359,9 @@ input, textarea {
 }
 .todo:last-of-type {
   border-bottom-color: transparent;
+}
+.main-container.density-sm .todo:last-of-type {
+	border-bottom: 2px solid rgb(255, 255, 255, 0.06);
 }
 .main-container.density-sm .todo,
 .main-container.density-sm .todo-tag-edit {
