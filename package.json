@@ -8,7 +8,9 @@
     "test": "next test",
     "eject": "react-scripts eject",
     "tauri": "tauri",
-    "dev": "next dev",
+    "dev": "npm run dev:app",
+		"dev:web": "cross-env NEXT_PUBLIC_APP_ENV=web next dev",
+		"dev:app": "cross-env NEXT_PUBLIC_APP_ENV=app next dev",
     "lint": "next lint"
   },
   "dependencies": {

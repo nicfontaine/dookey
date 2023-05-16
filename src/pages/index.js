@@ -124,7 +124,7 @@ const TodoPage = () => {
 		<>
 
 			<Head>
-				<title>{process.env.APP_NAME}</title>
+				<title>{process.env.NEXT_PUBLIC_APP_NAME}</title>
 				<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v2"></link>
 				<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v2"></link>
 				<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v2"></link>

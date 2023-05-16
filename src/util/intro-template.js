@@ -57,7 +57,7 @@ const introTemplate = {
 		fontSize: "17",
 		center: "800",
 		backups: "./backups/",
-		version: process.env.APP_VERSION,
+		version: process.env.NEXT_PUBLIC_APP_VERSION,
 		image: "https://i.redd.it/brd8yuu3zis01.gif",
 		density: "md",
 	},

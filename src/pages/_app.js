@@ -20,3 +20,6 @@ export default function MyApp ({ Component, pageProps }) {
 		</Provider>
 	);
 }
+
+console.log(`APP_ENV: ${process.env.NEXT_PUBLIC_APP_ENV}
+APP_VERSION ${process.env.NEXT_PUBLIC_APP_VERSION}`);
