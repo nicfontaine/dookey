@@ -7,6 +7,7 @@ const EntryCommandOptions = ({
 
 	const settings = useSelector((state) => state.settings.value);
 	const tags = useSelector((state) => state.tags.value);
+	const APP_ENV = process.env.NEXT_PUBLIC_APP_ENV;
 
 	const entryCommandOptionsRef = useRef(null);
 
@@ -43,10 +44,14 @@ const EntryCommandOptions = ({
 							<div className="row desc">Copy data to clipboard</div>
 							<div className="row"><span className="code">/import</span></div>
 							<div className="row desc">Paste &amp; merge data</div>
-							<div className="row"><span className="code">/save</span></div>
-							<div className="row desc">Save to local file</div>
-							<div className="row"><span className="code">/open</span></div>
-							<div className="row desc">Load from local file</div>
+							{APP_ENV === "app" ? (
+								<>
+									<div className="row"><span className="code">/save</span></div>
+									<div className="row desc">Save to local file</div>
+									<div className="row"><span className="code">/open</span></div>
+									<div className="row desc">Load from local file</div>
+								</>
+							) : null }
 						</div>
 						<div className="group d-flx flx-row">
 							<div className="row"><span className="code">/nuke</span></div>
@@ -73,8 +78,12 @@ const EntryCommandOptions = ({
 						<div className="row desc">Full-width layout (default)</div>
 						<div className="row"><span className="code">/image &lt;url&gt;</span></div>
 						<div className="row desc">Top backdrop image</div>
-						<div className="row"><span className="code">/backups &lt;path&gt;</span></div>
-						<div className="row desc">Change backup file location</div>
+						{APP_ENV === "app" ? (
+							<>
+								<div className="row"><span className="code">/backups &lt;path&gt;</span></div>
+								<div className="row desc">Change backup file location</div>
+							</>
+						) : null }
 					</div>
 
 				</div>

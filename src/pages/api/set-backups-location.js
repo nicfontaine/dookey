@@ -1,6 +1,7 @@
 const path = require("path");
 
 export default async function handler (request, response) {
+	if (process.env.NEXT_PUBLIC_APP_ENV === "web") return;
 	const { method } = request;
 	const { backups } = request.body;
 	if (method === "POST") {

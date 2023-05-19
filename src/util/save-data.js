@@ -20,7 +20,7 @@ const saveData = async function (todos, archives, tags, settings) {
 	} else {
 		let status = "";
 		const body = JSON.stringify({ contents, filePath, settings });
-		const response = await fetch("/api/backup", {
+		const response = await fetch("/api/save", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body,

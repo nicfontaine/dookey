@@ -25,8 +25,6 @@ const EntryCommand = function ({
 	setClockActive,
 }) {
 	
-	// if (!cmd) return null;
-
 	const dispatch = useDispatch();
 	const todoList = useSelector((state) => state.todos.value.todos);
 	const archiveList = useSelector((state) => state.todos.value.archives);
