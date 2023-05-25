@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "cross-env BROWSER=none next start",
+    "start": "cross-env BROWSER=none next start -p 3693",
     "build": "next build",
     "test": "next test",
     "eject": "react-scripts eject",
     "tauri": "tauri",
     "dev": "npm run dev:app",
-		"dev:web": "cross-env NEXT_PUBLIC_APP_ENV=web next dev",
-		"dev:app": "cross-env NEXT_PUBLIC_APP_ENV=app next dev",
+		"dev:web": "cross-env NEXT_PUBLIC_APP_ENV=web next dev -p 3693",
+		"dev:app": "cross-env NEXT_PUBLIC_APP_ENV=app next dev -p 3693",
     "lint": "next lint"
   },
   "dependencies": {

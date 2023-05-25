@@ -79,6 +79,8 @@
 ## Bugs
 - Focusing down list should scroll tall items totally into view
 - Moving 2nd of 2 archives causes error
+- Not locked in tag input, leaving it stays open
+- Random colors for new tags are too similar sometimes (after restart?)
 
 ## Tauri Bugs
 - Open from backup file not working
