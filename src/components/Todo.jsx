@@ -165,7 +165,7 @@ const Todo = ({
 			if (e.key === "Enter") {
 				e.preventDefault();
 				handleTodo.edit(e);
-			} else if (e.key === "Delete") {
+			} else if (e.key === "Delete" || e.key === "Backspace") {
 				e.preventDefault();
 				handleTodo.deleteStart(e);
 			} else if (e.key === "e") {
