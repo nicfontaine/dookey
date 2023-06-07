@@ -78,6 +78,7 @@ const TodoInput = ({
 
 		// Handle special keys like enter, escape, etc
 		keyDown (e) {
+			const ctrl = e.ctrlKey || e.metaKey;
 			setEmojiKeyDownEvent(e);
 			// "ESC"
 			if (e.key === "Escape") {
@@ -106,7 +107,7 @@ const TodoInput = ({
 					e.preventDefault();
 					return;
 				}
-				if (e.ctrlKey) {
+				if (ctrl) {
 					e.preventDefault();
 					handleTodoInput.unEdit(e);
 				}
@@ -119,20 +120,22 @@ const TodoInput = ({
 				setTodoCaretStart(start);
 				setTodoInputText(e.target.value.substring(0, start) + "\t" + e.target.value.substring(end));
 				e.target.selectionStart = e.target.selectionEnd = start + 1;
-			} else if (e.key === "b" && e.ctrlKey) {
-				// Bolden
-				e.preventDefault();
-				setTodoCaretStart(e.target.selectionStart);
-				setTodoInputText(textSurround(e.target, "**", "**"));
-			} else if (e.key === "i" && e.ctrlKey) {
-				e.preventDefault();
-				setTodoCaretStart(e.target.selectionStart);
-				setTodoInputText(textSurround(e.target, "_", "_"));
-			} else if (e.key === "g" && e.ctrlKey) {
-				e.preventDefault();
-				let _l = "<details><summary>Subtasks...</summary>\n<div>";
-				setTodoCaretStart(e.target.selectionStart);
-				setTodoInputText(textSurround(e.target, _l, "</div></details>"));
+			} else if (ctrl) {
+				if (e.key === "b") {
+					// Bolden
+					e.preventDefault();
+					setTodoCaretStart(e.target.selectionStart);
+					setTodoInputText(textSurround(e.target, "**", "**"));
+				} else if (e.key === "i") {
+					e.preventDefault();
+					setTodoCaretStart(e.target.selectionStart);
+					setTodoInputText(textSurround(e.target, "_", "_"));
+				} else if (e.key === "g") {
+					e.preventDefault();
+					let _l = "<details><summary>Subtasks...</summary>\n<div>";
+					setTodoCaretStart(e.target.selectionStart);
+					setTodoInputText(textSurround(e.target, _l, "</div></details>"));
+				}
 			}
 		},
 

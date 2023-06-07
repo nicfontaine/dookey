@@ -67,8 +67,9 @@ const TodoPage = () => {
 		if (settings) backups();
 		document.body.tabIndex = -1;
 		window.addEventListener("keydown", (e) => {
+			const ctrl = e.ctrlKey || e.metaKey;
 			if (e.target === document.body) {
-				if (e.key === "/" || (e.key === "l" && e.ctrlKey)) {
+				if (e.key === "/" || (e.key === "l" && ctrl)) {
 					e.preventDefault();
 					dispatch(focusItemIndex(-1));
 				}
@@ -111,10 +112,13 @@ const TodoPage = () => {
 	const handleMain = {
 		scrollDistance: 30,
 		keyDown (e) {
-			if (e.key === "ArrowDown") {
-				if (e.ctrlKey && !e.shiftKey) todoListRef.current.scrollTop += handleMain.scrollDistance;
-			} else if (e.key === "ArrowUp") {
-				if (e.ctrlKey && !e.shiftKey) todoListRef.current.scrollTop -= handleMain.scrollDistance;
+			const ctrl = e.ctrlKey || e.metaKey;
+			if (ctrl && !e.shiftKey) {
+				if (e.key === "ArrowDown") {
+					todoListRef.current.scrollTop += handleMain.scrollDistance;
+				} else if (e.key === "ArrowUp") {
+					todoListRef.current.scrollTop -= handleMain.scrollDistance;
+				}
 			}
 		},
 	};

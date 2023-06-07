@@ -158,6 +158,7 @@ const Todo = ({
 		},
 
 		keyDown (e) {
+			const ctrl = e.ctrlKey || e.metaKey;
 			// TODO: Cleanup
 			if (!e.target.classList.contains("todo")) {
 				return;
@@ -183,7 +184,7 @@ const Todo = ({
 				} else {
 					handleTodo.archiveStart(e);
 				}
-			} else if (e.key === "/" || (e.key === "l" && e.ctrlKey)) {
+			} else if (e.key === "/" || (e.key === "l" && ctrl)) {
 				e.preventDefault();
 				dispatch(focusItemEntry());
 			} else if (e.key === "o" || e.key === " ") {
@@ -194,16 +195,16 @@ const Todo = ({
 				}
 			} else if (e.key === "ArrowDown") {
 				e.preventDefault();
-				if (!e.ctrlKey) {
+				if (!ctrl) {
 					dispatch(focusItemNext(archiveList.length + todoList.length));
-				} else if (e.shiftKey && e.ctrlKey) {
+				} else if (e.shiftKey && ctrl) {
 					moveDown();
 				}
 			} else if (e.key === "ArrowUp") {
 				e.preventDefault();
-				if (!e.ctrlKey) {
+				if (!ctrl) {
 					dispatch(focusItemPrev(archiveList.length + todoList.length));
-				} else if (e.shiftKey && e.ctrlKey) {
+				} else if (e.shiftKey && ctrl) {
 					moveUp();
 				}
 			} else if (e.key === "Tab") {
@@ -216,7 +217,7 @@ const Todo = ({
 			} else if (e.key === "End") {
 				e.preventDefault();
 				dispatch(focusItemIndex(todoList.length + archiveList.length - 1));
-			} else if (e.key === "z" && e.ctrlKey) {
+			} else if (e.key === "z" && ctrl) {
 				if (!todosDeleted.length) return;
 				const _td = todosDeleted[todosDeleted.length - 1];
 				if (_td.archived) {

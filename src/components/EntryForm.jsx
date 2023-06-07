@@ -118,6 +118,7 @@ const EntryForm = ({
 		},
 
 		keyDown (e) {
+			const ctrl = e.ctrlKey || e.metaKey;
 			setEmojiKeyDownEvent(e);
 			if (emojiPopupActive) {
 				if (
@@ -156,12 +157,12 @@ const EntryForm = ({
 			}
 
 			if (e.key === "ArrowDown") {
-				if (!entryInputRef.current.value.length && !e.ctrlKey) {
+				if (!entryInputRef.current.value.length && !ctrl) {
 					e.preventDefault();
 					dispatch(focusItemNext(archiveList.length + todoList.length));
 				}
 			} else if (e.key === "ArrowUp") {
-				if (!entryInputRef.current.value.length && !e.ctrlKey) {
+				if (!entryInputRef.current.value.length && !ctrl) {
 					e.preventDefault();
 					dispatch(focusItemPrev(archiveList.length + todoList.length));
 				}
