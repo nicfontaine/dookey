@@ -81,6 +81,7 @@
 - Moving 2nd of 2 archives causes error
 - Not locked in tag input, leaving it stays open
 - Random colors for new tags are too similar sometimes (after restart?)
+- Emoji style (opacity?) when deleting archive
 
 ## Tauri Bugs
 - Open from backup file not working
@@ -89,7 +90,6 @@
 ## Todo
 - Search
 - Maybe move edit/active outside of data object
-- Textarea styling (height)
 - Tag filters
 - Scroll todolist top, on entry submit
 - Set caret position after todo-input textSurround()

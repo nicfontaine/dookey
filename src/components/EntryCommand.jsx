@@ -109,6 +109,10 @@ const EntryCommand = function ({
 			if (location) {
 				dispatch(setBackups(location));
 				const backupsAbsolute = await resolveBackupPath(settings);
+				if (backupsAbsolute.err) {
+					dispatch(setStatusMessage([backupsAbsolute.err.code, 5000]));
+					return;
+				}
 				dispatch(setBackupsAbsolute(backupsAbsolute));
 				dispatch(setStatusMessage([`Location: ${backupsAbsolute}`, 8000]));
 			}

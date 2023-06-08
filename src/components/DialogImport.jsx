@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useDispatch, batch } from "react-redux";
 import { mergeTodoList, mergeArchiveList } from "../feature/todosSlice.js";
-import { mergeSettings } from "../feature/settingsSlice.js";
+import { importSettings, mergeSettings } from "../feature/settingsSlice.js";
 import { mergeTagList } from "../feature/tagsSlice.js";
 import { setStatusMessage } from "../feature/statusMessageSlice.js";
 import { focusItemIndex, focusOut } from "../feature/todosSlice.js";
@@ -45,7 +45,7 @@ const DialogImport = ({
 						dispatch(mergeTodoList(val.todos));
 						dispatch(mergeArchiveList(val.archives));
 						dispatch(mergeTagList(val.tags));
-						dispatch(mergeSettings(val.settings));
+						dispatch(importSettings(val.settings));
 						dispatch(setStatusMessage(["Imported", 50000]));
 					});
 				} catch (err) {

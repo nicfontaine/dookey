@@ -16,6 +16,7 @@ import { setTags } from "../feature/tagsSlice";
 import { setBackupsAbsolute, setSettings } from "../feature/settingsSlice";
 import resolveBackupPath from "../util/resolve-backup-path";
 import DialogFileSync from "../components/DialogFileSync";
+import { setStatusMessage } from "../feature/statusMessageSlice";
 
 const TodoPage = () => {
 
@@ -50,6 +51,10 @@ const TodoPage = () => {
 
 	const backups = async function () {
 		const backupsAbsolute = await resolveBackupPath(settings);
+		if (backupsAbsolute.err) {
+			dispatch(setStatusMessage([backupsAbsolute.err.code, 5000]));
+			return;
+		}
 		dispatch(setBackupsAbsolute(backupsAbsolute));
 	};
 
@@ -61,7 +66,7 @@ const TodoPage = () => {
 				dispatch(setTodos(introTemplate.todos));
 				dispatch(setTags(introTemplate.tags));
 				dispatch(setSettings(introTemplate.settings));
-				console.log(introTemplate.settings);
+				// console.log(introTemplate.settings);
 			});
 		}
 		if (settings) backups();

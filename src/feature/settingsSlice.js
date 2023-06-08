@@ -65,6 +65,13 @@ export const settingsSlice = createSlice({
 			state.value = { ...action.payload };
 		},
 
+		importSettings: (state, action) => {
+			const payload = { ...action.payload };
+			delete payload.backups;
+			delete payload.backupsAbsolute;
+			state.value = { ...state.value, ...payload };
+		},
+
 		resetSettings: () => initialState,
 
 	},
@@ -82,6 +89,7 @@ export const {
 	setClockHour,
 	mergeSettings,
 	setSettings,
+	importSettings,
 	resetSettings,
 } = settingsSlice.actions;
 
