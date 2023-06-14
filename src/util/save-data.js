@@ -28,8 +28,9 @@ const saveData = async function (todos, archives, tags, settings) {
 		const res = await response.json();
 		if (res.err) {
 			status = JSON.stringify(res.err);
+		} else {
+			status = "Saved to: " + res.path;
 		}
-		status = "Saved to: " + res.path;
 		return {
 			status,
 			backups: res.backups,

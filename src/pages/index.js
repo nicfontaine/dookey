@@ -49,10 +49,11 @@ const TodoPage = () => {
 		}
 	}, [focusIndex]);
 
+	// TODO: This should invalidate our settings backups if not found, so we can sync across devices, insead of clearing it on save
 	const backups = async function () {
-		const backupsAbsolute = await resolveBackupPath(settings);
+		const backupsAbsolute = await resolveBackupPath(settings.backups);
 		if (backupsAbsolute.err) {
-			dispatch(setStatusMessage([backupsAbsolute.err.code, 5000]));
+			dispatch(setStatusMessage(["Error resolving path", 5000]));
 			return;
 		}
 		dispatch(setBackupsAbsolute(backupsAbsolute));

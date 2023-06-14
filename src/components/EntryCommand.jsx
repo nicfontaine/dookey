@@ -108,11 +108,12 @@ const EntryCommand = function ({
 			const location = args[0]?.trim();
 			if (location) {
 				dispatch(setBackups(location));
-				const backupsAbsolute = await resolveBackupPath(settings);
+				const backupsAbsolute = await resolveBackupPath(location);
 				if (backupsAbsolute.err) {
-					dispatch(setStatusMessage([backupsAbsolute.err.code, 5000]));
+					dispatch(setStatusMessage(["Error resolving path", 5000]));
 					return;
 				}
+				console.log(backupsAbsolute);
 				dispatch(setBackupsAbsolute(backupsAbsolute));
 				dispatch(setStatusMessage([`Location: ${backupsAbsolute}`, 8000]));
 			}
